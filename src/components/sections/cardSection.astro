@@ -1,0 +1,47 @@
+---
+import Section from "../section.astro";
+import SectionHeader from "../headers/sectionHeader.astro";
+import ProjectCard from "./projectCard.astro";
+import type { CardContentType } from "../../types/cardContentType";
+
+interface Props {
+  class: string;
+  bg: "white" | "gray";
+  imageAlign: "left" | "right";
+  decorator: "ellipse" | "rectangle";
+  content: CardContentType[];
+}
+const { class: className, bg, imageAlign, decorator, content } = Astro.props;
+---
+
+<Section
+  class={["py-10 md:py-25", className, bg == "white" ? "bg-white" : "bg-gray"]}
+>
+  <SectionHeader
+    ><span slot="numbering"><slot name="numbering" /></span>
+    <span slot="content"><slot name="content" /></span>
+  </SectionHeader>
+  {
+    Astro.slots.has("subheading") && (
+      <div class="text-[1.1rem] text-pale-blue/80 pt-4 leading-snug md:pt-6">
+        <slot name="subheading" />
+      </div>
+    )
+  }
+  <ul
+    class="w-full grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] lg:flex lg:flex-col gap-10 pt-10"
+  >
+    {
+      content.map((card) => (
+        <li>
+          <ProjectCard
+            content={card}
+            imageAlign={imageAlign}
+            decorator={decorator}
+            bg={bg == "white" ? "gray" : "white"}
+          />
+        </li>
+      ))
+    }
+  </ul>
+</Section>

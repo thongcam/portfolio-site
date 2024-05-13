@@ -1,0 +1,271 @@
+---
+import NavbarLink from "./navbarLink/navbarLink.astro";
+import LogoSmall from "/public/images/logo-small.svg";
+import LogoLarge from "/public/images/logo-large.svg";
+import CloseMenu from "/public/icons/Close menu.svg";
+import OpenMenu from "/public/icons/Open menu.svg";
+import ExternalLinkIcon from "/public/icons/External link.svg";
+import TouchButton from "../touchButton.astro";
+import Image from "astro/components/Image.astro";
+import MaxWidth from "../maxWidth.astro";
+import { string } from "astro/zod";
+import type { NavLinkType } from "../../types/navLinkType";
+
+const MenuItems: NavLinkType[] = [
+  {
+    label: "Work",
+    target: "#work",
+    icon: null,
+  },
+  {
+    label: "About",
+    target: "#work",
+    icon: null,
+  },
+  {
+    label: "Contact",
+    target: "#work",
+    icon: null,
+  },
+  {
+    label: "Resume",
+    target: "#work",
+    icon: {
+      iconSrc: ExternalLinkIcon,
+      iconAlt: "External link icon",
+    },
+  },
+];
+---
+
+<div class="h-full bg-gray/80 sticky top-0 backdrop-blur z-50" id="navBar">
+  <MaxWidth
+    class="flex flex-row justify-between content-middle items-center py-6"
+  >
+    <a href="/" tabindex="0">
+      <Image
+        src={LogoSmall}
+        alt="Portfolio site Home"
+        height={50}
+        class={"md:hidden"}
+        loading={"eager"}
+      />
+      <Image
+        src={LogoLarge}
+        alt="Portfolio site Home"
+        height={50}
+        class:list={"hidden md:block"}
+        loading={"eager"}
+      />
+    </a>
+    <div
+      id="nav-right-wrapper"
+      class="transition-color duration-200 ease-in-out md:static md:block md:size-auto md:bg-none md:flex-initial"
+    >
+      <div
+        id="nav-links-and-buttons"
+        class="transition-transform duration-200 ease-in-out translate-x-[calc(100vw-100px)] md:transition-none md:translate-x-0 md:block md:size-auto md:bg-none md:gap-0 md:static md:shadow-none"
+        data-menu-opened="true"
+      >
+        <button
+          role="button"
+          aria-label="Close hamburger menu"
+          aria-disabled="true"
+          aria-expanded="false"
+          aria-controls="nav-list"
+          class="menu-button relative size-[50px] hidden place-items-center md:hidden active:bg-dark-gray rounded"
+          id="close-menu-button"
+        >
+          <Image
+            src={CloseMenu}
+            alt="Close hamburger menu"
+            height={25}
+            loading={"eager"}
+          />
+        </button>
+        <nav class="flex flex-col content-end w-full">
+          <ul
+            class="flex flex-col items-end divide-y-[0.5px] divide-pale-blue/50 border-y-[0.5px] border-pale-blue/50 text-lg hidden md:flex md:flex-row md:gap-12 md:text-base md:border-y-0 md:divide-y-0"
+            id="nav-list"
+          >
+            {
+              MenuItems.map((item) => (
+                <NavbarLink
+                  label={item.label}
+                  target={item.target}
+                  icon={item.icon}
+                />
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <button
+      role="button"
+      aria-label="Open hamburger menu"
+      aria-disabled="false"
+      aria-expanded="false"
+      aria-controls="nav-list"
+      class="menu-button relative size-[50px] grid place-items-center md:hidden active:bg-dark-gray rounded"
+      id="open-menu-button"
+    >
+      <Image
+        src={OpenMenu}
+        alt="Open hamburger menu"
+        height={25}
+        loading={"eager"}
+      />
+    </button>
+  </MaxWidth>
+</div>
+
+<script>
+  import { classicNameResolver } from "typescript";
+  import Headroom from "headroom.js";
+
+  let navBar = document.getElementById("navBar");
+  let headroom = new Headroom(navBar, {
+    offset: 100,
+    tolerance: 4,
+  });
+  headroom.init();
+
+  let toggleMenuButton = (menuButton: HTMLElement | null) => {
+    if (menuButton) {
+      menuButton.classList.toggle("grid");
+      menuButton.classList.toggle("hidden");
+      menuButton.setAttribute(
+        "aria-expanded",
+        `${(menuButton.getAttribute("aria-expanded") !== "true").toString()}`
+      );
+      menuButton.setAttribute(
+        "aria-disabled",
+        `${(menuButton.getAttribute("aria-disabled") !== "true").toString()}`
+      );
+    }
+  };
+
+  let toggleHeaderHideEffect = () => {
+    document
+      .getElementById("navBar")
+      ?.classList.toggle("max-md:!translate-y-0");
+  };
+
+  let toggleHamburgerMenu = () => {
+    const openMenuButton: HTMLElement | null =
+      document.getElementById("open-menu-button");
+    const closeMenuButton: HTMLElement | null =
+      document.getElementById("close-menu-button");
+    const navLinksAndButton: HTMLElement | null = document.getElementById(
+      "nav-links-and-buttons"
+    );
+    const navLinksAndButtonOpenedClasses = [
+      "absolute",
+      "right-0",
+      "h-full",
+      "w-[calc(100%-50px-calc(2*clamp(1.5rem,7vw,5rem)))]",
+      "shadow-md",
+      "bg-gray",
+      "py-6",
+      "px-[clamp(1.5rem,7vw,5rem)]",
+      "flex",
+      "flex-col",
+      "items-end",
+      "gap-6",
+    ];
+    const navRightWrapper: HTMLElement | null =
+      document.getElementById("nav-right-wrapper");
+    const navRightWrapperOpenedClasses = [
+      "fixed",
+      "h-[100vh]",
+      "w-full",
+      "top-0",
+      "right-0",
+    ];
+    const navList: HTMLElement | null = document.getElementById("nav-list");
+    if (navLinksAndButton != null) {
+      const menuOpened: string | undefined =
+        navLinksAndButton.dataset.menuOpened;
+      toggleHeaderHideEffect();
+      switch (menuOpened) {
+        case "true":
+          navRightWrapper?.classList.add(...navRightWrapperOpenedClasses);
+          navRightWrapper?.classList.add("bg-dark-blue/25");
+          navLinksAndButton?.classList.add(...navLinksAndButtonOpenedClasses);
+          navLinksAndButton?.classList.toggle(
+            "translate-x-[calc(100vw-100px)]"
+          );
+          navList?.classList.toggle("hidden");
+          toggleMenuButton(openMenuButton);
+          toggleMenuButton(closeMenuButton);
+          navLinksAndButton.dataset.menuOpened = "false";
+          break;
+        case "false":
+          navLinksAndButton?.classList.toggle(
+            "translate-x-[calc(100vw-100px)]"
+          );
+          navRightWrapper?.classList.remove("bg-dark-blue/25");
+          toggleMenuButton(openMenuButton);
+          setTimeout(() => {
+            navRightWrapper?.classList.remove(...navRightWrapperOpenedClasses);
+            navLinksAndButton?.classList.remove(
+              ...navLinksAndButtonOpenedClasses
+            );
+            toggleMenuButton(closeMenuButton);
+            navList?.classList.toggle("hidden");
+          }, 200);
+          navLinksAndButton.dataset.menuOpened = "true";
+          break;
+        default:
+          break;
+      }
+    } else return;
+  };
+  const menuButtons = document.querySelectorAll(".menu-button");
+
+  menuButtons.forEach((element) => {
+    element.addEventListener("click", (e) => {
+      toggleHamburgerMenu();
+    });
+  });
+  document
+    .getElementById("nav-right-wrapper")
+    ?.addEventListener("click", (e) => {
+      if (
+        document
+          .getElementById("close-menu-button")
+          ?.getAttribute("aria-expanded") == "true" &&
+        e.target == e.currentTarget
+      ) {
+        toggleHamburgerMenu();
+      }
+    });
+</script>
+
+<style>
+  button:after {
+    --extend-clickable-area-by: -10px;
+    content: "";
+    position: absolute;
+    top: var(--extend-clickable-area-by);
+    bottom: var(--extend-clickable-area-by);
+    left: var(--extend-clickable-area-by);
+    right: var(--extend-clickable-area-by);
+  }
+
+  /**
+ * Note: I have omitted any vendor-prefixes for clarity.
+ * Adding them is left as an exercise for the reader.
+ */
+  .headroom {
+    will-change: transform;
+    transition: transform 400ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  .headroom--pinned {
+    transform: translateY(0%);
+  }
+  .headroom--unpinned {
+    transform: translateY(-100%);
+  }
+</style>

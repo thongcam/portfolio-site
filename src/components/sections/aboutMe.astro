@@ -1,0 +1,57 @@
+---
+import Section from "../section.astro";
+import SectionHeader from "../headers/sectionHeader.astro";
+import Image from "astro/components/Image.astro";
+import AboutMeImage from "/public/images/about me.png";
+import ThreeRings from "../decorators/threeRings.astro";
+import StandOutCard from "../standOutCard.astro";
+import InternalLinkYellow from "/public/icons/Internal link yellow.svg";
+---
+
+<Section class={["py-10 md:py-25 bg-white overflow-x-hidden"]}>
+  <SectionHeader>
+    <span slot="numbering">3.</span>
+    <span slot="content">About me</span>
+  </SectionHeader>
+  <div class="flex flex-col relative pt-10 lg:pt-0">
+    <div
+      class:list={"w-full  relative  overflow-y-hidden md:overflow-y-visible"}
+    >
+      <div
+        class:list={"md:w-[88%] lg:w-[90%] xl:w-[95%] md:grid md:grid-cols-[1fr_45%] ld:grid-cols-[1fr_38%] xl:grid-cols-[1fr_45%] md:items-center md:justify-center"}
+      >
+        <StandOutCard
+          class="pb-10 z-10 md:flex md:flex-col md:justify-between md:w-full md:h-fit md:min-h-75 md:pr-12 xl:pr-15"
+        >
+          <p class="text-lg text-white pb-12">
+            As an Electrical Engineering student who codes websites, I pivoted
+            to product design because of my love for solving problems in a
+            human-centric way. With my diverse set of skills, I am eager to join
+            teams that builds better technology for humans.
+          </p>
+          <a
+            href="/"
+            tabindex="0"
+            class="text-lg text-yellow flex flex-row gap-3 underline decoration-1 underline-offset-4 hover:brightness-110 hover:gap-4 transition-[gap] duration-200 ease-in-out"
+          >
+            <span class="fit-content"> Read about my journey </span>
+            <Image
+              loading={"eager"}
+              src={InternalLinkYellow}
+              alt="Internal link"
+            />
+          </a>
+        </StandOutCard>
+        <Image
+          loading={"eager"}
+          src={AboutMeImage}
+          alt="Portrait of Thong Cam"
+          class:list={"z-10 w-full relative md:h-[100%] md:max-w-xl pt-5 md:pt-0 aspect-[4/5] md:scale-110 lg:scale-100 xl:scale-90 xl:-translate-x-[11%] md:-translate-x-[5%] object-cover "}
+        />
+      </div>
+      <ThreeRings
+        class="w-[80%] absolute left-[50%] -translate-x-[50%] z-0 top-[calc(100%-150vw)] md:w-[28vw] md:max-w-[23rem] md:min-w-[20rem] md:top-[50%] md:-translate-y-[50%] md:right-0 md:left-auto md:translate-x-0 transition-[top,_left] duration-300"
+      />
+    </div>
+  </div>
+</Section>

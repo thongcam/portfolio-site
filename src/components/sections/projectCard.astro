@@ -1,0 +1,95 @@
+---
+import Image from "astro/components/Image.astro";
+import Example from "/public/images/cases/example.png";
+import InternalLinkWhite from "/public/icons/Internal link white.svg";
+import ExternalLinkWhite from "/public/icons/External link white.svg";
+import EllipseDecorator from "/public/decorators/ellipseDecorator.svg";
+import RectangleDecorator from "/public/decorators/rectangleDecorator.svg";
+import type { CardContentType } from "../../types/cardContentType";
+
+interface Props {
+  content: CardContentType;
+  imageAlign: "left" | "right";
+  decorator: "ellipse" | "rectangle";
+  bg: "white" | "gray";
+}
+
+const { content, imageAlign, decorator, bg } = Astro.props;
+const {
+  title,
+  description,
+  subDescription,
+  linkText,
+  external,
+  gray,
+  image,
+  ellipseDecorator,
+} = content;
+---
+
+<div
+  class:list={[
+    "flex flex-col gap-5 lg:grid lg:grid-rows-1 lg:gap-10 w-full",
+    imageAlign == "right" ? "lg:grid-cols-[37%_1fr]" : "lg:grid-cols-[1fr_37%]",
+  ]}
+>
+  <Image
+    src={Example}
+    alt={"Example"}
+    class:list={[
+      "object-cover w-full h-full",
+      imageAlign == "right" ? "lg:order-1" : "lg:order-0",
+    ]}
+    width={0}
+    height={0}
+  />
+  <div
+    class:list={[
+      "relative w-full px-5 py-4 md:px-10 md:py-9 overflow-hidden",
+      bg == "gray" ? "bg-gray" : "bg-white",
+    ]}
+  >
+    <div class="z-10 h-full">
+      <div class="flex flex-col justify-between min-h-[70%]">
+        <div>
+          <h3 class="pb-5 font-display text-2xl font-bold">
+            {title}
+          </h3>
+          <p class="">{description}</p>
+          {
+            subDescription ? (
+              <p class="italic text-pale-blue/80 pt-4">{subDescription}</p>
+            ) : null
+          }
+        </div>
+        <a
+          href="/"
+          tabindex="0"
+          target={external ? "_blank" : ""}
+          class="w-fit mt-8 p-5 flex flex-row gap-2 items-center bg-dark-blue hover:shadow-lg hover:bg-dark-blue-hover focus:shadow-lg focus:bg-dark-blue-hover focus-visible:outline-dark-cyan focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-95 target:scale-95 transition-scale ease-in-out duration-200 hover:cursor-pointer"
+          ><span class="text-white">
+            {linkText}
+          </span>
+
+          <Image
+            src={external ? ExternalLinkWhite : InternalLinkWhite}
+            alt={external ? "External link" : "Internal link"}
+            class:list={"h-[1rem]"}
+            loading={"eager"}
+          />
+        </a>
+      </div>
+    </div>
+    <Image
+      loading={"eager"}
+      src={decorator == "ellipse" ? EllipseDecorator : RectangleDecorator}
+      alt="Ellipse decorator"
+      class:list={[
+        "absolute z-0 opacity-40 w-[45%] min-w-[10rem] max-w-[13rem] -bottom-[min(30%,_4rem)] -right-[10%]",
+        decorator == "ellipse"
+          ? "w-[45%] min-w-[10rem] max-w-[13rem] -bottom-[min(30%,_5rem)] -right-[10%]"
+          : "w-[55%] min-w-[10rem] max-w-[14rem] -bottom-[min(30%,_4.5rem)] -right-[15%]",
+      ]}
+    />
+  </div>
+</div>

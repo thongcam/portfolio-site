@@ -1,0 +1,42 @@
+---
+import Section from "../section.astro";
+import DisplayHeader from "../headers/displayHeader.astro";
+import Image from "astro/components/Image.astro";
+import HeroImage from "/public/images/hero-image.png";
+import ThreeRings from "../decorators/threeRings.astro";
+import StandOutCard from "../standOutCard.astro";
+---
+
+<Section class={["pt-10 pb-15 md:pb-20 bg-gray overflow-x-hidden relative"]}>
+  <div class="flex flex-col relative">
+    <DisplayHeader class={"pb-10"}
+      >I design and code to solve human problems.</DisplayHeader
+    >
+    <div
+      class:list={"w-full relative md:grid md:grid-cols-[37%_1fr] md:gap-10"}
+    >
+      <Image
+        loading={"eager"}
+        src={HeroImage}
+        alt="Portrait of Thong Cam"
+        class:list={"z-10 w-full relative md:h-[100%] md:max-w-xl pb-5 aspect-[4/5] object-cover "}
+      />
+      <StandOutCard
+        class="z-10 md:flex md:flex-col md:justify-between md:w-full md:h-fit md:min-h-[20rem] md:translate-y-10"
+      >
+        <p class="text-lg text-white pb-12">
+          I’m Thong Cam, an aspiring product designer with a background in
+          engineering. Currently pursuing a Master’s in HCI in the Netherlands
+          and Finland.
+        </p>
+        <p class="text-base text-yellow">
+          User Research • Product Design • Full-stack Development • Electronic
+          Prototyping • Entrepreneurship • More
+        </p>
+      </StandOutCard>
+      <ThreeRings
+        class="w-[80%] absolute left-[50%] -translate-x-[50%] z-0 top-[min(55vw,24rem)] md:w-[22vw] md:min-w-[15rem] md:top-[-17%] md:right-[-9%] lg:top-[-18%] 2xl:top-[-24%] 2xl:right-[-10%] md:left-auto md:translate-x-0 transition-[top,_left] duration-300"
+      />
+    </div>
+  </div>
+</Section>

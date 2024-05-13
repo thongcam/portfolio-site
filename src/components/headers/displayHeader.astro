@@ -1,0 +1,42 @@
+---
+interface Props {
+  class: string;
+}
+const { class: className } = Astro.props;
+---
+
+<h1
+  class:list={[
+    "display-header text-6xl leading-tight md:leading-snug font-display font-bold max-w-4xl text-balance md:text-wrap",
+    className,
+  ]}
+>
+  <span
+    class="decoration-none bg-gradient-to-r from-yellow/50 to-yellow/50 bg-[-10%_82%] bg-[length:0%_0.8rem] bg-no-repeat"
+    ><slot /></span
+  >
+</h1>
+
+<script>
+  let options = {
+    root: null,
+    rootMargin: "0px 0px 10% 0px",
+    threshold: 1.0,
+  };
+
+  let addAnimation = (
+    entries: IntersectionObserverEntry[],
+    observer: IntersectionObserver
+  ) => {
+    entries.forEach((entry) => {
+      if (entry.intersectionRatio >= 1) {
+        entry.target.classList.add("animate-underlining");
+      }
+    });
+  };
+
+  let observer = new IntersectionObserver(addAnimation, options);
+  document?.querySelectorAll(".display-header span")?.forEach((i) => {
+    observer.observe(i);
+  });
+</script>

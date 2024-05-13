@@ -1,0 +1,32 @@
+---
+interface Props {
+  imgsrc: ImageMetadata;
+  alttext: string;
+  buttonlabel: string;
+}
+
+import Image from "astro/components/Image.astro";
+const { imgsrc, buttonlabel, alttext } = Astro.props;
+---
+
+<button
+  role="button"
+  aria-label={buttonlabel}
+  aria-disabled="false"
+  aria-pressed="false"
+  class="relative"
+>
+  <Image src={imgsrc} alt={alttext} height={25} />
+</button>
+
+<style>
+  button:after {
+    --extend-clickable-area-by: -15px;
+    content: "";
+    position: absolute;
+    top: var(--extend-clickable-area-by);
+    bottom: var(--extend-clickable-area-by);
+    left: var(--extend-clickable-area-by);
+    right: var(--extend-clickable-area-by);
+  }
+</style>

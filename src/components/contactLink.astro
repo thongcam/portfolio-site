@@ -1,0 +1,17 @@
+---
+import ExternalLink from "/public/icons/External link.svg";
+import Image from "astro/components/Image.astro";
+const { href } = Astro.props;
+---
+
+<li class="">
+  <a
+    href={href}
+    tabindex="0"
+    target="_blank"
+    class="text-lg underline hover:opacity-80 flex flex-row gap-2 items-center"
+  >
+    <slot />
+    <Image src={ExternalLink} alt="External link" class:list={"h-[1rem]"} />
+  </a>
+</li>
