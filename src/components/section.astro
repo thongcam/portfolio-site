@@ -2,11 +2,12 @@
 import MaxWidth from "./maxWidth.astro";
 interface Props {
   class: string[];
+  id: string;
 }
-const { class: className } = Astro.props;
+const { class: className, id } = Astro.props;
 ---
 
-<section class:list={[className]}>
+<section class:list={[className]} id={id}>
   <MaxWidth class="">
     <slot />
   </MaxWidth>

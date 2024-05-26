@@ -6,9 +6,12 @@ import AboutMeImage from "/public/images/about me.png";
 import ThreeRings from "../decorators/threeRings.astro";
 import StandOutCard from "../standOutCard.astro";
 import InternalLinkYellow from "/public/icons/Internal link yellow.svg";
+import HomePageContent from "../../content/homepage.json";
+
+const aboutMeContent = HomePageContent.aboutMe;
 ---
 
-<Section class={["py-10 md:py-25 bg-white overflow-x-hidden"]}>
+<Section class={["py-10 md:py-25 bg-white overflow-x-hidden"]} id="about">
   <SectionHeader>
     <span slot="numbering">3.</span>
     <span slot="content">About me</span>
@@ -23,18 +26,16 @@ import InternalLinkYellow from "/public/icons/Internal link yellow.svg";
         <StandOutCard
           class="pb-10 z-10 md:flex md:flex-col md:justify-between md:w-full md:h-fit md:min-h-75 md:pr-12 xl:pr-15"
         >
-          <p class="text-lg text-white pb-12">
-            As an Electrical Engineering student who codes websites, I pivoted
-            to product design because of my love for solving problems in a
-            human-centric way. With my diverse set of skills, I am eager to join
-            teams that builds better technology for humans.
+          <p class="text-lg text-white pb-12 text-pretty">
+            {aboutMeContent.description}
           </p>
           <a
-            href="/"
+            href={aboutMeContent.aboutUrl}
+            target="_blank"
             tabindex="0"
             class="text-lg text-yellow flex flex-row gap-3 underline decoration-1 underline-offset-4 hover:brightness-110 hover:gap-4 transition-[gap] duration-200 ease-in-out"
           >
-            <span class="fit-content"> Read about my journey </span>
+            <span class="fit-content">{aboutMeContent.buttonText}</span>
             <Image
               loading={"eager"}
               src={InternalLinkYellow}
@@ -46,7 +47,7 @@ import InternalLinkYellow from "/public/icons/Internal link yellow.svg";
           loading={"eager"}
           src={AboutMeImage}
           alt="Portrait of Thong Cam"
-          class:list={"z-10 w-full relative md:h-[100%] md:max-w-xl pt-5 md:pt-0 aspect-[4/5] md:scale-110 lg:scale-100 xl:scale-90 xl:-translate-x-[11%] md:-translate-x-[5%] object-cover "}
+          class:list={"shadow z-10 w-full relative md:h-[100%] md:max-w-xl pt-5 md:pt-0 aspect-[4/5] md:scale-110 lg:scale-100 xl:scale-90 xl:-translate-x-[11%] md:-translate-x-[5%] object-cover "}
         />
       </div>
       <ThreeRings

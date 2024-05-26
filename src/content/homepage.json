@@ -1,0 +1,124 @@
+{
+    "title": "Thong Cam | Portfolio site",
+    "hero": {
+        "mainHeader": "I design and code to solve human problems.",
+        "standoutCard": {
+            "mainContent": "I’m Thong Cam, an aspiring product designer with a background in engineering. Currently pursuing a Master’s in HCI in the Netherlands and Finland.",
+            "tagline": "User Research • Product Design • Full-stack Development • Electronic Prototyping • Entrepreneurship • More"
+        }
+    },
+    "cardSections": [
+        {
+            "id": "case-studies",
+            "numbering": "1.",
+            "title": "Work / Case studies",
+            "subheading": null,
+            "bg": "white",
+            "imageAlign": "right",
+            "decorator": "ellipse",
+            "content": [
+                {
+                    "title": "How to support people in starting a UI/UX design career",
+                    "description": "In-depth user research project on novice UI/UX designers and how an online platform may support them.",
+                    "subDescription": "User research",
+                    "linkText": "Read case",
+                    "external": true,
+                    "url": "https://thongcam.notion.site/How-to-support-people-in-starting-a-UI-UX-design-career-98332b45aa49402784cab9baafa87ed4",
+                    "image": {
+                        "src": "/src/assets/uiux design support thumbnail.png",
+                        "alt": "Example"
+                    }
+                },
+                {
+                    "title": "Visitor tracker for Dipoli Exhibition Space",
+                    "description": "Computer vision-powered application for tracking exhibition visitors. Designed iteratively with user research and testing.",
+                    "subDescription": "User Testing, Design Thinking, Development",
+                    "linkText": "Read case",
+                    "external": true,
+                    "url": "https://thongcam.notion.site/Visitor-tracker-for-Dipoli-exhibition-space-93d6018b9bb44a4f837d68b8ffd71024",
+                    "image": {
+                        "src": "/src/assets/dipoli visitor tracker thumbnail.png",
+                        "alt": "Example"
+                    }
+                },
+                {
+                    "title": "Redesigning MyCourses dashboard UI",
+                    "description": "Improve Aalto’s learning management system UI with users’ tasks in mind.",
+                    "subDescription": "UI Design",
+                    "linkText": "Read case",
+                    "external": true,
+                    "url": "https://thongcam.notion.site/Redesigning-MyCourses-dashboard-UI-5e5d83e98d2443ad8dc8f62e3316516b",
+                    "image": {
+                        "src": "/src/assets/mycourses redesign thumbnail.png",
+                        "alt": "Example"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "websites",
+            "numbering": "2.",
+            "title": "Work / Websites",
+            "subheading": "I also worked as a web developer for these websites:",
+            "bg": "gray",
+            "imageAlign": "left",
+            "decorator": "rectangle",
+            "content": [
+                {
+                    "title": "Design Bits",
+                    "description": "An online course about the basics of design, offered by Aalto University. I implemented a Finnish version of the course and revamped the front-end according to new designs.",
+                    "subDescription": null,
+                    "linkText": "Visit website",
+                    "url": "https://designbits.aalto.fi/en/",
+                    "external": true,
+                    "image": {
+                        "src": "/src/assets/designbits thumbnail.png",
+                        "alt": "Example"
+                    }
+                },
+                {
+                    "title": "Online Teaching Digital Toolbox",
+                    "description": "An repository of teaching practices for joint online courses by <a href='https://www.unite-university.eu' target='_blank' style='text-decoration:underline;color:#21324c'>the Unite! university alliance</a>. I developed the entire site from an initial desktop design.",
+                    "subDescription": null,
+                    "linkText": "Visit website",
+                    "url": "https://learningtoolbox.aalto.fi/learningtoolbox/recommendations-and-pre-loved-practices/",
+                    "external": true,
+                    "image": {
+                        "src": "/src/assets/jprov thumbnail.png",
+                        "alt": "Example"
+                    }
+                }
+            ]
+        }
+    ],
+    "aboutMe": {
+        "description": "As an Electrical Engineering student who codes websites, I pivoted to product design because of my love for solving problems in a human-centric way. With my diverse set of skills, I am eager to join teams that builds better technology for humans.",
+        "buttonText": "Read about my journey",
+        "aboutUrl": "https://thongcam.notion.site/About-me-c6e7dc61203b46168df645f75b3e68f7"
+    },
+    "contact": {
+        "header": "Let's work together!",
+        "contactLinks": [
+            {
+                "label": "LinkedIn",
+                "url": "https://www.linkedin.com/in/thongcam/"
+            },
+            {
+                "label": "GitHub",
+                "url": "https://github.com/thongcam"
+            },
+            {
+                "label": "thongcam02@gmail.com",
+                "url": "mailto:thongcam02@gmail.com"
+            },
+            {
+                "label": "Resume",
+                "url": "https://drive.google.com/file/d/11pAKgNpiJkdp9ilo2bA6ekaer8H2-6UZ/view?usp=sharing"
+            }
+        ]
+    },
+    "footer": {
+        "mainline": "Thong Cam @ 2024",
+        "tagline": "Designed and built with a lot of Pho"
+    }
+}

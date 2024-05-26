@@ -3,6 +3,9 @@ import MaxWidth from "./maxWidth.astro";
 import Image from "astro/components/Image.astro";
 import HalfRing from "/public/decorators/half ring.svg";
 import LogoSmall from "/public/images/logo-small.svg";
+import HomePageContent from "../content/homepage.json";
+
+const footerContent = HomePageContent.footer;
 ---
 
 <footer class="relative">
@@ -17,9 +20,7 @@ import LogoSmall from "/public/images/logo-small.svg";
     </div>
   </div>
   <MaxWidth class="pt-[5.5rem] md:pt-16 pb-12 flex flex-col gap-5">
-    <span class="text-lg">Thong Cam @ 2024</span>
-    <span class="text-sm text-pale-blue/80"
-      >Designed and built with a lot of pho</span
-    >
+    <span class="text-lg">{footerContent.mainline}</span>
+    <span class="text-sm text-pale-blue/80">{footerContent.tagline}</span>
   </MaxWidth>
 </footer>

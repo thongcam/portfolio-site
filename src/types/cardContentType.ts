@@ -4,11 +4,10 @@ export interface CardContentType {
     subDescription: string | null;
     linkText: string;
     external: boolean;
-    gray: boolean;
+    url: string;
     image: {
-      source: string;
+      src: string;
       alt: string;
-      alignRight: boolean;
     };
-    ellipseDecorator: boolean;
+
   }

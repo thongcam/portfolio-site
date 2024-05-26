@@ -8,18 +8,21 @@ const { label, target, icon } = Astro.props;
 <li
   class="flex-initial w-full flex flex-row content-center items-center gap-3 md:gap-2 hover:underline hover:decoration-1 hover:decoration-dark-blue hover:text-dark-blue/90 underline-offset-4 md:w-auto"
 >
-  <a href={target} tabindex="0" class="flex w-full ps-3 py-6 md:px-0 md:py-0"
-    >{label}</a
-  >
+  <a
+    href={target}
+    tabindex="0"
+    class="flex flex-row flex-wrap w-full ps-3 py-6 md:px-0 md:py-0 items-center justify-between md:gap-2"
+    >{label}
 
-  {
-    icon != null && (
-      <Image
-        src={icon.iconSrc}
-        alt={icon.iconAlt}
-        class:list={"h-[1rem] md:h-[0.8rem] w-auto pe-3 md:pe-0"}
-        loading={"eager"}
-      />
-    )
-  }
+    {
+      icon != null && (
+        <Image
+          src={icon.iconSrc}
+          alt={icon.iconAlt}
+          class:list={"h-[1rem] md:h-[0.8rem] w-auto pe-3 md:pe-0"}
+          loading={"eager"}
+        />
+      )
+    }
+  </a>
 </li>

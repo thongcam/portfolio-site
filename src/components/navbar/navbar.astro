@@ -14,22 +14,23 @@ import type { NavLinkType } from "../../types/navLinkType";
 const MenuItems: NavLinkType[] = [
   {
     label: "Work",
-    target: "#work",
+    target: "#case-studies",
     icon: null,
   },
   {
     label: "About",
-    target: "#work",
+    target: "#about",
     icon: null,
   },
   {
     label: "Contact",
-    target: "#work",
+    target: "#contact",
     icon: null,
   },
   {
     label: "Resume",
-    target: "#work",
+    target:
+      "https://drive.google.com/file/d/11pAKgNpiJkdp9ilo2bA6ekaer8H2-6UZ/view?usp=sharing",
     icon: {
       iconSrc: ExternalLinkIcon,
       iconAlt: "External link icon",
@@ -85,7 +86,7 @@ const MenuItems: NavLinkType[] = [
         </button>
         <nav class="flex flex-col content-end w-full">
           <ul
-            class="flex flex-col items-end divide-y-[0.5px] divide-pale-blue/50 border-y-[0.5px] border-pale-blue/50 text-lg hidden md:flex md:flex-row md:gap-12 md:text-base md:border-y-0 md:divide-y-0"
+            class="flex flex-col items-end divide-y-[0.5px] divide-pale-blue/50 border-y-[0.5px] border-pale-blue/50 text-lg max-md:hidden md:flex md:flex-row md:gap-12 md:text-base md:border-y-0 md:divide-y-0"
             id="nav-list"
           >
             {
@@ -196,7 +197,7 @@ const MenuItems: NavLinkType[] = [
           navLinksAndButton?.classList.toggle(
             "translate-x-[calc(100vw-100px)]"
           );
-          navList?.classList.toggle("hidden");
+          navList?.classList.toggle("max-md:hidden");
           toggleMenuButton(openMenuButton);
           toggleMenuButton(closeMenuButton);
           navLinksAndButton.dataset.menuOpened = "false";
@@ -213,7 +214,7 @@ const MenuItems: NavLinkType[] = [
               ...navLinksAndButtonOpenedClasses
             );
             toggleMenuButton(closeMenuButton);
-            navList?.classList.toggle("hidden");
+            navList?.classList.toggle("max-md:hidden");
           }, 200);
           navLinksAndButton.dataset.menuOpened = "true";
           break;

@@ -11,162 +11,47 @@ import DisplayHeader from "../components/headers/displayHeader.astro";
 import Section from "../components/section.astro";
 import ContactLink from "../components/contactLink.astro";
 import Footer from "../components/footer.astro";
+import HomepageContent from "../content/homepage.json";
 
-const { class: className } = Astro.props;
-const caseStudies: CardContentType[] = [
-  {
-    title: "How to support people in starting a UI/UX design career",
-    description:
-      "In-depth user research project on novice UI/UX designers and how an online platform may support them.",
-    subDescription: "User research",
-    linkText: "Read case",
-    external: false,
-    gray: true,
-    image: {
-      source: "public/images/cases/uiux support/thumbnail.png",
-      alt: "Example",
-      alignRight: true,
-    },
-    ellipseDecorator: true,
-  },
-  {
-    title: "Visitor tracker for Dipoli Exhibition Space",
-    description:
-      "Computer vision-powered application for tracking exhibition visitors. Designed iteratively with user research and testing.",
-    subDescription: "User Testing, Design Thinking, Development",
-    linkText: "Read case",
-    external: false,
-    gray: true,
-    image: {
-      source: "public/images/cases/visitor tracker/example.png",
-      alt: "Example",
-      alignRight: true,
-    },
-    ellipseDecorator: true,
-  },
-  {
-    title: "Redesigning MyCourses dashboard UI",
-    description:
-      "Improve Aalto’s learning management system UI with users’ tasks in mind.",
-    subDescription: "UI Design",
-    linkText: "Read case",
-    external: false,
-    gray: true,
-    image: {
-      source: "public/images/cases/mycourses/example.png",
-      alt: "Example",
-      alignRight: true,
-    },
-    ellipseDecorator: true,
-  },
-];
+const cardSections = HomepageContent.cardSections;
 
-const websites: CardContentType[] = [
-  {
-    title: "How to support people in starting a UI/UX design career",
-    description:
-      "In-depth user research project on novice UI/UX designers and how an online platform may support them.",
-    subDescription: null,
-    linkText: "Read case",
-    external: true,
-    gray: false,
-    image: {
-      source: "public/images/cases/uiux support/thumbnail.png",
-      alt: "Example",
-      alignRight: false,
-    },
-    ellipseDecorator: false,
-  },
-  {
-    title: "Visitor tracker for Dipoli Exhibition Space",
-    description:
-      "Computer vision-powered application for tracking exhibition visitors. Designed iteratively with user research and testing.",
-    subDescription: null,
-    linkText: "Read case",
-    external: true,
-    gray: false,
-    image: {
-      source: "public/images/cases/visitor tracker/example.png",
-      alt: "Example",
-      alignRight: false,
-    },
-    ellipseDecorator: false,
-  },
-  {
-    title: "Redesigning MyCourses dashboard UI",
-    description:
-      "Improve Aalto’s learning management system UI with users’ tasks in mind.",
-    subDescription: null,
-    linkText: "Read case",
-    external: true,
-    gray: false,
-    image: {
-      source: "public/images/cases/mycourses/example.png",
-      alt: "Example",
-      alignRight: false,
-    },
-    ellipseDecorator: false,
-  },
-];
-
-const contactLinks: ContactLinkType[] = [
-  {
-    label: "LinkedIn",
-    url: "https://www.linkedin.com/in/thongcam/",
-  },
-  {
-    label: "GitHub",
-    url: "https://github.com/thongcam",
-  },
-  {
-    label: "thongcam02@gmail.com",
-    url: "mailto:thongcam02@gmail.com",
-  },
-  {
-    label: "Resume",
-    url: "https://drive.google.com/file/d/11pAKgNpiJkdp9ilo2bA6ekaer8H2-6UZ/view?usp=sharing",
-  },
-];
+const contactLinks: ContactLinkType[] = HomepageContent.contact.contactLinks;
 ---
 
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/images/logo-small.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Thong Cam | Portfolio site</title>
+    <title>{HomepageContent.title}</title>
   </head>
   <body class="text-dark-blue font-body bg-gray">
     <Navbar />
     <Hero />
-    <CardSection
-      class=""
-      bg="white"
-      imageAlign="right"
-      decorator="ellipse"
-      content={caseStudies}
-    >
-      <span slot="numbering">1.</span>
-      <span slot="content">Work / Case studies</span>
-    </CardSection>
-    <CardSection
-      class=""
-      bg="gray"
-      imageAlign="left"
-      decorator="rectangle"
-      content={websites}
-    >
-      <span slot="numbering">2.</span>
-      <span slot="content">Work / Websites</span>
-      <span slot="subheading"
-        >I also helped built 2 websites as a freelance web developer.</span
-      >
-    </CardSection>
+    {
+      cardSections.map((cardSection) => {
+        const content: CardContentType[] = cardSection.content;
+        return (
+          <CardSection
+            bg={cardSection.bg}
+            class=""
+            imageAlign={cardSection.imageAlign}
+            decorator={cardSection.decorator}
+            subheading={cardSection.subheading}
+            content={content}
+            id={cardSection.id}
+          >
+            <span slot="numbering">{cardSection.numbering}</span>
+            <span slot="content">{cardSection.title}</span>
+          </CardSection>
+        );
+      })
+    }
     <AboutMe />
-    <Section class={["bg-white pt-10 md:pt-15 pb-20"]}>
+    <Section class={["bg-white pt-10 md:pt-15 pb-20"]} id="contact">
       <div>
-        <DisplayHeader class="">Let's work together!</DisplayHeader>
+        <DisplayHeader class="">{HomepageContent.contact.header}</DisplayHeader>
         <ul class="pt-15 flex flex-row flex-wrap gap-y-10 gap-x-30">
           {
             contactLinks.map((link) => (
