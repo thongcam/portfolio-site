@@ -9,9 +9,14 @@ const { href } = Astro.props;
     href={href}
     tabindex="0"
     target="_blank"
-    class="text-lg underline hover:opacity-80 flex flex-row gap-2 items-center"
+    class="relative text-lg underline hover:opacity-80 flex flex-row gap-2 items-center md:gap-2 md:after:absolute md:after:inset-[-20px]"
   >
     <slot />
-    <Image src={ExternalLink} alt="External link" class:list={"h-[1rem]"} />
+    <Image
+      src={ExternalLink}
+      alt="External link"
+      class:list={"h-[1rem]"}
+      loading={"eager"}
+    />
   </a>
 </li>
