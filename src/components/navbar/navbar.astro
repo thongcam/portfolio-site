@@ -230,6 +230,20 @@ const MenuItems: NavLinkType[] = [
       toggleHamburgerMenu();
     });
   });
+
+  const menuLinks = document.querySelectorAll("#nav-links-and-buttons a");
+  menuLinks.forEach((element) => {
+    element.addEventListener("click", (e) => {
+      if (
+        document
+          .getElementById("close-menu-button")
+          ?.getAttribute("aria-expanded") === "true"
+      ) {
+        toggleHamburgerMenu();
+      }
+    });
+  });
+
   document
     .getElementById("nav-right-wrapper")
     ?.addEventListener("click", (e) => {
