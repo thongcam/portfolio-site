@@ -1,27 +1,197 @@
 ---
 interface Props {
   class: string;
+  enableAnimation: boolean;
+  fromCorner: boolean;
 }
-const { class: className } = Astro.props;
+const { class: className, enableAnimation, fromCorner } = Astro.props;
 ---
 
 <div class:list={className}>
-  <svg
-    width="auto"
-    height="auto"
-    viewBox="0 0 421 422"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    class:list="mx-auto"
-  >
-    <path
-      d="M210.5 31.2197C309.635 31.2197 390 111.585 390 210.72C390 309.855 309.635 390.22 210.5 390.22C111.365 390.22 31.0002 309.855 31.0002 210.72C31.0002 111.585 111.365 31.2197 210.5 31.2197ZM210.5 359.09C292.443 359.09 358.87 292.662 358.87 210.72C358.87 128.777 292.443 62.3495 210.5 62.3495C128.558 62.3495 62.13 128.777 62.13 210.72C62.13 292.662 128.558 359.09 210.5 359.09Z"
-      fill="#198F8A"></path>
-    <path
-      d="M210.5 0.219663C326.756 0.219678 421 94.4638 421 210.72C421 326.976 326.756 421.22 210.5 421.22C94.2441 421.22 4.28762e-05 326.976 5.81213e-05 210.72C7.33664e-05 94.4637 94.2441 0.219647 210.5 0.219663ZM210.5 390.072C309.554 390.072 389.852 309.773 389.852 210.72C389.852 111.666 309.554 31.3673 210.5 31.3673C111.446 31.3673 31.1477 111.666 31.1477 210.72C31.1477 309.773 111.446 390.072 210.5 390.072Z"
-      fill="#34BAB4"></path>
-    <path
-      d="M210 62.2197C292.291 62.2197 359 128.705 359 210.72C359 292.734 292.291 359.22 210 359.22C127.71 359.22 61.0002 292.734 61.0002 210.72C61.0002 128.705 127.71 62.2197 210 62.2197ZM210 335.162C278.959 335.162 334.862 279.447 334.862 210.72C334.862 141.992 278.959 86.2772 210 86.2772C141.041 86.2772 85.1387 141.992 85.1387 210.72C85.1387 279.447 141.041 335.162 210 335.162Z"
-      fill="#293F5F"></path>
-  </svg>
+  {
+    enableAnimation ? (
+      <svg
+        width="auto"
+        height="auto"
+        viewBox="0 0 421 421"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class:list={[
+          "threeCircles md:translate-x-[-50px]",
+          fromCorner && " md:translate-y-[80px] ",
+        ]}
+      >
+        <circle
+          cx="210"
+          cy="210"
+          r="45"
+          stroke="#34BAB4"
+          stroke-width="50"
+          data-animation-class="ringThreeAnimation"
+          class="ringThree"
+        />
+        <circle
+          cx="210"
+          cy="210"
+          r="55"
+          stroke="#198F8A"
+          stroke-width="35"
+          data-animation-class="ringTwoAnimation"
+          class="ringTwo"
+        />
+        <circle
+          cx="210"
+          cy="210"
+          r="70"
+          stroke="#293F5F"
+          stroke-width="35"
+          data-animation-class="ringOneAnimation"
+          class="ringOne"
+        />
+      </svg>
+    ) : (
+      <svg
+        width="auto"
+        height="auto"
+        viewBox="0 0 421 421"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class={""}
+      >
+        <circle
+          cx="210"
+          cy="210"
+          r="195"
+          stroke="#34BAB4"
+          stroke-width="32"
+          data-animation-class="ringThreeAnimation"
+          class="ringThree"
+        />
+        <circle
+          cx="210"
+          cy="210"
+          r="164.5"
+          stroke="#198F8A"
+          stroke-width="31"
+          data-animation-class="ringTwoAnimation"
+          class="ringTwo"
+        />
+        <circle
+          cx="210"
+          cy="210"
+          r="136.5"
+          stroke="#293F5F"
+          stroke-width="30"
+          data-animation-class="ringOneAnimation"
+          class="ringOne"
+        />
+      </svg>
+    )
+  }
 </div>
+
+<script>
+  let options = {
+    root: null,
+    rootMargin: "0px 0px 25% 0px",
+    threshold: 1.0,
+  };
+
+  let addAnimation = (
+    entries: IntersectionObserverEntry[],
+    observer: IntersectionObserver
+  ) => {
+    entries.forEach((entry) => {
+      if (entry.intersectionRatio >= 1) {
+        entry.target.classList.add("threeCirclesAnimation");
+        [...entry.target.children].forEach((c) => {
+          c.classList.add(c.getAttribute("data-animation-class") || "");
+        });
+      }
+    });
+  };
+
+  let observer = new IntersectionObserver(addAnimation, options);
+  document?.querySelectorAll(".threeCircles")?.forEach((i) => {
+    observer.observe(i);
+  });
+</script>
+
+<style>
+  @media (min-width: 741px) {
+    .threeCirclesAnimation {
+      animation: threeCircles 500ms 200ms cubic-bezier(0, 0, 0.2, 1) forwards;
+      transform-origin: center;
+    }
+  }
+
+  .ringOneAnimation {
+    animation: ringOne 1000ms 200ms cubic-bezier(0, 0, 0.2, 1) forwards;
+    /* r: 70px;
+    stroke-width: 50; */
+    transform-origin: center;
+  }
+
+  .ringTwoAnimation {
+    animation: ringTwo 1000ms 300ms cubic-bezier(0, 0, 0.2, 1) forwards;
+    /* r: 60px;
+    stroke-width: 60; */
+    transform-origin: center;
+  }
+
+  .ringThreeAnimation {
+    animation: ringThree 1000ms 400ms cubic-bezier(0, 0, 0.2, 1) forwards;
+    /* r: 50px;
+    stroke-width: 70; */
+    transform-origin: center;
+  }
+
+  @keyframes threeCircles {
+    from {
+      /* transform: translate(-50px, 80px); */
+    }
+    to {
+      transform: translate(0);
+    }
+  }
+
+  @keyframes ringOne {
+    from {
+      r: 70px;
+
+      stroke-width: 35;
+    }
+    to {
+      r: 136.5px;
+      transform: translate(0);
+
+      stroke-width: 25;
+    }
+  }
+
+  @keyframes ringTwo {
+    from {
+      r: 55px;
+
+      stroke-width: 35;
+    }
+    to {
+      r: 164.5px;
+      transform: translate(0);
+      stroke-width: 31;
+    }
+  }
+
+  @keyframes ringThree {
+    from {
+      r: 45px;
+      stroke-width: 50;
+    }
+    to {
+      r: 195px;
+      transform: translate(0);
+
+      stroke-width: 32;
+    }
+  }
+</style>
