@@ -36,11 +36,14 @@ const aboutMeContent = HomePageContent.aboutMe;
             class="text-lg text-yellow flex flex-row gap-3 underline decoration-1 underline-offset-4 hover:brightness-110 hover:gap-4 transition-[gap] duration-200 ease-in-out"
           >
             <span class="fit-content">{aboutMeContent.buttonText}</span>
-            <Image
-              loading={"eager"}
-              src={InternalLinkYellow}
-              alt="Internal link"
-            />
+            <div class="flex flex-col justify-center">
+              <Image
+                loading={"eager"}
+                src={InternalLinkYellow}
+                alt="Internal link"
+                class:list={"aspect-auto"}
+              />
+            </div>
           </a>
         </StandOutCard>
         <Image
