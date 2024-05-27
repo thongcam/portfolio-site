@@ -11,12 +11,23 @@ const footerContent = HomePageContent.footer;
 <footer class="relative">
   <div class="bg-white md:pt-20">
     <div class="relative w-[clamp(15rem,30vw,18em)] mx-auto">
-      <Image src={HalfRing} alt="" class:list={"asbolute mx-auto bottom-0"} />
       <Image
-        src={LogoSmall}
+        src={HalfRing}
         alt=""
-        class:list={"absolute left-[50%] -translate-x-[50%] translate-y-[50%] bottom-0 w-[50%] "}
+        class:list={"asbolute mx-auto bottom-0"}
+        loading={"eager"}
       />
+      <div
+        class="absolute left-[50%] -translate-x-[50%] translate-y-[50%] bottom-0 w-[50%]"
+      >
+        <Image
+          src={LogoSmall}
+          alt=""
+          class:list={"w-full transition-transform ease-out duration-75"}
+          loading={"eager"}
+          id="rotating-logo"
+        />
+      </div>
     </div>
   </div>
   <MaxWidth class="pt-[5.5rem] md:pt-16 pb-12 flex flex-col gap-5">
@@ -24,3 +35,76 @@ const footerContent = HomePageContent.footer;
     <span class="text-sm text-pale-blue/80">{footerContent.tagline}</span>
   </MaxWidth>
 </footer>
+
+<script>
+  const rotatingLogo = document.getElementById("rotating-logo");
+
+  const toDeg = (radian: number) => (radian * 180) / Math.PI;
+
+  const calculateAngleToMouse = (distanceX: number, distanceY: number) => {
+    const res =
+      -55 +
+      (distanceY >= 0
+        ? 90 + toDeg(Math.atan(Math.abs(distanceY) / Math.abs(distanceX)))
+        : toDeg(Math.atan(Math.abs(distanceX) / Math.abs(distanceY))));
+    return res;
+  };
+
+  const applyRotation = (elem: HTMLElement, mouseX: number, mouseY: number) => {
+    const distanceX =
+      mouseX - (elem.getBoundingClientRect().left + elem.clientWidth / 2);
+    const distanceY =
+      mouseY - (elem.getBoundingClientRect().top + elem.clientHeight / 2);
+    const angleToMouse = calculateAngleToMouse(distanceX, distanceY);
+    if (distanceX < 0) {
+      elem.style.transform =
+        "scaleX(-1) rotate(" + String(angleToMouse) + "deg)";
+    } else {
+      elem.style.transform = "rotate(" + String(angleToMouse) + "deg)";
+    }
+  };
+
+  const mouseMoveHandler = (event: MouseEvent) => {
+    if (rotatingLogo) applyRotation(rotatingLogo, event.clientX, event.clientY);
+    return 0;
+  };
+
+  let throttleTimer: boolean;
+
+  const throttle = (
+    event: MouseEvent,
+    callback: (e: MouseEvent) => number,
+    time: number
+  ) => {
+    if (throttleTimer) return;
+    throttleTimer = true;
+
+    setTimeout(() => {
+      callback(event);
+      throttleTimer = false;
+    }, time);
+  };
+
+  const mouseMoveHandlerThrottle = (event: MouseEvent) => {
+    throttle(event, mouseMoveHandler, 15);
+  };
+
+  let handleInteraction = (
+    entries: IntersectionObserverEntry[],
+    observer: IntersectionObserver
+  ) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        document.addEventListener("mousemove", mouseMoveHandlerThrottle);
+      } else {
+        document.removeEventListener("mousemove", mouseMoveHandlerThrottle);
+        if (rotatingLogo) rotatingLogo.style.transform = "rotate(0)";
+      }
+    });
+  };
+
+  let observer = new IntersectionObserver(handleInteraction);
+  document?.querySelectorAll("#rotating-logo")?.forEach((i) => {
+    observer.observe(i);
+  });
+</script>
