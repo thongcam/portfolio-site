@@ -73,7 +73,7 @@ if (!images[image.src])
 
           <Image
             src={external ? ExternalLinkWhite : InternalLinkWhite}
-            alt={external ? "External link" : "Internal link"}
+            alt={`${external ? "External link" : "Internal link"} to "${title}"`}
             class:list={"s-[1rem]"}
             loading={"eager"}
           />

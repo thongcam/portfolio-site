@@ -76,7 +76,9 @@ const contactLinks: ContactLinkType[] = HomepageContent.contact.contactLinks;
         <ul class="pt-15 flex flex-row flex-wrap gap-y-10 gap-x-30">
           {
             contactLinks.map((link) => (
-              <ContactLink href={link.url}>{link.label}</ContactLink>
+              <ContactLink href={link.url} label={link.label}>
+                {link.label}
+              </ContactLink>
             ))
           }
         </ul>
