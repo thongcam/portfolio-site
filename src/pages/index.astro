@@ -12,6 +12,12 @@ import Section from "../components/section.astro";
 import ContactLink from "../components/contactLink.astro";
 import Footer from "../components/footer.astro";
 import HomepageContent from "../content/homepage.json";
+import { getImage } from "astro:assets";
+import HeroImage from "/public/images/hero-image.png";
+
+const base_url = import.meta.env.BASE_URL;
+
+const og_image_url = await getImage({ src: HeroImage, format: "webp" });
 
 const cardSections = HomepageContent.cardSections;
 
@@ -35,16 +41,10 @@ const contactLinks: ContactLinkType[] = HomepageContent.contact.contactLinks;
       property="og:description"
       content="An aspiring product designer with a background in engineering. Currently pursuing a Master’s in HCI in the Netherlands and Finland."
     />
-    <meta property="og:url" content="https://thong.cam" />
+    <meta property="og:url" content={base_url} />
     <meta property="og:site_name" content="Thong Cam" />
-    <meta
-      property="og:image"
-      content="https://thongcam.netlify.app/.netlify/images?url=_astro%2Fhero-image.B3HjGEpb.png"
-    />
-    <meta
-      property="og:image:secure_url"
-      content="https://thongcam.netlify.app/.netlify/images?url=_astro%2Fhero-image.B3HjGEpb.png"
-    />
+    <meta property="og:image" content={og_image_url.src} />
+    <meta property="og:image:secure_url" content={og_image_url.src} />
     <title>{HomepageContent.title}</title>
   </head>
   <body class="text-dark-blue font-body bg-gray">
