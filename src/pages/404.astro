@@ -1,0 +1,47 @@
+---
+import HomepageContent from "../content/homepage.json";
+import { getImage } from "astro:assets";
+import HeroImage from "/public/images/hero-image.png";
+import Navbar from "../components/navbar/navbar.astro";
+import MaxWidth from "../components/maxWidth.astro";
+import { cmsURL } from "../constants";
+
+const logosResponse = await fetch(`${cmsURL}/api/globals/logos`, {
+  credentials: "include",
+});
+
+const logos = await logosResponse.json();
+
+const settingsResponse = await fetch(`${cmsURL}/api/globals/settings`, {
+  credentials: "include",
+});
+
+const settings = await settingsResponse.json();
+
+const base_url = import.meta.env.BASE_URL;
+const og_image_url = await getImage({ src: HeroImage, format: "webp" });
+---
+
+<html lang="en" class="scroll-smooth scroll-p-15 md:scroll-m-0">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href={cmsURL + logos.logoSmall.url} />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta
+      name="description"
+      content="An aspiring product designer with a background in engineering. Currently pursuing a Master’s in HCI in the Netherlands and Finland."
+    />
+    <title>Page not found | {settings.siteTitle}</title>
+  </head>
+  <body class="text-dark-blue font-body bg-gray">
+    <Navbar logos={logos} />
+    <MaxWidth class="pt-10">
+      <h1 class="text-6xl font-bold leading-tight md:leading-snug font-display">
+        404
+      </h1>
+      <br />
+      <h3>The page you are trying to access is not found :(</h3>
+    </MaxWidth>
+  </body>
+</html>
