@@ -10,33 +10,14 @@ import Image from "astro/components/Image.astro";
 import MaxWidth from "../maxWidth.astro";
 import { string } from "astro/zod";
 import type { NavLinkType } from "../../types/navLinkType";
+import { cmsURL } from "../../constants";
+const { logos } = Astro.props;
 
-const MenuItems: NavLinkType[] = [
-  {
-    label: "Work",
-    target: "#case-studies",
-    icon: null,
-  },
-  {
-    label: "About",
-    target: "#about",
-    icon: null,
-  },
-  {
-    label: "Contact",
-    target: "#contact",
-    icon: null,
-  },
-  {
-    label: "Resume",
-    target:
-      "https://drive.google.com/file/d/11pAKgNpiJkdp9ilo2bA6ekaer8H2-6UZ/view?usp=sharing",
-    icon: {
-      iconSrc: ExternalLinkIcon,
-      iconAlt: "External link to Resume",
-    },
-  },
-];
+const navDataResponse = await fetch(`${cmsURL}/api/globals/nav`, {
+  credentials: "include",
+});
+
+const navData = await navDataResponse.json();
 ---
 
 <div class="h-full bg-gray/80 sticky top-0 backdrop-blur z-50" id="navBar">
@@ -45,15 +26,17 @@ const MenuItems: NavLinkType[] = [
   >
     <a href="/" tabindex="0">
       <Image
-        src={LogoSmall}
-        height={50}
+        src={cmsURL + logos.logoSmall.url}
+        height={logos.logoSmall.height}
+        width={logos.logoSmall.width}
         alt="Portfolio site Home"
         class={"md:hidden"}
         loading={"eager"}
       />
       <Image
-        src={LogoLarge}
-        height={50}
+        src={cmsURL + logos.logoLarge.url}
+        height={logos.logoLarge.height}
+        width={logos.logoLarge.width}
         alt="Portfolio site Home"
         class:list={"hidden md:block"}
         loading={"eager"}
@@ -90,12 +73,8 @@ const MenuItems: NavLinkType[] = [
             id="nav-list"
           >
             {
-              MenuItems.map((item) => (
-                <NavbarLink
-                  label={item.label}
-                  target={item.target}
-                  icon={item.icon}
-                />
+              navData.navLinks.map((item: NavLinkType) => (
+                <NavbarLink title={item.title} url={item.url} />
               ))
             }
           </ul>

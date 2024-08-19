@@ -3,9 +3,13 @@ import MaxWidth from "./maxWidth.astro";
 import Image from "astro/components/Image.astro";
 import HalfRing from "/public/decorators/half ring.svg";
 import LogoSmall from "/public/images/logo-small.svg";
-import HomePageContent from "../content/homepage.json";
+import { cmsURL } from "../constants";
 
-const footerContent = HomePageContent.footer;
+const footerDataResponse = await fetch(`${cmsURL}/api/globals/footer`, {
+  credentials: "include",
+});
+
+const footerData = await footerDataResponse.json();
 ---
 
 <footer class="relative">
@@ -31,8 +35,8 @@ const footerContent = HomePageContent.footer;
     </div>
   </div>
   <MaxWidth class="pt-[5.5rem] md:pt-16 pb-12 flex flex-col gap-5">
-    <span class="text-lg">{footerContent.mainline}</span>
-    <span class="text-sm text-pale-blue/80">{footerContent.tagline}</span>
+    <span class="text-lg">{footerData.copyright}</span>
+    <span class="text-sm text-pale-blue/80">{footerData.tagline}</span>
   </MaxWidth>
 </footer>
 
