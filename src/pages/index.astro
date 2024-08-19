@@ -14,43 +14,70 @@ import Footer from "../components/footer.astro";
 import HomepageContent from "../content/homepage.json";
 import { getImage } from "astro:assets";
 import HeroImage from "/public/images/hero-image.png";
+import { cmsURL } from "../constants";
+
+const homepageDataResponse = await fetch(`${cmsURL}/api/globals/homepage`, {
+  credentials: "include",
+});
+
+const homepageData = await homepageDataResponse.json();
+
+const logosResponse = await fetch(`${cmsURL}/api/globals/logos`, {
+  credentials: "include",
+});
+
+const logos = await logosResponse.json();
+
+const contactsResponse = await fetch(`${cmsURL}/api/globals/contacts`, {
+  credentials: "include",
+});
+
+const contacts = await contactsResponse.json();
+
+const settingsResponse = await fetch(`${cmsURL}/api/globals/settings`, {
+  credentials: "include",
+});
+
+const settings = await settingsResponse.json();
 
 const base_url = import.meta.env.BASE_URL;
 
 const og_image_url = await getImage({ src: HeroImage, format: "webp" });
 
-const cardSections = HomepageContent.cardSections;
+const caseStudiesSection = homepageData.caseStudies;
 
-const contactLinks: ContactLinkType[] = HomepageContent.contact.contactLinks;
+const websitesSection = homepageData.websites;
+
+// const cardSections = HomepageContent.cardSections;
 ---
 
 <html lang="en" class="scroll-smooth scroll-p-15 md:scroll-m-0">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/images/logo-small.svg" />
+    <link rel="icon" type="image/svg+xml" href={cmsURL + logos.logoSmall.url} />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <meta
-      name="description"
-      content="An aspiring product designer with a background in engineering. Currently pursuing a Master’s in HCI in the Netherlands and Finland."
-    />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={HomepageContent.title} />
-    <meta
-      property="og:description"
-      content="An aspiring product designer with a background in engineering. Currently pursuing a Master’s in HCI in the Netherlands and Finland."
-    />
+    <meta name="description" content={settings.siteDescription} />
+    <meta property="og:locale" content={settings.ogMetadata.locale} />
+    <meta property="og:type" content={settings.ogMetadata.type} />
+    <meta property="og:title" content={settings.siteTitle} />
+    <meta property="og:description" content={settings.ogMetadata.description} />
     <meta property="og:url" content={base_url} />
     <meta property="og:site_name" content="Thong Cam" />
-    <meta property="og:image" content={og_image_url.src} />
-    <meta property="og:image:secure_url" content={og_image_url.src} />
-    <title>{HomepageContent.title}</title>
+    <meta
+      property="og:image"
+      content={cmsURL + settings.ogMetadata.image.sizes.portrait.url}
+    />
+    <meta
+      property="og:image:secure_url"
+      content={cmsURL + settings.ogMetadata.image.sizes.portrait.url}
+    />
+    <title>{settings.siteTitle}</title>
   </head>
   <body class="text-dark-blue font-body bg-gray">
-    <Navbar />
-    <Hero />
-    {
+    <Navbar logos={logos} />
+    <Hero data={homepageData.heroSection} />
+    <!-- {
       cardSections.map((cardSection) => {
         const content: CardContentType[] = cardSection.content;
         return (
@@ -68,16 +95,40 @@ const contactLinks: ContactLinkType[] = HomepageContent.contact.contactLinks;
           </CardSection>
         );
       })
-    }
-    <AboutMe />
+    } -->
+    <CardSection
+      bg={caseStudiesSection.bg}
+      class=""
+      imageAlign={caseStudiesSection.imageAlign}
+      decorator={caseStudiesSection.decorator}
+      subheading={caseStudiesSection.sectionSubtitle || ""}
+      content={caseStudiesSection.showcasedProjects}
+      id="case-studies"
+    >
+      <span slot="numbering">{caseStudiesSection.sectionNumber}</span>
+      <span slot="content">{caseStudiesSection.sectionTitle}</span>
+    </CardSection>
+    <CardSection
+      bg={websitesSection.bg}
+      class=""
+      imageAlign={websitesSection.imageAlign}
+      decorator={websitesSection.decorator}
+      subheading={websitesSection.sectionSubtitle || ""}
+      content={websitesSection.showcasedProjects}
+      id="websites"
+    >
+      <span slot="numbering">{websitesSection.sectionNumber}</span>
+      <span slot="content">{websitesSection.sectionTitle}</span>
+    </CardSection>
+    <AboutMe data={homepageData.aboutMe} />
     <Section class={["bg-white pt-10 md:pt-15 pb-20"]} id="contact">
       <div>
-        <DisplayHeader class="">{HomepageContent.contact.header}</DisplayHeader>
+        <DisplayHeader class="">{homepageData.contact.header}</DisplayHeader>
         <ul class="pt-15 flex flex-row flex-wrap gap-y-10 gap-x-30">
           {
-            contactLinks.map((link) => (
-              <ContactLink href={link.url} label={link.label}>
-                {link.label}
+            contacts.contactLinks.map((link: ContactLinkType) => (
+              <ContactLink href={link.url} label={link.title}>
+                {link.title}
               </ContactLink>
             ))
           }
