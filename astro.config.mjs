@@ -9,5 +9,9 @@ export default defineConfig({
   integrations: [tailwind(), sitemap()],
   output: "server",
   adapter: netlify(),
-  site: "https://thong.cam"
+  site: "https://thong.cam",
+  image: {
+    domains: ["astro.build"],
+    remotePatterns: [{ protocol: "https" }],
+  },
 });
