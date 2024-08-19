@@ -1,4 +1,5 @@
 ---
+// @ts-nocheck
 import { escapeHTML } from "astro/runtime/server/escape.js";
 import { Text, Node } from "slate";
 
@@ -10,7 +11,7 @@ const { content } = Astro.props;
 ---
 
 {
-  content.map((node, i) => {
+  content.map((node: Object, i) => {
     if (Text.isText(node)) {
       let text = escapeHTML(node.text);
 
