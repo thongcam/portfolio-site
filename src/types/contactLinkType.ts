@@ -1,4 +1,4 @@
 export interface ContactLinkType {
-    label: string,
+    title: string,
     url: string,
 }

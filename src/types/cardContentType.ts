@@ -1,13 +1,21 @@
 export interface CardContentType {
     title: string;
-    description: string;
+    description: Object[];
     subDescription: string | null;
-    linkText: string;
-    external: boolean;
+    linkLabel: string;
     url: string;
-    image: {
-      src: string;
+    thumbnailImage: {
+      width: number;
+      height: number;
+      url: string;
       alt: string;
+      sizes: {
+        cardThumbnail: {
+          width: number;
+          height: number;
+          url: string;
+        }
+      }
     };
 
   }
