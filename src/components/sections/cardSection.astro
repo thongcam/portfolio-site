@@ -3,6 +3,7 @@ import Section from "../section.astro";
 import SectionHeader from "../headers/sectionHeader.astro";
 import ProjectCard from "./projectCard.astro";
 import type { CardContentType } from "../../types/cardContentType";
+import { cmsURL } from "../../constants";
 
 interface Props {
   id: string;
@@ -11,7 +12,7 @@ interface Props {
   imageAlign: string;
   decorator: string;
   subheading: string | null;
-  content: CardContentType[];
+  content: string[];
 }
 const {
   id,
@@ -22,10 +23,23 @@ const {
   subheading,
   content,
 } = Astro.props;
+
+let showcasedProjects = await Promise.all(
+  content.map(async (projectID) => {
+    try {
+      const thumbnailData = await fetch(
+        `${cmsURL}/api/${id}/${projectID}/thumbnail`
+      );
+      return thumbnailData.json();
+    } catch (error) {
+      return { projectID, error };
+    }
+  })
+);
 ---
 
 <Section
-  class={["py-10 md:py-25", className, bg == "white" ? "bg-white" : "bg-gray"]}
+  class={["py-12 md:py-25", className, bg == "white" ? "bg-white" : "bg-gray"]}
   id={id}
 >
   <SectionHeader
@@ -34,19 +48,19 @@ const {
   </SectionHeader>
   {
     subheading && (
-      <div class="text-[1.1rem] text-pale-blue/80 pt-4 leading-snug md:pt-6">
+      <div class="text-[1.1rem] text-pale-blue/80 pt-3 leading-snug md:pt-6">
         <span>{subheading}</span>
       </div>
     )
   }
   <ul
-    class="w-full grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] lg:flex lg:flex-col gap-12 pt-12"
+    class="w-full grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] lg:flex lg:flex-col gap-12 pt-10 md:pt-12"
   >
     {
-      content.map((card) => (
+      showcasedProjects.map((data) => (
         <li>
           <ProjectCard
-            content={card}
+            content={data}
             imageAlign={imageAlign}
             decorator={decorator}
             bg={bg == "white" ? "gray" : "white"}

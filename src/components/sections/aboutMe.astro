@@ -6,15 +6,16 @@ import AboutMeImage from "/public/images/about me.png";
 import ThreeRings from "../decorators/threeRings.astro";
 import StandOutCard from "../standOutCard.astro";
 import InternalLinkYellow from "/public/icons/Internal link yellow.svg";
-import HomePageContent from "../../content/homepage.json";
-
-const aboutMeContent = HomePageContent.aboutMe;
+import { cmsURL } from "../../constants";
+const { data } = Astro.props;
+const image = data.aboutMePortrait.sizes.portrait;
+const imageAlt = data.aboutMePortrait.alt;
 ---
 
-<Section class={["py-10 md:py-25 bg-white overflow-x-hidden"]} id="about">
+<Section class={["py-12 md:py-25 bg-white overflow-x-hidden"]} id="about">
   <SectionHeader>
-    <span slot="numbering">3.</span>
-    <span slot="content">About me</span>
+    <span slot="numbering">{data.sectionNumber}.</span>
+    <span slot="content">{data.sectionTitle}</span>
   </SectionHeader>
   <div class="flex flex-col relative pt-10 lg:pt-0">
     <div
@@ -27,15 +28,15 @@ const aboutMeContent = HomePageContent.aboutMe;
           class="pb-10 z-10 md:flex md:flex-col md:justify-between md:w-full md:h-fit md:min-h-75 md:pr-12 xl:pr-15"
         >
           <p class="text-lg text-white pb-12 text-pretty">
-            {aboutMeContent.description}
+            {data.content}
           </p>
           <a
-            href={aboutMeContent.aboutUrl}
-            target="_blank"
+            href={data.buttonURL}
+            target={data.buttonURL.startsWith("http") ? "__blank" : ""}
             tabindex="0"
             class="text-lg text-yellow flex flex-row gap-3 underline decoration-1 underline-offset-4 hover:brightness-110 hover:gap-4 transition-[gap] duration-200 ease-in-out"
           >
-            <span class="fit-content">{aboutMeContent.buttonText}</span>
+            <span class="fit-content">{data.buttonLabel}</span>
             <div class="flex flex-col justify-center">
               <Image
                 loading={"eager"}
@@ -48,8 +49,10 @@ const aboutMeContent = HomePageContent.aboutMe;
         </StandOutCard>
         <Image
           loading={"eager"}
-          src={AboutMeImage}
-          alt="Portrait of Thong Cam"
+          src={cmsURL + image.url}
+          width={image.width}
+          height={image.height}
+          alt={imageAlt || ""}
           class:list={"shadow z-10 w-full relative md:h-[100%] md:max-w-xl pt-5 md:pt-0 aspect-[4/5] md:scale-110 lg:scale-100 xl:scale-90 xl:-translate-x-[11%] md:-translate-x-[5%] object-cover "}
         />
       </div>

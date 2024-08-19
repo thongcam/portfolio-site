@@ -1,0 +1,95 @@
+---
+import { escapeHTML } from "astro/runtime/server/escape.js";
+import { Text, Node } from "slate";
+
+interface Props {
+  content: Object[];
+}
+
+const { content } = Astro.props;
+---
+
+{
+  content.map((node, i) => {
+    if (Text.isText(node)) {
+      let text = escapeHTML(node.text);
+
+      if (node.bold) {
+        return <strong>{text}</strong>;
+      }
+
+      if (node.code) {
+        return <code>{text}</code>;
+      }
+
+      if (node.italic) {
+        return <em>{text}</em>;
+      }
+
+      if (node.text === "") {
+        return <br />;
+      }
+
+      // Handle other leaf types here...
+
+      return <span set:html={text} />;
+    }
+
+    if (!node) {
+      return null;
+    }
+
+    switch (node.type) {
+      case "h1":
+        return (
+          <h1>
+            <Astro.self content={node.children} />
+          </h1>
+        );
+      // Iterate through all headings here...
+      case "h6":
+        return (
+          <h6>
+            <Astro.self content={node.children} />
+          </h6>
+        );
+      case "blockquote":
+        return (
+          <blockquote>
+            <Astro.self content={node.children} />
+          </blockquote>
+        );
+      case "ul":
+        return (
+          <ul>
+            <Astro.self content={node.children} />
+          </ul>
+        );
+      case "ol":
+        return (
+          <ol>
+            <Astro.self content={node.children} />
+          </ol>
+        );
+      case "li":
+        return (
+          <li>
+            <Astro.self content={node.children} />
+          </li>
+        );
+      case "link":
+        return (
+          <a href={escapeHTML(node.url)} target={node.newTab ? "__blank" : ""}>
+            <Astro.self content={node.children} />
+          </a>
+        );
+
+      default:
+        return (
+          <p>
+            <Astro.self content={node.children} />
+          </p>
+        );
+    }
+  })
+}
