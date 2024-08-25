@@ -11,7 +11,7 @@ export default defineConfig({
   adapter: netlify(),
   site: "https://thong.cam",
   image: {
-    domains: ["astro.build"],
+    domains: ["astro.build", "thong.cam", "admin.thong.cam"],
     remotePatterns: [{ protocol: "https" }],
   },
 });
