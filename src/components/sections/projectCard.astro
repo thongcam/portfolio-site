@@ -54,7 +54,7 @@ const external = checkURL.origin !== Astro.url.origin;
   >
     <div class="z-10 h-full">
       <div class="flex flex-col justify-between min-h-[70%]">
-        <div>
+        <div class="card-content">
           <h3 class="pb-5 font-display text-2xl font-bold">
             {title}
           </h3>
@@ -99,7 +99,7 @@ const external = checkURL.origin !== Astro.url.origin;
 </div>
 
 <style>
-  :global(a) {
+  :global(.card-content a) {
     text-decoration: underline;
     color: #21324c;
   }
