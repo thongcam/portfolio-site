@@ -84,9 +84,11 @@ const external = checkURL.origin !== Astro.url.origin;
         </a>
       </div>
     </div>
-    <Image
+    <img
       loading={"eager"}
-      src={decorator == "ellipse" ? EllipseDecorator : RectangleDecorator}
+      src={decorator == "ellipse"
+        ? EllipseDecorator.src
+        : RectangleDecorator.src}
       alt="Ellipse decorator"
       class:list={[
         "absolute z-0 opacity-40 w-[45%] min-w-[10rem] max-w-[13rem] -bottom-[min(30%,_4rem)] -right-[10%]",

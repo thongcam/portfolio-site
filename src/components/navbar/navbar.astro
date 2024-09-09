@@ -25,7 +25,7 @@ const navData = await navDataResponse.json();
     class="flex flex-row justify-between content-middle items-center py-6"
   >
     <a href="/" tabindex="0">
-      <Image
+      <img
         src={cmsURL + logos.logoSmall.url}
         height={logos.logoSmall.height}
         width={logos.logoSmall.width}
@@ -33,7 +33,7 @@ const navData = await navDataResponse.json();
         class={"md:hidden"}
         loading={"eager"}
       />
-      <Image
+      <img
         src={cmsURL + logos.logoLarge.url}
         height={logos.logoLarge.height}
         width={logos.logoLarge.width}
@@ -90,8 +90,8 @@ const navData = await navDataResponse.json();
       class="menu-button relative size-[50px] grid place-items-center md:hidden active:bg-dark-gray rounded"
       id="open-menu-button"
     >
-      <Image
-        src={OpenMenu}
+      <img
+        src={OpenMenu.src}
         alt="Open hamburger menu"
         height={25}
         loading={"eager"}

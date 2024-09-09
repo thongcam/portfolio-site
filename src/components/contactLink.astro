@@ -12,8 +12,8 @@ const { href, label } = Astro.props;
     class="relative text-lg underline hover:opacity-80 flex flex-row gap-2 items-center md:gap-2 md:after:absolute md:after:inset-[-20px]"
   >
     <slot />
-    <Image
-      src={ExternalLink}
+    <img
+      src={ExternalLink.src}
       alt={"External link to " + label}
       class:list={"s-[1rem]"}
       loading={"eager"}
