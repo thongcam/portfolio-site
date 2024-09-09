@@ -75,8 +75,8 @@ const external = checkURL.origin !== Astro.url.origin;
             {linkLabel}
           </span>
 
-          <Image
-            src={external ? ExternalLinkWhite : InternalLinkWhite}
+          <img
+            src={external ? ExternalLinkWhite.src : InternalLinkWhite.src}
             alt={`${external ? "External link" : "Internal link"} to "${title}"`}
             class:list={"s-[1rem]"}
             loading={"eager"}
