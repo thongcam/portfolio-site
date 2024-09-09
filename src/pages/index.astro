@@ -49,19 +49,6 @@ const caseStudiesSection = homepageData.caseStudies;
 const websitesSection = homepageData.websites;
 
 // const cardSections = HomepageContent.cardSections;
-
-// Tell the browser to always check the freshness of the cache
-Astro.response.headers.set(
-  "Cache-Control",
-  "public, max-age=0, must-revalidate"
-);
-
-// Tell Netlify's CDN to treat it as fresh for 5 minutes, then for up to a week return a stale version
-// while it revalidates. Use Durable Cache to minimize the need for serverless function calls.
-Astro.response.headers.set(
-  "Netlify-CDN-Cache-Control",
-  "public, durable, s-maxage=300, stale-while-revalidate=604800"
-);
 ---
 
 <html lang="en" class="scroll-smooth scroll-p-15 md:scroll-m-0">
