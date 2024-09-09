@@ -80,6 +80,8 @@ const external = checkURL.origin !== Astro.url.origin;
             alt={`${external ? "External link" : "Internal link"} to "${title}"`}
             class:list={"s-[1rem]"}
             loading={"eager"}
+            width={ExternalLinkWhite.width}
+            width={ExternalLinkWhite.height}
           />
         </a>
       </div>

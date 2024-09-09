@@ -60,8 +60,10 @@ const navData = await navDataResponse.json();
           class="menu-button relative size-[50px] hidden place-items-center md:hidden active:bg-dark-gray rounded"
           id="close-menu-button"
         >
-          <Image
-            src={CloseMenu}
+          <img
+            src={CloseMenu.src}
+            width={CloseMenu.width}
+            height={CloseMenu.height}
             alt="Close hamburger menu"
             height={25}
             loading={"eager"}
@@ -92,6 +94,8 @@ const navData = await navDataResponse.json();
     >
       <img
         src={OpenMenu.src}
+        width={OpenMenu.width}
+        height={OpenMenu.height}
         alt="Open hamburger menu"
         height={25}
         loading={"eager"}

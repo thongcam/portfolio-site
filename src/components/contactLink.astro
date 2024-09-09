@@ -15,6 +15,8 @@ const { href, label } = Astro.props;
     <img
       src={ExternalLink.src}
       alt={"External link to " + label}
+      width={ExternalLink.width}
+      height={ExternalLink.height}
       class:list={"s-[1rem]"}
       loading={"eager"}
     />

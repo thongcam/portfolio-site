@@ -20,6 +20,8 @@ const { title, url } = Astro.props;
       url.startsWith("http") && (
         <img
           src={ExternalLink.src}
+          width={ExternalLink.width}
+          height={ExternalLink.height}
           alt={"External link to " + title}
           class:list={"s-[1rem] md:s-[0.8rem] w-auto pe-3 md:pe-0"}
           loading={"eager"}

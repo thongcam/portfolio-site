@@ -16,7 +16,7 @@ const { imgsrc, buttonlabel, alttext } = Astro.props;
   aria-pressed="false"
   class="relative"
 >
-  <img src={imgsrc.src} alt={alttext} height={25} />
+  <img src={imgsrc.src} alt={alttext} height={25} width={imgsrc.width} />
 </button>
 
 <style>
