@@ -9,20 +9,38 @@ import type { SerializedEditorState } from "lexical";
 import { RichTextLexical } from "../../../components/rich-text/richTextLexical";
 import { cmsURL } from "../../../constants";
 
-
+interface SingleImage {
+    url: string,
+    width: number,
+    height: number,
+}
 interface LightboxImageProps {
     src: string;
     alt: string;
     caption?: SerializedEditorState;
     width: number;
     height: number;
-    srcSet?: ImageSource[]
+    sizes:  {[size: string] :  SingleImage};
 }
 
-export default function LightboxImage({src, alt, caption, width, height, srcSet} : LightboxImageProps) {
+export default function LightboxImage({src, alt, caption, width, height, sizes} : LightboxImageProps) {
     const [open, setOpen] = useState(false);
     const zoomRef = useRef(null);
     const captionsRef = useRef(null);
+    const srcSet = [
+        ...Object.entries(sizes).filter(([imageSize,imageSizeData]) => imageSizeData.url !== null).map(([imageSize, imageSizeData]) => {
+          return {
+            src: cmsURL + imageSizeData.url,
+            width: imageSizeData.width,
+            height: imageSizeData.height,
+          }
+        }),
+        {
+            src: cmsURL + src,
+            width: width,
+            height: height
+        }
+      ]
 return (
     <Fragment>
         <Lightbox
