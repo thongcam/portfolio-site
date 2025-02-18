@@ -40,7 +40,7 @@ export const CustomUploadJSXConverter : JSXConverters = {
       if(node.fields.zoomable) {
         const imageDocument =  node as ImageDocument;
           const srcSet = [
-            ...Object.entries(imageDocument.value.sizes).map(([imageSize, imageSizeData]) => {
+            ...Object.entries(imageDocument.value.sizes).filter(([imageSize,imageSizeData]) => imageSizeData.url !== null).map(([imageSize, imageSizeData]) => {
               return {
                 src: cmsURL + imageSizeData.url,
                 width: imageSizeData.width,
@@ -55,7 +55,7 @@ export const CustomUploadJSXConverter : JSXConverters = {
           ]
           return <LightboxImage
             
-            src={cmsURL + imageDocument.value.sizes.tablet.url}
+            src={cmsURL + (imageDocument.value.sizes.tablet.url || imageDocument.value.url) }
             alt={imageDocument.value.alt}
             caption={imageDocument.fields.caption}
             width={imageDocument.value.sizes.tablet.width}
