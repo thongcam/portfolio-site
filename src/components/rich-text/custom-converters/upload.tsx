@@ -2,8 +2,6 @@ import type { SerializedUploadNode } from "@payloadcms/richtext-lexical";
 import { UploadJSXConverter, type JSXConverters } from "@payloadcms/richtext-lexical/react";
 import { cmsURL } from "../../../constants";
 import LightboxImage from "../../../pages/case-studies/components/LightboxImage";
-import type { JsonObjectExpression } from "typescript";
-
 
 interface SingleImage {
     url: string,
@@ -39,13 +37,28 @@ export const CustomUploadJSXConverter : JSXConverters = {
     upload: ({node, ...args}) => {
       if(node.fields.zoomable) {
         const imageDocument =  node as ImageDocument;
-          return <LightboxImage         
+          const srcSet = [
+            ...Object.entries(imageDocument.value.sizes).filter(([imageSize,imageSizeData]) => imageSizeData).map(([imageSize, imageSizeData]) => {
+              return {
+                src: cmsURL + imageSizeData.url,
+                width: imageSizeData.width,
+                height: imageSizeData.height,
+              }
+            }),
+            {
+                src: cmsURL + imageDocument.value.url,
+                width:imageDocument.value.width,
+                height:imageDocument.value.height
+            }
+          ]
+          return <LightboxImage
+            
             src={cmsURL + (imageDocument.value.sizes.tablet.url || imageDocument.value.url) }
             alt={imageDocument.value.alt}
             caption={imageDocument.fields.caption}
             width={imageDocument.value.sizes.tablet.width}
             height={imageDocument.value.sizes.tablet.height}
-            sizes={imageDocument.value.sizes}
+            srcSet={srcSet}
           ></LightboxImage>
         } else {
           updateImageURLs(node)
