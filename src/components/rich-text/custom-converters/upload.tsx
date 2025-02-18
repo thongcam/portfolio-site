@@ -2,6 +2,7 @@ import type { SerializedUploadNode } from "@payloadcms/richtext-lexical";
 import { UploadJSXConverter, type JSXConverters } from "@payloadcms/richtext-lexical/react";
 import { cmsURL } from "../../../constants";
 import LightboxImage from "../../../pages/case-studies/components/LightboxImage";
+import type { JsonObjectExpression } from "typescript";
 
 
 interface SingleImage {
@@ -20,10 +21,38 @@ type ImageDocument = SerializedUploadNode & {
     },
 }
 
+const updateImageURLs = (uploadDocument : any) => {
+  Object.keys(uploadDocument).forEach(function(key) {
+    if (typeof uploadDocument[key] === "object") {
+      if (uploadDocument[key] !== undefined) {
+        updateImageURLs(uploadDocument[key]);
+      }
+    } else {
+      if (key === "url" || key === "thumbnailURL") {
+        uploadDocument[key] = cmsURL + uploadDocument[key]
+      }
+    }
+  });
+}
+
 export const CustomUploadJSXConverter : JSXConverters = {
     upload: ({node, ...args}) => {
-        if(node.fields.zoomable) {
-          const imageDocument =  node as ImageDocument;
+      if(node.fields.zoomable) {
+        const imageDocument =  node as ImageDocument;
+          const srcSet = [
+            ...Object.entries(imageDocument.value.sizes).map(([imageSize, imageSizeData]) => {
+              return {
+                src: cmsURL + imageSizeData.url,
+                width: imageSizeData.width,
+                height: imageSizeData.height,
+              }
+            }),
+            {
+                src: cmsURL + imageDocument.value.url,
+                width:imageDocument.value.width,
+                height:imageDocument.value.height
+            }
+          ]
           return <LightboxImage
             
             src={cmsURL + imageDocument.value.sizes.tablet.url}
@@ -31,25 +60,11 @@ export const CustomUploadJSXConverter : JSXConverters = {
             caption={imageDocument.fields.caption}
             width={imageDocument.value.sizes.tablet.width}
             height={imageDocument.value.sizes.tablet.height}
-            srcSet={
-              [
-                ...Object.entries(imageDocument.value.sizes).map(([imageSize, imageSizeData]) => {
-                  return {
-                    src: cmsURL + imageSizeData.url,
-                    width: imageSizeData.width,
-                    height: imageSizeData.height,
-                  }
-                }),
-                {
-                    src: cmsURL + imageDocument.value.url,
-                    width:imageDocument.value.width,
-                    height:imageDocument.value.height
-                }
-              ]
-            }
+            srcSet={srcSet}
           ></LightboxImage>
         } else {
-          return UploadJSXConverter.upload?.({node:node, ...args})
+          updateImageURLs(node)
+          return UploadJSXConverter.upload?.({node, ...args})
         }
       },
 }
