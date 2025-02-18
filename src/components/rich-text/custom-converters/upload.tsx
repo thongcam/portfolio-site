@@ -39,7 +39,6 @@ export const CustomUploadJSXConverter : JSXConverters = {
     upload: ({node, ...args}) => {
       if(node.fields.zoomable) {
         const imageDocument =  node as ImageDocument;
-
           return <LightboxImage         
             src={cmsURL + (imageDocument.value.sizes.tablet.url || imageDocument.value.url) }
             alt={imageDocument.value.alt}

@@ -28,13 +28,13 @@ export default function LightboxImage({src, alt, caption, width, height, sizes} 
     const zoomRef = useRef(null);
     const captionsRef = useRef(null);
     const srcSet = [
-        ...Object.entries(sizes).filter(([imageSize,imageSizeData]) => imageSizeData.url !== null).map(([imageSize, imageSizeData]) => {
-          return {
-            src: cmsURL + imageSizeData.url,
-            width: imageSizeData.width,
-            height: imageSizeData.height,
-          }
-        }),
+        // ...Object.entries(sizes).filter(([imageSize,imageSizeData]) => imageSizeData.url !== null).map(([imageSize, imageSizeData]) => {
+        //   return {
+        //     src: cmsURL + imageSizeData.url,
+        //     width: imageSizeData.width,
+        //     height: imageSizeData.height,
+        //   }
+        // }),
         {
             src: cmsURL + src,
             width: width,
