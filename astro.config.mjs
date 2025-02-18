@@ -4,9 +4,11 @@ import netlify from "@astrojs/netlify";
 
 import sitemap from "@astrojs/sitemap";
 
+import react from "@astrojs/react";
+
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind(), sitemap()],
+  integrations: [tailwind(), sitemap(), react()],
   output: "server",
   adapter: netlify(),
   site: "https://thong.cam",

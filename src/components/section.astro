@@ -3,11 +3,12 @@ import MaxWidth from "./maxWidth.astro";
 interface Props {
   class: string[];
   id: string;
+  style?: astroHTML.JSX.CSSProperties;
 }
-const { class: className, id } = Astro.props;
+const { class: className, id, style } = Astro.props;
 ---
 
-<section class:list={[className]} id={id}>
+<section class:list={[className]} id={id} style={style}>
   <MaxWidth class="">
     <slot />
   </MaxWidth>

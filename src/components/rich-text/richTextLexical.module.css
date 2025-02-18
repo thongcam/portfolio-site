@@ -1,0 +1,60 @@
+.richText {
+    a {
+        text-decoration: underline;
+        color: rgb(33 50 76 / 0.8);
+    }
+    table {
+        table-layout: fixed;
+        width: 100%;
+        margin: 1.25rem 0;
+        border: none;
+        border-collapse: collapse;
+        figcaption {
+            font-weight: normal;
+            text-align: start;
+        }
+
+        th {
+            background-color: #f9f9fa;
+        }
+
+        th:has(figure) {
+            background-color: transparent   ;
+            border: none !important;
+            padding: 0 !important;
+            vertical-align: top;
+        }
+
+        tr:has(figure) {
+            th {
+                padding-bottom: 1.25rem !important;
+            }
+
+            th:last-child {
+                padding-bottom: 0 !important;
+            }
+
+            th:nth-child(odd) {
+                padding-right: 1.25rem !important;
+            }
+        }
+    }
+    /* tbody {
+        display: grid;
+        grid-auto-flow: row;
+        grid-auto-rows: 1fr;
+        row-gap: 1.25rem;
+    } */
+    /* tr {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+        column-gap: 1.25rem;
+    } */
+     blockquote {
+        border-left: 2px solid #111F31 ;
+        padding-left: 1rem;
+        color: rgb(33 50 76);
+        font-style: italic;
+        margin: 0.5rem 0;
+     }
+}

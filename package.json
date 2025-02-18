@@ -10,16 +10,30 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.5.10",
-    "@astrojs/netlify": "^5.2.1",
-    "@astrojs/sitemap": "^3.1.5",
-    "@astrojs/tailwind": "^5.1.0",
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/netlify": "^6.2.0",
+    "@astrojs/react": "^4.2.0",
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/tailwind": "^6.0.0",
     "@fontsource-variable/noto-serif": "^5.0.6",
     "@fontsource-variable/nunito": "^5.0.19",
-    "astro": "^4.7.1",
+    "@lexical/headless": "^0.24.0",
+    "@lexical/html": "^0.24.0",
+    "@makotot/ghostui": "^2.0.0",
+    "@payloadcms/richtext-lexical": "^3.23.0",
+    "@sidsbrmnn/scrollspy": "^1.1.0",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "astro": "^5.3.0",
+    "color": "^5.0.0",
     "headroom.js": "^0.12.0",
+    "jsdom": "^26.0.0",
+    "lexical": "^0.24.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "slate": "^0.103.0",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "yet-another-react-lightbox": "^3.21.7"
   }
 }

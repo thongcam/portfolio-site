@@ -1,6 +1,6 @@
 export interface CardContentType {
     title: string;
-    description: Object[];
+    description: Object;
     subDescription: string | null;
     linkLabel: string;
     url: string;

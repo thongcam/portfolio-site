@@ -12,7 +12,7 @@ const footerDataResponse = await fetch(`${cmsURL}/api/globals/footer`, {
 const footerData = await footerDataResponse.json();
 ---
 
-<footer class="relative">
+<footer class="relative bg-gray">
   <div class="bg-white md:pt-20">
     <div class="relative w-[clamp(15rem,30vw,18em)] mx-auto">
       <img
@@ -39,7 +39,7 @@ const footerData = await footerDataResponse.json();
     </div>
   </div>
   <MaxWidth class="pt-[5.5rem] md:pt-16 pb-12 flex flex-col gap-5">
-    <span class="text-lg">{footerData.copyright}</span>
+    <span class="text-md">{footerData.copyright}</span>
     <span class="text-sm text-pale-blue/80">{footerData.tagline}</span>
   </MaxWidth>
 </footer>

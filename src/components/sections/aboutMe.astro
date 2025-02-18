@@ -27,14 +27,14 @@ const imageAlt = data.aboutMePortrait.alt;
         <StandOutCard
           class="pb-10 z-10 md:flex md:flex-col md:justify-between md:w-full md:h-fit md:min-h-75 md:pr-12 xl:pr-15"
         >
-          <p class="text-lg text-white pb-12 text-pretty">
+          <p class="text-md text-white pb-12 text-pretty">
             {data.content}
           </p>
           <a
             href={data.buttonURL}
             target={data.buttonURL.startsWith("http") ? "__blank" : ""}
             tabindex="0"
-            class="text-lg text-yellow flex flex-row gap-3 underline decoration-1 underline-offset-4 hover:brightness-110 hover:gap-4 transition-[gap] duration-200 ease-in-out"
+            class="text-md text-yellow flex flex-row gap-3 underline decoration-1 underline-offset-4 hover:brightness-110 hover:gap-4 transition-[gap] duration-200 ease-in-out"
           >
             <span class="fit-content">{data.buttonLabel}</span>
             <div class="flex flex-col justify-center">

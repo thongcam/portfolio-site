@@ -7,7 +7,8 @@ import EllipseDecorator from "/public/decorators/ellipseDecorator.svg";
 import RectangleDecorator from "/public/decorators/rectangleDecorator.svg";
 import type { CardContentType } from "../../types/cardContentType";
 import { cmsURL } from "../../constants";
-import RichText from "../richText.astro";
+import { RichTextLexical } from "../rich-text/richTextLexical";
+import type { SerializedEditorState } from "lexical";
 
 interface Props {
   content: CardContentType;
@@ -19,15 +20,10 @@ interface Props {
 const { content, imageAlign, decorator, bg } = Astro.props;
 const { title, description, subDescription, linkLabel, url, thumbnailImage } =
   content;
-let checkURL = new URL(url);
+let checkURL = new URL(
+  url.includes("http") ? url : Astro.url.origin + "/" + url
+);
 const external = checkURL.origin !== Astro.url.origin;
-// const images = import.meta.glob<{ default: ImageMetadata }>(
-//   "/src/assets/*.{jpeg,jpg,png,gif}"
-// );
-// if (!images[image.src])
-//   throw new Error(
-//     `"${image.src}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,gif}"`
-//   );
 ---
 
 <div
@@ -55,11 +51,11 @@ const external = checkURL.origin !== Astro.url.origin;
     <div class="z-10 h-full">
       <div class="flex flex-col justify-between min-h-[70%]">
         <div class="card-content">
-          <h3 class="pb-5 font-display text-2xl font-bold">
+          <h3 class="pb-5 font-display text-xl/[1.25] font-extrabold">
             {title}
           </h3>
           <!-- <p class="" set:html={description} /> -->
-          <RichText content={description} />
+          <RichTextLexical data={description as SerializedEditorState} />
           {
             subDescription ? (
               <p class="italic text-pale-blue/80 pt-4">{subDescription}</p>
