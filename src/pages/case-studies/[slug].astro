@@ -140,12 +140,14 @@ Astro.response.headers.set("netlify-cache-tag", id!);
         alt={page.bannerImage.alt}
         inferSize
         class="rounded-xl hidden sm:block"
+        loading={"eager"}
       />
       <Image
         src={cmsURL + page.thumbnail.thumbnailImage.thumbnailURL}
         alt={page.thumbnail.thumbnailImage.alt}
         inferSize
         class="rounded-xl block sm:hidden"
+        loading={"eager"}
       />
       <!-- <picture>
         <source
