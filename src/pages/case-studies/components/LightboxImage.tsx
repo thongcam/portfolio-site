@@ -50,7 +50,7 @@ return (
         >
 
         </Lightbox>
-        <figure className="flex flex-col gap-2">
+        <figure className="flex flex-col gap-2 my-5">
             <button className="relative" onClick={() => setOpen(true)}>
                 <span className={"absolute bottom-2 right-3 md:bottom-4 md:right-5 p-2 bg-pale-blue/50 rounded-full flex flex-row items-center  " + styles.zoomHint} style={{}}>
                     <img className="h-6" src="/icons/Frame inspect.svg" alt="" />
@@ -62,9 +62,12 @@ return (
                 
                 />
             </button>
-            <figcaption className="text-sm text-pale-blue/80">
-              {caption ? <RichTextLexical data={caption}/> : ""}
-            </figcaption>
+            {
+                caption &&
+                <figcaption className="text-sm text-pale-blue/80">
+                    <RichTextLexical data={caption}/>
+                </figcaption>
+            }
           </figure>
     </Fragment>
 

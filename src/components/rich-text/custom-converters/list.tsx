@@ -9,6 +9,6 @@ export const CustomListJSXConverter : JSXConverters<SerializedListNode> = {
   
       const NodeTag = node.tag
   
-      return <NodeTag className={`list-${node?.listType} ${NodeTag === "ol"? "list-decimal" : "list-disc"} list-inside`}>{children}</NodeTag>
+      return <NodeTag className={`list-${node?.listType} ${NodeTag === "ol"? "list-decimal" : "list-disc"} list-inside my-3 space-y-2`}>{children}</NodeTag>
     }
 }

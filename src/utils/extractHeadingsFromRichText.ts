@@ -1,8 +1,9 @@
 import type { SerializedHeadingNode } from "@payloadcms/richtext-lexical";
 import type { SerializedLexicalNode } from "lexical";
 import extractPlainTextFromRichText from "./extractPlainTextFromRichText";
+import "css.escape"
 
-export const textToID = (text : string ) => text.toLowerCase().replaceAll(" ", "-")
+export const textToID = (text : string ) => encodeURIComponent(text.toLowerCase().replaceAll(" ", "-"))
 
 export default function extractHeadingsFromRichText(obj : SerializedLexicalNode) {
     let headings : {title: string, id: string, heading: string}[] = [];
@@ -30,7 +31,10 @@ export default function extractHeadingsFromRichText(obj : SerializedLexicalNode)
         })
       }
     }
+
   
     traverse(obj);
+
+    headings.forEach((heading, key) => heading.id += key + 1)
     return headings; // Remove leading/trailing spaces
   }

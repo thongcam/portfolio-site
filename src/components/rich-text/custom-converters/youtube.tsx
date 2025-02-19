@@ -10,6 +10,7 @@ export const YoutubeJSXConverter: JSXConverters = {
 				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 				allowFullScreen
                 title={"Embedded video"}
+                className="my-5"
 			></iframe>
 		)
 	},

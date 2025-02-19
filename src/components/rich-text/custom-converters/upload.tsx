@@ -2,6 +2,8 @@ import type { SerializedUploadNode } from "@payloadcms/richtext-lexical";
 import { UploadJSXConverter, type JSXConverters } from "@payloadcms/richtext-lexical/react";
 import { cmsURL } from "../../../constants";
 import LightboxImage from "../../../pages/case-studies/components/LightboxImage";
+import { Fragment } from "react/jsx-runtime";
+import { RichTextLexical } from "../richTextLexical";
 
 interface SingleImage {
     url: string,
@@ -62,7 +64,11 @@ export const CustomUploadJSXConverter : JSXConverters = {
           ></LightboxImage>
         } else {
           updateImageURLs(node)
-          return UploadJSXConverter.upload?.({node, ...args})
+          return (<figure className="flex flex-col my-5 gap-2">
+              {UploadJSXConverter.upload?.({node, ...args})}
+              {node.fields.caption && <figcaption className="text-sm text-pale-blue/80"><RichTextLexical data={node.fields.caption}/>
+              </figcaption>}
+          </figure>)
         }
       },
 }

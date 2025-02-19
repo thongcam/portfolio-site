@@ -81,7 +81,7 @@ const themeColorLighter = Color.hwb({
 const scrollSpyItems = [
   {
     title: "Summary",
-    id: "summary",
+    id: "summary0",
     heading: "h2",
   },
   ...extractHeadingsFromRichText(page),
@@ -266,15 +266,20 @@ Astro.response.headers.set("netlify-cache-tag", id!);
 
       var sections = document.querySelectorAll(".scroll-spy-item");
 
+      sections.forEach((section, key) => {
+        section.id += String(key);
+      });
+
       const observer = new IntersectionObserver(
         (entries) => {
           for (const entry of entries)
             if (entry.isIntersecting) {
+              console.log(entry.target.id);
               document
                 .querySelector(".active-scroll-spy")
                 ?.setAttribute("class", " ");
               document
-                .querySelector("a[href*=" + entry.target.id + "]")
+                .querySelector("a[href*=" + CSS.escape(entry.target.id) + "]")
                 ?.setAttribute("class", "active-scroll-spy");
             }
         },

@@ -1,5 +1,6 @@
 .richText {
     a {
+        -webkit-appearance: none;
         text-decoration: underline;
         color: rgb(33 50 76 / 0.8);
     }
@@ -23,8 +24,12 @@
             border: none !important;
             padding: 0 !important;
             vertical-align: top;
-        }
 
+            figure {
+                margin: 0;
+            }
+        }
+        
         tr:has(figure, picture) {
             th {
                 padding-bottom: 1.25rem !important;
@@ -53,8 +58,8 @@
      blockquote {
         border-left: 2px solid #111F31 ;
         padding-left: 1rem;
-        color: rgb(33 50 76);
+        color: rgb(33 50 76 / 0.8);
         font-style: italic;
-        margin: 0.5rem 0;
+        margin: 1.25rem 0;
      }
 }

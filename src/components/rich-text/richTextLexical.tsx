@@ -9,8 +9,7 @@ import { CustomHeadingJSXConverter } from './custom-converters/heading'
 import { CustomListJSXConverter } from './custom-converters/list'
 import { CustomParagraphJSXConverter } from './custom-converters/paragraph'
 import { CustomUploadJSXConverter } from './custom-converters/upload'
-import styles from "./richTextLexical.module.css"
-import { Fragment } from 'react/jsx-runtime'
+import styles from "./richTextLexical.module.scss"
 import { CustomTextJSXConverter } from './custom-converters/text'
 import { YoutubeJSXConverter } from './custom-converters/youtube'
 
@@ -27,7 +26,7 @@ const jsxConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
   blocks: {
     // myTextBlock is the slug of the block
     CalloutBlock: ({node} : {node : SerializedBlockNode}) => <CalloutBlock emoji={node.fields.emoji} content={node.fields.content} color={node.fields.color}></CalloutBlock>,
-    FigmaEmbedBlock: ({node} : {node: SerializedBlockNode}) => <div className="flex" dangerouslySetInnerHTML={{__html: node.fields.figmaEmbedCode}}></div>
+    FigmaEmbedBlock: ({node} : {node: SerializedBlockNode}) => <div className="flex my-5" dangerouslySetInnerHTML={{__html: node.fields.figmaEmbedCode}}></div>
   },
 })
 
