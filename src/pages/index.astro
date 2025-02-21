@@ -55,7 +55,10 @@ Astro.response.headers.set(
 );
 
 // The CDN should cache for a year, but revalidate if the cache tag changes
-Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
+Astro.response.headers.set(
+  "netlify-cdn-cache-control",
+  "public, durable, s-maxage=31536000"
+);
 
 // Tag the page with the book ID
 Astro.response.headers.set(
