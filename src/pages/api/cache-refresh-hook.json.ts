@@ -12,6 +12,7 @@ export async function POST({ request } : {request : Request}) {
   }
     try {
         await purgeCache({ tags: body.updateTags });
+        console.log("Purge cache successfully!")
     } catch {
         console.log("Could not purge cache!")
     }
