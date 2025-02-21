@@ -240,9 +240,10 @@ Astro.response.headers.set("Cache-Tag", id!);
         {
           otherCaseStudies.map((data) => (
             <div class="flex flex-col gap-5 max-w-75">
-              <img
+              <Image
                 src={cmsURL + data.thumbnailImage.url}
                 alt={data.thumbnailImage.alt}
+                inferSize
               />
               <a
                 href={encodeURIComponent(data.title)}

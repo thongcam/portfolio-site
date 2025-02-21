@@ -11,6 +11,7 @@ export const YoutubeJSXConverter: JSXConverters = {
 				allowFullScreen
                 title={"Embedded video"}
                 className="my-5"
+				loading='lazy'
 			></iframe>
 		)
 	},
