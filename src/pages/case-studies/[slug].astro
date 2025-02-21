@@ -202,9 +202,9 @@ Astro.response.headers.set("Cache-Tag", id!);
     </Section>
     <Section class={["mb-15"]} id="content">
       <div class="relative">
-        <div class="absolute right-[calc(-1*max(4vw,20px))] h-[100%] top-10">
+        <div class="absolute right-[calc(-1*max(5vw,20px))] h-[100%] top-10">
           <aside
-            class="p-5 bg-gray rounded-lg hidden md:block sticky top-10 w-[20vw] max-w-75"
+            class="p-5 bg-gray rounded-lg hidden md:block sticky top-5 w-[20vw] max-w-75 max-h-[calc(100vh-2.5rem)] overflow-y-auto scroll-spy-menu"
           >
             <ul
               class="text-sm text-pale-blue/80 leading-[1.25] overflow-ellipsis flex flex-col gap-2"
@@ -288,9 +288,30 @@ Astro.response.headers.set("Cache-Tag", id!);
               document
                 .querySelector(".active-scroll-spy")
                 ?.setAttribute("class", " ");
-              document
-                .querySelector("a[href*=" + CSS.escape(entry.target.id) + "]")
-                ?.setAttribute("class", "active-scroll-spy");
+              const currentScrollSpyItem: HTMLElement = document.querySelector(
+                "a[href*=" + CSS.escape(entry.target.id) + "]"
+              )!;
+              const scrollSpyMenu: HTMLElement =
+                document.querySelector(".scroll-spy-menu")!;
+
+              if (
+                scrollSpyMenu.scrollTop + scrollSpyMenu.offsetHeight <
+                currentScrollSpyItem.offsetTop + 20
+              ) {
+                scrollSpyMenu.scrollTop = Math.min(
+                  currentScrollSpyItem.offsetTop + 20,
+                  scrollSpyMenu.scrollHeight
+                );
+              } else if (
+                scrollSpyMenu.scrollTop >
+                currentScrollSpyItem.offsetTop - 20
+              ) {
+                scrollSpyMenu.scrollTop = Math.max(
+                  currentScrollSpyItem.offsetTop - 20,
+                  0
+                );
+              }
+              currentScrollSpyItem.setAttribute("class", "active-scroll-spy");
             }
         },
         {
@@ -304,6 +325,25 @@ Astro.response.headers.set("Cache-Tag", id!);
   <style>
     .active-scroll-spy {
       font-weight: bold;
+    }
+
+    .scroll-spy-menu {
+      scrollbar-width: thin;
+      scrollbar-color: rgb(33 50 76 / 0.25) transparent;
+      scrollbar-arrow-color: transparent;
+      scroll-behavior: smooth;
+    }
+
+    .scroll-spy-menu::-webkit-scrollbar {
+      width: 5px;
+    }
+    .scroll-spy-menu::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .scroll-spy-menu::-webkit-scrollbar-thumb {
+      background-color: rgb(33 50 76 / 0.25);
+      border-radius: 20px;
+      border: transparent;
     }
   </style>
 </html>
