@@ -53,8 +53,8 @@ const id = caseStudies.find(
   (caseStudy) => caseStudy.title == decodeURIComponent(slug!)
 )?.id;
 
-if (!id) {
-  Astro.redirect("/404");
+if (id === undefined) {
+  return Astro.redirect("/404");
 }
 
 const otherCaseStudies = caseStudies.filter((caseStudy) => caseStudy.id !== id);
@@ -98,18 +98,15 @@ const calculateScrollSpyItemPadding = (heading: string) => {
 
 // The browser should always check freshness
 Astro.response.headers.set(
-  "cache-control",
+  "Cache-Control",
   "public, max-age=0, must-revalidate"
 );
 
 // The CDN should cache for a year, but revalidate if the cache tag changes
-Astro.response.headers.set(
-  "netlify-cdn-cache-control",
-  "public, durable, s-maxage=31536000"
-);
+Astro.response.headers.set("Netlify-Cdn-Cache-Control", "s-maxage=31536000");
 
-// Tag the page with the book ID
-Astro.response.headers.set("netlify-cache-tag", id!);
+Astro.response.headers.set("Netlify-Cache-Tag", id!);
+Astro.response.headers.set("Cache-Tag", id!);
 ---
 
 <html class="scroll-smooth scroll-p-15" lang="en">

@@ -12,9 +12,9 @@ export async function POST({ request } : {request : Request}) {
   }
     try {
         await purgeCache({ tags: body.updateTags });
-        console.log("Purge cache successfully!")
+        console.info("Purge cache successfully!", body.updateTags)
     } catch {
-        console.log("Could not purge cache!")
+        console.info("Could not purge cache!")
     }
 
   return new Response(`Revalidated cache with tags: ${body.updateTags.join(", ")}`, { status: 200 });
