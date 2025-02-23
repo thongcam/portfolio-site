@@ -49,8 +49,8 @@ export const CustomUploadJSXConverter : JSXConverters = {
             }),
             {
                 src: imageDocument.value.url,
-                width:imageDocument.value.width,
-                height:imageDocument.value.height
+                width: imageDocument.value.width,
+                height: imageDocument.value.height
             }
           ]
           return <LightboxImage

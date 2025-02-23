@@ -8,10 +8,10 @@ type UploadNodeWithURL = SerializedUploadNode & {url : string}
 
 export default async function useAstroImage(obj : SerializedLexicalNode) {  
     async function traverse(obj:  SerializedLexicalNode) {
-        let currentNode = obj;
+      let currentNode = obj;
       if (typeof currentNode === 'object' && currentNode !== null) {
         await Promise.all(Object.entries(currentNode).map(async ([key, value]) => {   
-          if (key === 'mimeType' && (value as string).includes("image")) {
+          if (key === 'mimeType' && typeof(value) === "string" && value.includes("image")) {
             const currentUploadNode = currentNode as UploadNodeWithURL
             const astroImage = await getImage({src: cmsURL + currentUploadNode.url, inferSize: true, format:"webp"})
             currentUploadNode.url = astroImage.src
