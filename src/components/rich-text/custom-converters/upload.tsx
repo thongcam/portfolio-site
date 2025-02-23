@@ -55,11 +55,11 @@ export const CustomUploadJSXConverter : JSXConverters = {
           ]
           return <LightboxImage
             
-            src={cmsURL + (imageDocument.value.sizes.cardThumbnail.url || imageDocument.value.url) }
+            src={cmsURL + (imageDocument.value.sizes.tablet.url || imageDocument.value.url) }
             alt={imageDocument.value.alt}
             caption={imageDocument.fields.caption}
-            width={imageDocument.value.sizes.cardThumbnail.width}
-            height={imageDocument.value.sizes.cardThumbnail.height}
+            width={imageDocument.value.sizes.tablet.width}
+            height={imageDocument.value.sizes.tablet.height}
             srcSet={srcSet}
           ></LightboxImage>
         } else {
