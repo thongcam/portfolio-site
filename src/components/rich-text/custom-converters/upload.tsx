@@ -42,20 +42,20 @@ export const CustomUploadJSXConverter : JSXConverters = {
           const srcSet = [
             ...Object.entries(imageDocument.value.sizes).filter(([imageSize,imageSizeData]) => imageSizeData).map(([imageSize, imageSizeData]) => {
               return {
-                src: cmsURL + encodeURIComponent(imageSizeData.url),
+                src: cmsURL + imageSizeData.url,
                 width: imageSizeData.width,
                 height: imageSizeData.height,
               }
             }),
             {
-                src: cmsURL + encodeURIComponent(imageDocument.value.url),
+                src: cmsURL + imageDocument.value.url,
                 width:imageDocument.value.width,
                 height:imageDocument.value.height
             }
           ]
           return <LightboxImage
             
-            src={cmsURL + encodeURIComponent(imageDocument.value.sizes.tablet.url || imageDocument.value.url) }
+            src={cmsURL + (imageDocument.value.sizes.tablet.url || imageDocument.value.url) }
             alt={imageDocument.value.alt}
             caption={imageDocument.fields.caption}
             width={imageDocument.value.sizes.tablet.width}
