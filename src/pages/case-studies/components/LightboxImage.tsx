@@ -59,7 +59,7 @@ return (
                 <picture className="w-[100%]">
                     {
                         srcSet?.map(src => {
-                            return <source srcSet={encodeURIComponent(src.src)} height={src.height} width={src.width}/>
+                            return <source srcSet={src.src} height={src.height} width={src.width}/>
                         })
                     }
                     <img
