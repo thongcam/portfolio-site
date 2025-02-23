@@ -42,20 +42,20 @@ export const CustomUploadJSXConverter : JSXConverters = {
           const srcSet = [
             ...Object.entries(imageDocument.value.sizes).filter(([imageSize,imageSizeData]) => imageSizeData).map(([imageSize, imageSizeData]) => {
               return {
-                src: cmsURL + imageSizeData.url,
+                src: imageSizeData.url,
                 width: imageSizeData.width,
                 height: imageSizeData.height,
               }
             }),
             {
-                src: cmsURL + imageDocument.value.url,
+                src: imageDocument.value.url,
                 width:imageDocument.value.width,
                 height:imageDocument.value.height
             }
           ]
           return <LightboxImage
             
-            src={cmsURL + (imageDocument.value.sizes.tablet.url || imageDocument.value.url) }
+            src={(imageDocument.value.sizes.tablet.url || imageDocument.value.url) }
             alt={imageDocument.value.alt}
             caption={imageDocument.fields.caption}
             width={imageDocument.value.sizes.tablet.width}
@@ -63,7 +63,6 @@ export const CustomUploadJSXConverter : JSXConverters = {
             srcSet={srcSet}
           ></LightboxImage>
         } else {
-          updateImageURLs(node)
           return (<figure className="flex flex-col my-5 gap-2">
               {UploadJSXConverter.upload?.({node, ...args})}
               {node.fields.caption && <figcaption className="text-sm text-pale-blue/80"><RichTextLexical data={node.fields.caption}/>

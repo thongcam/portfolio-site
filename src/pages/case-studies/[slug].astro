@@ -13,6 +13,8 @@ import type { SerializedEditorState } from "lexical";
 import Color from "color";
 import extractHeadingsFromRichText from "../../utils/extractHeadingsFromRichText";
 import { Image } from "astro:assets";
+import useAstroImage from "../../utils/useAstroImage";
+import util from "util";
 
 interface SummaryBlockType {
   title: string;
@@ -65,6 +67,18 @@ const page = await pageResponse.json();
 
 const pageDescription = extractPlainTextFromRichText(
   page.thumbnail.description
+);
+
+const pageContent = page.content;
+
+await useAstroImage(pageContent);
+
+console.log(
+  util.inspect(page.content.root.children[15].value, {
+    showHidden: false,
+    depth: null,
+    colors: true,
+  })
 );
 
 const themeColor = Color(page.themeColor);
