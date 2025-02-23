@@ -56,11 +56,18 @@ return (
                     <img className="h-6" src="/icons/Frame inspect.svg" alt="" loading="lazy"/>
                     <span className="text-sm font-semibold text-white transition-all duration-150 ease-in">Click to zoom</span>
                 </span>
-                <img
-                src={src}
-                alt={alt}
-                loading="lazy"
-                />
+                <picture className="w-[100%]">
+                    {
+                        srcSet?.map(src => {
+                            return <source srcSet={src.src} height={src.height} width={src.width}/>
+                        })
+                    }
+                    <img
+                    src={src}
+                    alt={alt}
+                    loading="lazy"
+                    />
+                </picture>
             </button>
             {
                 caption &&

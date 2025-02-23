@@ -39,7 +39,7 @@
                 padding-bottom: 0 !important;
             }
 
-            th:not(:last-child) {
+            th:not(:last-child), th:only-child {
                 padding-right: 1.25rem !important;
             }
         }
