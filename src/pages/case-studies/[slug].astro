@@ -243,7 +243,7 @@ Astro.response.headers.set("Cache-Tag", id!);
           </aside>
         </div>
         <article class="md:w-[80%] max-w-[80ch] flow-root">
-          <RichTextLexical data={page.content} client:load />
+          <RichTextLexical data={page.content} client:idle />
         </article>
       </div>
     </Section>
