@@ -15,7 +15,6 @@ import HomepageContent from "../content/homepage.json";
 import { getImage } from "astro:assets";
 import HeroImage from "/public/images/hero-image.png";
 import { cmsURL } from "../constants";
-import { ClientRouter } from "astro:transitions";
 
 const homepageDataResponse = await fetch(`${cmsURL}/api/globals/homepage`, {
   credentials: "include",
@@ -85,7 +84,6 @@ Astro.response.headers.set("Cache-Tag", "global,case-studies,websites");
       content={cmsURL + settings.ogMetadata.image.sizes.portrait.url}
     />
     <title>{settings.siteTitle}</title>
-    <ClientRouter />
     <script
       defer
       data-domain="thong.cam"

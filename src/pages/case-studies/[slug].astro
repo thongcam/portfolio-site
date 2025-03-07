@@ -15,7 +15,6 @@ import extractHeadingsFromRichText from "../../utils/extractHeadingsFromRichText
 import { Image } from "astro:assets";
 import useAstroImage from "../../utils/useAstroImage";
 import util from "util";
-import { ClientRouter } from "astro:transitions";
 
 interface SummaryBlockType {
   title: string;
@@ -73,6 +72,14 @@ const pageDescription = extractPlainTextFromRichText(
 const pageContent = page.content;
 
 await useAstroImage(pageContent);
+
+console.log(
+  util.inspect(page.content.root.children[15].value, {
+    showHidden: false,
+    depth: null,
+    colors: true,
+  })
+);
 
 const themeColor = Color(page.themeColor);
 
@@ -142,7 +149,6 @@ Astro.response.headers.set("Cache-Tag", id!);
       data-domain="thong.cam"
       src="https://plausible.thong.cam/js/script.js"></script>
     <title>{page.title}</title>
-    <ClientRouter />
   </head>
   <body class="text-dark-blue font-body">
     <Navbar logos={logos} />
@@ -278,7 +284,60 @@ Astro.response.headers.set("Cache-Tag", id!);
       </ul>
     </Section>
     <Footer />
-  </body><style>
+  </body>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var sections = document.querySelectorAll(".scroll-spy-item");
+
+      sections.forEach((section, key) => {
+        section.id += String(key);
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries)
+            if (entry.isIntersecting) {
+              document
+                .querySelector(".active-scroll-spy")
+                ?.setAttribute("class", " ");
+              const currentScrollSpyItem: HTMLElement = document.querySelector(
+                "a[href*=" + CSS.escape(entry.target.id) + "]"
+              )!;
+              const scrollSpyMenu: HTMLElement =
+                document.querySelector(".scroll-spy-menu")!;
+
+              if (
+                scrollSpyMenu.scrollTop + scrollSpyMenu.offsetHeight <
+                currentScrollSpyItem.offsetTop + 20
+              ) {
+                scrollSpyMenu.scrollTop = Math.min(
+                  currentScrollSpyItem.offsetTop + 20,
+                  scrollSpyMenu.scrollHeight
+                );
+              } else if (
+                scrollSpyMenu.scrollTop >
+                currentScrollSpyItem.offsetTop - 20
+              ) {
+                scrollSpyMenu.scrollTop = Math.max(
+                  currentScrollSpyItem.offsetTop - 20,
+                  0
+                );
+              }
+              currentScrollSpyItem.setAttribute("class", "active-scroll-spy");
+            }
+        },
+        {
+          rootMargin: "0px 0px -90% 0px",
+        }
+      );
+      sections.forEach((e) => observer.observe(e));
+    })();
+  </script>
+
+  <style>
     .active-scroll-spy {
       font-weight: bold;
     }
@@ -286,7 +345,6 @@ Astro.response.headers.set("Cache-Tag", id!);
     .scroll-spy-menu {
       scrollbar-width: thin;
       scrollbar-color: rgb(33 50 76 / 0.25) transparent;
-
       scrollbar-arrow-color: transparent;
       scroll-behavior: smooth;
     }
@@ -304,53 +362,3 @@ Astro.response.headers.set("Cache-Tag", id!);
     }
   </style>
 </html>
-
-<script is:inline data-astro-rerun>
-  (function () {
-    "use strict";
-
-    var sections = document.querySelectorAll(".scroll-spy-item");
-
-    sections.forEach((section, key) => {
-      section.id += String(key);
-    });
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries)
-          if (entry.isIntersecting) {
-            document
-              .querySelector(".active-scroll-spy")
-              ?.setAttribute("class", " ");
-            const currentScrollSpyItem = document.querySelector(
-              "a[href*=" + CSS.escape(entry.target.id) + "]"
-            );
-            const scrollSpyMenu = document.querySelector(".scroll-spy-menu");
-
-            if (
-              scrollSpyMenu.scrollTop + scrollSpyMenu.offsetHeight <
-              currentScrollSpyItem.offsetTop + 20
-            ) {
-              scrollSpyMenu.scrollTop = Math.min(
-                currentScrollSpyItem.offsetTop + 20,
-                scrollSpyMenu.scrollHeight
-              );
-            } else if (
-              scrollSpyMenu.scrollTop >
-              currentScrollSpyItem.offsetTop - 20
-            ) {
-              scrollSpyMenu.scrollTop = Math.max(
-                currentScrollSpyItem.offsetTop - 20,
-                0
-              );
-            }
-            currentScrollSpyItem.setAttribute("class", "active-scroll-spy");
-          }
-      },
-      {
-        rootMargin: "0px 0px -90% 0px",
-      }
-    );
-    sections.forEach((e) => observer.observe(e));
-  })();
-</script>

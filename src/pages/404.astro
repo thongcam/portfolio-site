@@ -5,7 +5,6 @@ import HeroImage from "/public/images/hero-image.png";
 import Navbar from "../components/navbar/navbar.astro";
 import MaxWidth from "../components/maxWidth.astro";
 import { cmsURL } from "../constants";
-import { ClientRouter } from "astro:transitions";
 
 const logosResponse = await fetch(`${cmsURL}/api/globals/logos`, {
   credentials: "include",
@@ -38,7 +37,6 @@ const og_image_url = await getImage({ src: HeroImage, format: "webp" });
       data-domain="thong.cam"
       src="https://plausible.thong.cam/js/script.js"></script>
     <title>Page not found | {settings.siteTitle}</title>
-    <ClientRouter />
   </head>
   <body class="text-dark-blue font-body bg-gray">
     <Navbar logos={logos} />
