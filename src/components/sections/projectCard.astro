@@ -67,6 +67,7 @@ const external = checkURL.origin !== Astro.url.origin;
           tabindex="0"
           target={external ? "_blank" : ""}
           class="w-fit mt-8 p-5 flex flex-row gap-2 items-center bg-dark-blue hover:shadow-lg hover:bg-dark-blue-hover focus:shadow-lg focus:bg-dark-blue-hover focus-visible:outline-dark-cyan focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-95 target:scale-95 transition-scale ease-in-out duration-200 hover:cursor-pointer"
+          data-astro-prefetch
           ><span class="text-white">
             {linkLabel}
           </span>
