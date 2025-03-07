@@ -15,7 +15,6 @@ export default async function useAstroImage(obj : SerializedLexicalNode) {
             const currentUploadNode = currentNode as UploadNodeWithURL
             const astroImage = await getImage({src: cmsURL + currentUploadNode.url, inferSize: true, format:"webp"})
             currentUploadNode.url = astroImage.src
-            console.log(currentUploadNode.url)
           } else if (typeof value === 'object' && value !== null) {
             await traverse(value); // Recursively traverse nested objects
           } else if (Array.isArray(value)) {

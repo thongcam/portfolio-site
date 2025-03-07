@@ -73,14 +73,6 @@ const pageContent = page.content;
 
 await useAstroImage(pageContent);
 
-console.log(
-  util.inspect(page.content.root.children[15].value, {
-    showHidden: false,
-    depth: null,
-    colors: true,
-  })
-);
-
 const themeColor = Color(page.themeColor);
 
 const themeColorLight = Color.hwb({
