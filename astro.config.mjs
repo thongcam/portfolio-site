@@ -18,4 +18,7 @@ export default defineConfig({
     domains: ["astro.build", "thong.cam", "admin.thong.cam"],
     remotePatterns: [{ protocol: "https" }],
   },
+  prefetch: {
+    defaultStrategy: "viewport,",
+  },
 });
