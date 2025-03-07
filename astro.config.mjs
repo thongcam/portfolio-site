@@ -19,6 +19,6 @@ export default defineConfig({
     remotePatterns: [{ protocol: "https" }],
   },
   prefetch: {
-    defaultStrategy: "viewport,",
+    defaultStrategy: "viewport",
   },
 });
