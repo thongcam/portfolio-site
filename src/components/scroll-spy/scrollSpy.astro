@@ -1,0 +1,120 @@
+---
+import extractHeadingsFromRichText from "@/utils/extractHeadingsFromRichText";
+
+const {page} = Astro.props;
+
+const scrollSpyItems = [
+  {
+    title: "Summary",
+    id: "summary0",
+    heading: "h2",
+  },
+  ...extractHeadingsFromRichText(page),
+];
+
+const calculateScrollSpyItemPadding = (heading: string) => {
+  const headingLevelNumber = parseInt(heading.charAt(1), 10);
+  return `${0.5 * (headingLevelNumber - 2)}rem`;
+};
+---
+
+<aside
+class="p-5 bg-gray rounded-lg hidden md:block sticky top-5 w-[20vw] max-w-75 max-h-[calc(100vh-2.5rem)] overflow-y-auto scroll-spy-menu"
+>
+<ul
+    class="text-sm text-pale-blue/80 leading-[1.25] overflow-ellipsis flex flex-col gap-2"
+>
+    {
+    scrollSpyItems.map((scrollSpyItem) => {
+        return (
+        <li
+            class="hover:text-dark-blue hover:cursor-pointer line-clamp-2"
+            style={{
+            paddingInlineStart: calculateScrollSpyItemPadding(
+                scrollSpyItem.heading
+            ),
+            }}
+        >
+            <a href={`#${scrollSpyItem.id}`}>{scrollSpyItem.title}</a>
+        </li>
+        );
+    })
+    }
+</ul>
+</aside>
+
+<style>
+    .active-scroll-spy {
+      font-weight: bold;
+    }
+
+    .scroll-spy-menu {
+      scrollbar-width: thin;
+      scrollbar-color: rgb(33 50 76 / 0.25) transparent;
+      scrollbar-arrow-color: transparent;
+      scroll-behavior: smooth;
+    }
+
+    .scroll-spy-menu::-webkit-scrollbar {
+      width: 5px;
+    }
+    .scroll-spy-menu::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .scroll-spy-menu::-webkit-scrollbar-thumb {
+      background-color: rgb(33 50 76 / 0.25);
+      border-radius: 20px;
+      border: transparent;
+    }
+</style>
+
+<script>
+    (function () {
+        "use strict";
+
+        var sections = document.querySelectorAll(".scroll-spy-item");
+
+        sections.forEach((section, key) => {
+        section.id += String(key);
+        });
+
+        const observer = new IntersectionObserver(
+        (entries) => {
+            for (const entry of entries)
+            if (entry.isIntersecting) {
+                document
+                .querySelector(".active-scroll-spy")
+                ?.setAttribute("class", " ");
+                const currentScrollSpyItem: HTMLElement = document.querySelector(
+                "a[href*=" + CSS.escape(entry.target.id) + "]"
+                )!;
+                const scrollSpyMenu: HTMLElement =
+                document.querySelector(".scroll-spy-menu")!;
+
+                if (
+                scrollSpyMenu.scrollTop + scrollSpyMenu.offsetHeight <
+                currentScrollSpyItem.offsetTop + 20
+                ) {
+                scrollSpyMenu.scrollTop = Math.min(
+                    currentScrollSpyItem.offsetTop + 20,
+                    scrollSpyMenu.scrollHeight
+                );
+                } else if (
+                scrollSpyMenu.scrollTop >
+                currentScrollSpyItem.offsetTop - 20
+                ) {
+                scrollSpyMenu.scrollTop = Math.max(
+                    currentScrollSpyItem.offsetTop - 20,
+                    0
+                );
+                }
+                currentScrollSpyItem.setAttribute("class", "active-scroll-spy");
+            }
+        },
+        {
+            rootMargin: "0px 0px -90% 0px",
+        }
+        );
+        sections.forEach((e) => observer.observe(e));
+    })();
+</script>
