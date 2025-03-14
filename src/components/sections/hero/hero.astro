@@ -1,9 +1,9 @@
 ---
 import Section from "../section.astro";
-import DisplayHeader from "@components/headers/display-header/displayHeader.astro";
+import DisplayHeader from "@components/headers/displayHeader.astro";
 import Image from "astro/components/Image.astro";
 import ThreeRings from "@components/decorators/threeRings.astro";
-import StandOutCard from "@components/cards/standout-card/standOutCard.astro";
+import StandOutCard from "@/components/cards/standOutCard.astro";
 import { cmsURL } from "@/constants";
 const { data } = Astro.props;
 const image = data.heroPortrait.sizes.portrait;
