@@ -1,12 +1,10 @@
 ---
 import Section from "../section.astro";
-import DisplayHeader from "../headers/displayHeader.astro";
+import DisplayHeader from "@components/headers/display-header/displayHeader.astro";
 import Image from "astro/components/Image.astro";
-import HeroImage from "/public/images/hero-image.png";
-import ThreeRings from "../decorators/threeRings.astro";
-import StandOutCard from "../standOutCard.astro";
-import HomePageContent from "../../content/homepage.json";
-import { cmsURL } from "../../constants";
+import ThreeRings from "@components/decorators/threeRings.astro";
+import StandOutCard from "@components/cards/standout-card/standOutCard.astro";
+import { cmsURL } from "@/constants";
 const { data } = Astro.props;
 const image = data.heroPortrait.sizes.portrait;
 const imageAlt = data.heroPortrait.alt;

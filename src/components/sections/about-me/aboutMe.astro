@@ -1,12 +1,11 @@
 ---
 import Section from "../section.astro";
-import SectionHeader from "../headers/sectionHeader.astro";
+import SectionHeader from "@components/headers/section-header/sectionHeader.astro";
 import Image from "astro/components/Image.astro";
-import AboutMeImage from "/public/images/about me.png";
-import ThreeRings from "../decorators/threeRings.astro";
-import StandOutCard from "../standOutCard.astro";
+import ThreeRings from "@components/decorators/threeRings.astro";
+import StandOutCard from "@components/cards/standout-card/standOutCard.astro";
 import InternalLinkYellow from "/public/icons/Internal link yellow.svg";
-import { cmsURL } from "../../constants";
+import { cmsURL } from "@/constants";
 const { data } = Astro.props;
 const image = data.aboutMePortrait.sizes.portrait;
 const imageAlt = data.aboutMePortrait.alt;

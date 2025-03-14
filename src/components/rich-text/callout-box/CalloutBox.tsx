@@ -1,5 +1,5 @@
 import type { SerializedEditorState } from "lexical";
-import { RichTextLexical } from "../../../components/rich-text/richTextLexical";
+import { RichTextLexical } from "../richTextLexical";
 
 export default function CalloutBlock({emoji, content, color} : {emoji: string; content: SerializedEditorState, color : string}) {
   return (

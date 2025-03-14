@@ -5,9 +5,9 @@ import LogoLarge from "/public/images/logo-large.svg";
 import CloseMenu from "/public/icons/Close menu.svg";
 import OpenMenu from "/public/icons/Open menu.svg";
 import ExternalLinkIcon from "/public/icons/External link.svg";
-import TouchButton from "../touchButton.astro";
+import TouchButton from "../buttons/touchButton.astro";
 import Image from "astro/components/Image.astro";
-import MaxWidth from "../maxWidth.astro";
+import MaxWidth from "@components/container/maxWidth.astro";
 import { string } from "astro/zod";
 import type { NavLinkType } from "../../types/navLinkType";
 import { cmsURL } from "../../constants";
@@ -105,7 +105,6 @@ const navData = await navDataResponse.json();
 </div>
 
 <script>
-  import { classicNameResolver } from "typescript";
   import Headroom from "headroom.js";
 
   let navBar = document.getElementById("navBar");

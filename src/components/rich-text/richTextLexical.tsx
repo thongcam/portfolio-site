@@ -4,7 +4,7 @@ import {
 } from '@payloadcms/richtext-lexical/react'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import type { SerializedBlockNode, UploadData } from '@payloadcms/richtext-lexical'
-import CalloutBlock from '../../pages/case-studies/components/CalloutBox'
+import CalloutBlock from './callout-box/CalloutBox'
 import { CustomHeadingJSXConverter } from './custom-converters/heading'
 import { CustomListJSXConverter } from './custom-converters/list'
 import { CustomParagraphJSXConverter } from './custom-converters/paragraph'

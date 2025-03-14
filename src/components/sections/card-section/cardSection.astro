@@ -1,9 +1,8 @@
 ---
 import Section from "../section.astro";
-import SectionHeader from "../headers/sectionHeader.astro";
-import ProjectCard from "./projectCard.astro";
-import type { CardContentType } from "../../types/cardContentType";
-import { cmsURL } from "../../constants";
+import SectionHeader from "@components/headers/section-header/sectionHeader.astro";
+import ProjectCard from "@components/cards/project-card/projectCard.astro";
+import { cmsURL } from "@/constants";
 
 interface Props {
   id: string;

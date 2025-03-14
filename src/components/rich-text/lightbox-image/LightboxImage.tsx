@@ -6,7 +6,7 @@ import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/captions.css";
 import styles from "./LightboxImage.module.css";
 import type { SerializedEditorState } from "lexical";
-import { RichTextLexical } from "../../../components/rich-text/richTextLexical";
+import { RichTextLexical } from "../richTextLexical";
 
 interface LightboxImageProps {
     src: string;

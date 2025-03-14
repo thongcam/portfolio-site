@@ -1,7 +1,7 @@
 import type { JSXConverters } from "@payloadcms/richtext-lexical/react"
-import extractPlainTextFromRichText from "../../../utils/extractPlainTextFromRichText"
+import extractPlainTextFromRichText from "@utils/extractPlainTextFromRichText"
 import type { SerializedHeadingNode } from "@payloadcms/richtext-lexical"
-import { textToID } from "../../../utils/extractHeadingsFromRichText"
+import { textToID } from "@utils/extractHeadingsFromRichText"
 
 
 export const CustomHeadingJSXConverter : JSXConverters<SerializedHeadingNode> = {

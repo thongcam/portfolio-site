@@ -2,11 +2,11 @@
 import "@fontsource-variable/nunito";
 import "@fontsource-variable/noto-serif";
 import Navbar from "../../components/navbar/navbar.astro";
-import Section from "../../components/section.astro";
+import Section from "../../components/sections/section.astro";
 import { cmsURL } from "../../constants";
-import ContactLink from "../../components/contactLink.astro";
+import ContactLink from "../../components/buttons/contactLink.astro";
 import type { ContactLinkType } from "../../types/contactLinkType";
-import Footer from "../../components/footer.astro";
+import Footer from "../../components/footer/footer.astro";
 import extractPlainTextFromRichText from "../../utils/extractPlainTextFromRichText";
 import { RichTextLexical } from "../../components/rich-text/richTextLexical";
 import type { SerializedEditorState } from "lexical";
@@ -15,29 +15,14 @@ import extractHeadingsFromRichText from "../../utils/extractHeadingsFromRichText
 import { Image } from "astro:assets";
 import useAstroImage from "../../utils/useAstroImage";
 import util from "util";
+import getGlobals from "@/utils/getGlobals";
 
 interface SummaryBlockType {
   title: string;
   content: SerializedEditorState;
 }
 
-const logosResponse = await fetch(`${cmsURL}/api/globals/logos`, {
-  credentials: "include",
-});
-
-const logos = await logosResponse.json();
-
-const settingsResponse = await fetch(`${cmsURL}/api/globals/settings`, {
-  credentials: "include",
-});
-
-const settings = await settingsResponse.json();
-
-const contactsResponse = await fetch(`${cmsURL}/api/globals/contacts`, {
-  credentials: "include",
-});
-
-const contacts = await contactsResponse.json();
+const {logos, contacts, settings} = await getGlobals();
 
 const caseStudiesResponse = await fetch(`${cmsURL}/api/case-studies/all`, {
   credentials: "include",
@@ -46,22 +31,21 @@ const caseStudiesResponse = await fetch(`${cmsURL}/api/case-studies/all`, {
 const caseStudies: {
   title: string;
   id: string;
+  slug: string;
   thumbnailImage: { url: string; alt: string };
 }[] = await caseStudiesResponse.json();
 
 const { slug } = Astro.params;
 
-const id = caseStudies.find(
-  (caseStudy) => caseStudy.title == decodeURIComponent(slug!)
-)?.id;
+const currentCaseStudy = caseStudies.find(_ => _.slug === slug)
 
-if (id === undefined) {
+if (!currentCaseStudy) {
   return Astro.redirect("/404");
 }
 
-const otherCaseStudies = caseStudies.filter((caseStudy) => caseStudy.id !== id);
+const otherCaseStudies = caseStudies.filter((caseStudy) => caseStudy.slug !== slug);
 
-const pageResponse = await fetch(`${cmsURL}/api/case-studies/${id}`);
+const pageResponse = await fetch(`${cmsURL}/api/case-studies/by-slug/${slug}`);
 
 const page = await pageResponse.json();
 
@@ -111,8 +95,8 @@ Astro.response.headers.set(
 // The CDN should cache for a year, but revalidate if the cache tag changes
 Astro.response.headers.set("Netlify-Cdn-Cache-Control", "s-maxage=31536000");
 
-Astro.response.headers.set("Netlify-Cache-Tag", id!);
-Astro.response.headers.set("Cache-Tag", id!);
+Astro.response.headers.set("Netlify-Cache-Tag", currentCaseStudy.id!);
+Astro.response.headers.set("Cache-Tag", currentCaseStudy.id!);
 ---
 
 <html class="scroll-smooth scroll-p-15" lang="en">
@@ -252,7 +236,7 @@ Astro.response.headers.set("Cache-Tag", id!);
                 inferSize
               />
               <a
-                href={encodeURIComponent(data.title)}
+                href={data.slug}
                 class="text-xl/[1.25] font-display font-bold underline hover:text-pale-blue/80"
                 tabindex="0"
                 data-astro-prefetch

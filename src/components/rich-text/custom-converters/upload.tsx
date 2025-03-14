@@ -1,8 +1,7 @@
 import type { SerializedUploadNode } from "@payloadcms/richtext-lexical";
 import { UploadJSXConverter, type JSXConverters } from "@payloadcms/richtext-lexical/react";
-import { cmsURL } from "../../../constants";
-import LightboxImage from "../../../pages/case-studies/components/LightboxImage";
-import { Fragment } from "react/jsx-runtime";
+import { cmsURL } from "@/constants";
+import LightboxImage from "../lightbox-image/LightboxImage";
 import { RichTextLexical } from "../richTextLexical";
 
 interface SingleImage {
