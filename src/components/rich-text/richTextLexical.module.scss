@@ -30,6 +30,17 @@
             }
         }
 
+        td:has(figure, picture) {
+            background-color: transparent;
+            border: none !important;
+            padding: 0 !important;
+            vertical-align: top;
+
+            figure {
+                margin: 0;
+            }
+        }
+
         tr:has(figure, picture) {
             th {
                 padding-bottom: 1.25rem !important;
