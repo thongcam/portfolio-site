@@ -59,6 +59,8 @@ return (
                 <img
                 src={src}
                 alt={alt}
+                width={width}
+                height={height}
                 loading="lazy"
                 />
             </button>
