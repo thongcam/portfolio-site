@@ -37,8 +37,9 @@ const imageAlt = data.heroPortrait.alt;
           {data.standoutCard.tagline}
         </p>
       </StandOutCard>
+      <!-- Old classes for ThreeRings on mobile screen: w-[80%] left-[50%] -translate-x-[50%] top-[min(55vw,24rem)]  -->
       <ThreeRings
-        class="w-[80%] absolute left-[50%] -translate-x-[50%] z-0 top-[min(55vw,24rem)] md:w-[22vw] md:min-w-[15rem] md:top-[-17%] md:right-[-9%] lg:top-[-18%] 2xl:top-[-24%] 2xl:right-[-10%] md:left-auto md:translate-x-0 transition-[top,_left] duration-300"
+        class="hidden z-0 absolute md:block md:w-[22vw] md:min-w-[15rem] md:top-[-17%] md:right-[-9%] lg:top-[-18%] 2xl:top-[-24%] 2xl:right-[-10%] md:left-auto md:translate-x-0 transition-[top,_left] duration-300"
         enableAnimation={true}
         fromCorner={true}
       />
