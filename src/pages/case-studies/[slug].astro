@@ -22,7 +22,7 @@ interface SummaryBlockType {
   content: SerializedEditorState;
 }
 
-const {logos, contacts, settings} = await getGlobals();
+const { logos, contacts, settings } = await getGlobals();
 
 const caseStudiesResponse = await fetch(`${cmsURL}/api/case-studies/all`, {
   credentials: "include",
@@ -37,13 +37,15 @@ const caseStudies: {
 
 const { slug } = Astro.params;
 
-const currentCaseStudy = caseStudies.find(_ => _.slug === slug)
+const currentCaseStudy = caseStudies.find((_) => _.slug === slug);
 
 if (!currentCaseStudy) {
   return Astro.redirect("/404");
 }
 
-const otherCaseStudies = caseStudies.filter((caseStudy) => caseStudy.slug !== slug);
+const otherCaseStudies = caseStudies.filter(
+  (caseStudy) => caseStudy.slug !== slug
+);
 
 const pageResponse = await fetch(`${cmsURL}/api/case-studies/by-slug/${slug}`);
 
@@ -59,7 +61,8 @@ await useAstroImage(pageContent);
 
 const themeColor = Color(page.themeColor);
 
-const {themeColorLight, themeColorLighter} = generateArticleColors(themeColor);
+const { themeColorLight, themeColorLighter } =
+  generateArticleColors(themeColor);
 
 // The browser should always check freshness
 Astro.response.headers.set(
@@ -168,7 +171,7 @@ Astro.response.headers.set("Cache-Tag", currentCaseStudy.id!);
     <Section class={["mb-15"]} id="content">
       <div class="relative">
         <div class="absolute right-[calc(-1*max(5vw,20px))] h-[100%] top-10">
-          <ScrollSpy page={page}/>
+          <ScrollSpy page={page} />
         </div>
         <article class="md:w-[80%] max-w-[80ch] flow-root">
           <RichTextLexical data={page.content} client:idle />

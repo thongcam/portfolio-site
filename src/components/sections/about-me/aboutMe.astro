@@ -38,7 +38,7 @@ const imageAlt = data.aboutMePortrait.alt;
             <span class="fit-content">{data.buttonLabel}</span>
             <div class="flex flex-col justify-center">
               <Image
-                loading={"eager"}
+                loading={"lazy"}
                 src={InternalLinkYellow}
                 width={InternalLinkYellow.width}
                 height={InternalLinkYellow.height}
@@ -49,7 +49,7 @@ const imageAlt = data.aboutMePortrait.alt;
           </a>
         </StandOutCard>
         <Image
-          loading={"eager"}
+          loading={"lazy"}
           src={cmsURL + image.url}
           width={image.width}
           height={image.height}

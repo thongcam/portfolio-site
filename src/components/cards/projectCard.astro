@@ -76,7 +76,7 @@ const external = checkURL.origin !== Astro.url.origin;
             src={external ? ExternalLinkWhite : InternalLinkWhite}
             alt={`${external ? "External link" : "Internal link"} to "${title}"`}
             class:list={"s-[1rem]"}
-            loading={"eager"}
+            loading={"lazy"}
             width={ExternalLinkWhite.width}
             height={ExternalLinkWhite.height}
           />
@@ -84,7 +84,7 @@ const external = checkURL.origin !== Astro.url.origin;
       </div>
     </div>
     <Image
-      loading={"eager"}
+      loading={"lazy"}
       src={decorator == "ellipse" ? EllipseDecorator : RectangleDecorator}
       alt="Ellipse decorator"
       class:list={[
