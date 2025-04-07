@@ -17,14 +17,13 @@ const settingsResponse = await fetch(`${cmsURL}/api/globals/settings`, {
 });
 
 const settings = await settingsResponse.json();
-
 ---
 
 <html lang="en" class="scroll-smooth scroll-p-15 md:scroll-m-0">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href={cmsURL + logos.logoSmall.url} />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta
       name="description"

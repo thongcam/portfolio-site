@@ -13,7 +13,7 @@ import Footer from "@components/footer/footer.astro";
 import { cmsURL } from "@/constants";
 import getGlobals from "@/utils/getGlobals";
 
-const {homepageData, logos, contacts, settings} = await getGlobals();
+const { homepageData, logos, contacts, settings } = await getGlobals();
 
 const base_url = import.meta.env.BASE_URL;
 
@@ -40,7 +40,7 @@ Astro.response.headers.set("Cache-Tag", "global,case-studies,websites");
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href={cmsURL + logos.logoSmall.url} />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={settings.siteDescription} />
     <meta property="og:locale" content={settings.ogMetadata.locale} />
