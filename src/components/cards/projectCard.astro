@@ -72,8 +72,8 @@ const external = checkURL.origin !== Astro.url.origin;
             {linkLabel}
           </span>
 
-          <img
-            src={external ? ExternalLinkWhite.src : InternalLinkWhite.src}
+          <Image
+            src={external ? ExternalLinkWhite : InternalLinkWhite}
             alt={`${external ? "External link" : "Internal link"} to "${title}"`}
             class:list={"s-[1rem]"}
             loading={"eager"}
@@ -83,11 +83,9 @@ const external = checkURL.origin !== Astro.url.origin;
         </a>
       </div>
     </div>
-    <img
+    <Image
       loading={"eager"}
-      src={decorator == "ellipse"
-        ? EllipseDecorator.src
-        : RectangleDecorator.src}
+      src={decorator == "ellipse" ? EllipseDecorator : RectangleDecorator}
       alt="Ellipse decorator"
       class:list={[
         "absolute z-0 opacity-40 w-[45%] min-w-[10rem] max-w-[13rem] -bottom-[min(30%,_4rem)] -right-[10%]",

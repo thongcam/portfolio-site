@@ -1,15 +1,15 @@
 ---
+import { Image } from "astro:assets";
 import NumberingDecoratorBackground from "/public/decorators/numberings/background.svg";
 ---
 
 <h2 class="flex flex-col gap-3 md:flex-row md:gap-5 md:align-center">
   <div class="relative w-fit">
-    <img
-      src={NumberingDecoratorBackground.src}
+    <Image
+      src={NumberingDecoratorBackground}
       alt="Numbering decorator"
       class:list={""}
       width={55}
-      height={"auto"}
       loading={"eager"}
     />
     <div

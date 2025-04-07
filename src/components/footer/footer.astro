@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import MaxWidth from "@components/container/maxWidth.astro";
 import HalfRing from "/public/decorators/half ring.svg";
 import LogoSmall from "/public/images/logo-small.svg";
@@ -14,8 +15,8 @@ const footerData = await footerDataResponse.json();
 <footer class="relative bg-gray">
   <div class="bg-white md:pt-20">
     <div class="relative w-[clamp(15rem,30vw,18em)] mx-auto">
-      <img
-        src={HalfRing.src}
+      <Image
+        src={HalfRing}
         width={HalfRing.width}
         height={HalfRing.height}
         alt=""
@@ -25,8 +26,8 @@ const footerData = await footerDataResponse.json();
       <div
         class="absolute left-[50%] -translate-x-[50%] translate-y-[50%] bottom-0 w-[50%]"
       >
-        <img
-          src={LogoSmall.src}
+        <Image
+          src={LogoSmall}
           width={LogoSmall.width}
           height={LogoSmall.height}
           alt=""

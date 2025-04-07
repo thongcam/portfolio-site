@@ -5,23 +5,24 @@ interface Props {
 const { class: className } = Astro.props;
 import EllipseDecorator from "/public/decorators/ellipseDecorator.svg";
 import RectangleDecorator from "/public/decorators/rectangleDecorator.svg";
+import Image from "astro/components/Image.astro";
 ---
 
 <div
   class:list={["relative p-6 bg-dark-blue overflow-clip md:p-10", className]}
 >
   <slot />
-  <img
+  <Image
     loading={"eager"}
-    src={EllipseDecorator.src}
+    src={EllipseDecorator}
     width={EllipseDecorator.width}
     height={EllipseDecorator.height}
     alt="Ellipse decorator"
     class:list={"w-[50%] min-w-[10rem] max-w-[13rem] absolute -bottom-[20%] -right-[10%] -z-10"}
   />
-  <img
+  <Image
     loading={"eager"}
-    src={RectangleDecorator.src}
+    src={RectangleDecorator}
     width={RectangleDecorator.width}
     height={RectangleDecorator.height}
     alt="Rectangle decorator"

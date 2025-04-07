@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import type { NavLinkType } from "@customTypes/navLinkType";
 import ExternalLink from "/public/icons/External link.svg";
 interface Props extends NavLinkType {}
@@ -17,8 +18,8 @@ const { title, url } = Astro.props;
 
     {
       url.startsWith("http") && (
-        <img
-          src={ExternalLink.src}
+        <Image
+          src={ExternalLink}
           width={ExternalLink.width}
           height={ExternalLink.height}
           alt={"External link to " + title}
