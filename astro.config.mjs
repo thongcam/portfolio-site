@@ -6,19 +6,29 @@ import sitemap from "@astrojs/sitemap";
 
 import react from "@astrojs/react";
 
+import tailwindcss from "@tailwindcss/vite";
+
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind(), sitemap(), react()],
+  integrations: [sitemap(), react()],
   output: "server",
+
   adapter: netlify({
     edgeMiddleware: true,
   }),
+
   site: "https://thong.cam",
+
   image: {
     domains: ["astro.build", "thong.cam", "admin.thong.cam"],
     remotePatterns: [{ protocol: "https" }],
   },
+
   prefetch: {
     defaultStrategy: "viewport",
+  },
+
+  vite: {
+    plugins: [tailwindcss()],
   },
 });

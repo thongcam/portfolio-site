@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+    /* Colors */
+    --color-white: #ffffff;
+    --color-gray: #f9f9fa;
+    --color-dark-gray: #e0e0e1;
+    --color-dark-blue: #111f31;
+    --color-dark-blue-hover: #293546;
+    --color-pale-blue: #21324c;
+    --color-yellow: #ebb723;
+    --color-cyan: #34bab4;
+    --color-dark-cyan: #198f8a;
+  
+    /* Spacing */
+    --spacing-15: 3.75rem;
+    --spacing-25: 6.25rem;
+    --spacing-30: 7.5rem;
+    --spacing-50: 12.5rem;
+    --spacing-75: 18.75rem;
+    --spacing-100: 25rem;
+    --spacing-125: 31.25rem;
+    --spacing-150: 37.5rem;
+  
+    /* Font Sizes */
+    --text-sm: 0.9rem;
+    --text-base: 1rem;
+    --text-md: 1.2rem;
+    --text-lg: 1.4rem;
+    --text-xl: 1.6rem;
+    --text-2xl: 1.728rem;
+    --text-3xl: 2.0735rem;
+    --text-4xl: 2.5rem;
+    --text-6xl: clamp(3rem, 5.5vw, 3.75rem);
+  
+    /* Font Families */
+    --font-display: "Noto Serif Variable", serif;
+    --font-body: "Nunito Variable", sans-serif;
+  
+    /* Breakpoints */
+    --breakpoint-s: 434px;
+    --breakpoint-md: 741px;
+    --breakpoint-lg: 1047px;
+    --breakpoint-xl: 1200px;
+    --breakpoint-2xl: 1350px;
+  
+    /* Animation */
+    --animate-underlining: underline 1000ms 200ms cubic-bezier(0, 0, 0.2, 1) forwards;
+  
+    /* Keyframes */
+    @keyframes underline {
+      0% {
+        background-size: 0% 0.8rem;
+      }
+      100% {
+        background-size: 100% 0.8rem;
+      }
+    }
+  }

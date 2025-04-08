@@ -1,7 +1,4 @@
 ---
-import Navbar from "@components/navbar/navbar.astro";
-import "@fontsource-variable/nunito";
-import "@fontsource-variable/noto-serif";
 import Hero from "@components/sections/hero/hero.astro";
 import CardSection from "@components/sections/card-section/cardSection.astro";
 import AboutMe from "@components/sections/about-me/aboutMe.astro";
@@ -9,13 +6,11 @@ import type { ContactLinkType } from "@customTypes/contactLinkType";
 import DisplayHeader from "@components/headers/displayHeader.astro";
 import Section from "@components/sections/section.astro";
 import ContactLink from "@components/buttons/contactLink.astro";
-import Footer from "@components/footer/footer.astro";
 import { cmsURL } from "@/constants";
 import getGlobals from "@/utils/getGlobals";
+import Layout from "@/layouts/layout.astro";
 
-const { homepageData, logos, contacts, settings } = await getGlobals();
-
-const base_url = import.meta.env.BASE_URL;
+const { homepageData, contacts, settings } = await getGlobals();
 
 const caseStudiesSection = homepageData.caseStudies;
 
@@ -36,75 +31,60 @@ Astro.response.headers.set("Cache-Tag", "global,case-studies,websites");
 //Teset
 ---
 
-<html lang="en" class="scroll-smooth scroll-p-15 md:scroll-m-0">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href={cmsURL + logos.logoSmall.url} />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={settings.siteDescription} />
-    <meta property="og:locale" content={settings.ogMetadata.locale} />
-    <meta property="og:type" content={settings.ogMetadata.type} />
-    <meta property="og:title" content={settings.siteTitle} />
-    <meta property="og:description" content={settings.ogMetadata.description} />
-    <meta property="og:url" content={base_url} />
-    <meta property="og:site_name" content="Thong Cam" />
-    <meta
-      property="og:image"
-      content={cmsURL + settings.ogMetadata.image.sizes.portrait.url}
-    />
-    <meta
-      property="og:image:secure_url"
-      content={cmsURL + settings.ogMetadata.image.sizes.portrait.url}
-    />
-    <title>{settings.siteTitle}</title>
-    <script
-      defer
-      data-domain="thong.cam"
-      src="https://plausible.thong.cam/js/script.js"></script>
-  </head>
-  <body class="text-dark-blue font-body bg-gray">
-    <Navbar logos={logos} />
-    <Hero data={homepageData.heroSection} />
-    <CardSection
-      bg={caseStudiesSection.bg}
-      class=""
-      imageAlign={caseStudiesSection.imageAlign}
-      decorator={caseStudiesSection.decorator}
-      subheading={caseStudiesSection.sectionSubtitle || ""}
-      content={caseStudiesSection.showcasedProjects}
-      id="case-studies"
-    >
-      <span slot="numbering">{caseStudiesSection.sectionNumber}.</span>
-      <span slot="content">{caseStudiesSection.sectionTitle}</span>
-    </CardSection>
-    <CardSection
-      bg={websitesSection.bg}
-      class=""
-      imageAlign={websitesSection.imageAlign}
-      decorator={websitesSection.decorator}
-      subheading={websitesSection.sectionSubtitle || ""}
-      content={websitesSection.showcasedProjects}
-      id="websites"
-    >
-      <span slot="numbering">{websitesSection.sectionNumber}.</span>
-      <span slot="content">{websitesSection.sectionTitle}</span>
-    </CardSection>
-    <AboutMe data={homepageData.aboutMe} />
-    <Section class={["bg-white pt-10 md:pt-15 pb-20"]} id="contact">
-      <div>
-        <DisplayHeader class="">{homepageData.contact.header}</DisplayHeader>
-        <ul class="pt-15 flex flex-row flex-wrap gap-y-10 gap-x-30">
-          {
-            contacts.contactLinks.map((link: ContactLinkType) => (
-              <ContactLink href={link.url} label={link.title}>
-                {link.title}
-              </ContactLink>
-            ))
-          }
-        </ul>
-      </div>
-    </Section>
-    <Footer />
-  </body>
-</html>
+<Layout
+  pageMetaDescription={settings.siteDescription}
+  pageOgMeta={{
+    title: settings.ogMetadata.title,
+    description: settings.ogMetadata.description,
+    url: Astro.url,
+    imageUrl: cmsURL + settings.ogMetadata.image.sizes.portrait.url,
+    imageUrlSecure: cmsURL + settings.ogMetadata.image.sizes.portrait.url,
+  }}
+>
+  <Hero data={homepageData.heroSection} />
+  <CardSection
+    bg={caseStudiesSection.bg}
+    class=""
+    imageAlign={caseStudiesSection.imageAlign}
+    decorator={caseStudiesSection.decorator}
+    subheading={caseStudiesSection.sectionSubtitle || ""}
+    content={caseStudiesSection.showcasedProjects}
+    id="case-studies"
+  >
+    <span slot="numbering">{caseStudiesSection.sectionNumber}.</span>
+    <span slot="content">{caseStudiesSection.sectionTitle}</span>
+  </CardSection>
+  <CardSection
+    bg={websitesSection.bg}
+    class=""
+    imageAlign={websitesSection.imageAlign}
+    decorator={websitesSection.decorator}
+    subheading={websitesSection.sectionSubtitle || ""}
+    content={websitesSection.showcasedProjects}
+    id="websites"
+  >
+    <span slot="numbering">{websitesSection.sectionNumber}.</span>
+    <span slot="content">{websitesSection.sectionTitle}</span>
+  </CardSection>
+  <AboutMe data={homepageData.aboutMe} />
+  <Section class={["bg-white pt-10 md:pt-15 pb-20"]} id="contact">
+    <div>
+      <DisplayHeader class="">{homepageData.contact.header}</DisplayHeader>
+      <ul class="pt-15 flex flex-row flex-wrap gap-y-10 gap-x-30">
+        {
+          contacts.contactLinks.map((link: ContactLinkType) => (
+            <ContactLink href={link.url} label={link.title}>
+              {link.title}
+            </ContactLink>
+          ))
+        }
+      </ul>
+    </div>
+  </Section>
+</Layout>
+
+<style>
+  body {
+    background-color: var(--color-gray);
+  }
+</style>

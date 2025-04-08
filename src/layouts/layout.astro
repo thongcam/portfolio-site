@@ -1,0 +1,60 @@
+---
+import "@fontsource-variable/nunito";
+import "@fontsource-variable/noto-serif";
+import Footer from "@/components/footer/footer.astro";
+import Navbar from "@/components/navbar/navbar.astro";
+import { cmsURL } from "@/constants";
+import getGlobals from "@/utils/getGlobals";
+import "../styles/global.css";
+
+interface Props {
+    pageMetaDescription?: string;
+    pageTitle?: string;
+    pageOgMeta?: {
+        title: string;
+        description: string;
+        url: URL;
+        imageUrl: string;
+        imageUrlSecure: string;
+    }
+}
+
+const { logos, settings } = await getGlobals();
+const { pageMetaDescription, pageTitle, pageOgMeta } = Astro.props as Props;
+---
+
+<html lang="en" class="scroll-smooth scroll-p-15 md:scroll-m-0">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href={cmsURL + logos.logoSmall.url} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    {
+      pageMetaDescription && (
+        <meta name="description" content={pageMetaDescription} />
+      )
+    }
+    {
+        pageOgMeta && (
+            <meta property="og:locale" content={settings.ogMetadata.locale} />
+            <meta property="og:type" content={settings.ogMetadata.type} />
+            <meta property="og:title" content={pageOgMeta.title} />
+            <meta property="og:description" content={pageOgMeta.description} />
+            <meta property="og:url" content={pageOgMeta.url} />
+            <meta property="og:site_name" content="Thong Cam" />
+            <meta property="og:image" content={pageOgMeta.imageUrl} />
+            <meta property="og:image:secure_url" content={pageOgMeta.imageUrlSecure} />
+        )
+    }
+    <title>{`${pageTitle ? pageTitle + " | " : ""}${settings.siteTitle}`}</title>
+    <script
+      defer
+      data-domain="thong.cam"
+      src="https://plausible.thong.cam/js/script.js"></script>
+  </head>
+  <body class="text-dark-blue font-body">
+    <Navbar logos={logos} />
+    <slot />
+    <Footer />
+  </body>
+</html>
