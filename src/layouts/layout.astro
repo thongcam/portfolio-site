@@ -44,6 +44,7 @@ const { pageMetaDescription, pageTitle, pageOgMeta } = Astro.props as Props;
             <meta property="og:site_name" content="Thong Cam" />
             <meta property="og:image" content={pageOgMeta.imageUrl} />
             <meta property="og:image:secure_url" content={pageOgMeta.imageUrlSecure} />
+            <meta property="og:logo" content={cmsURL + logos.logoSmall.url} />
         )
     }
     <title>{`${pageTitle ? pageTitle + " | " : ""}${settings.siteTitle}`}</title>
