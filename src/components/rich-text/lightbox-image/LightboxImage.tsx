@@ -51,7 +51,7 @@ return (
 
         </Lightbox>
         <figure className="flex flex-col gap-2 my-5">
-            <button className="relative" onClick={() => setOpen(true)}>
+            <button className="relative cursor-pointer" onClick={() => setOpen(true)}>
                 <span className={"absolute bottom-2 right-3 md:bottom-4 md:right-5 p-2 bg-pale-blue/50 rounded-full flex flex-row items-center  " + styles.zoomHint} style={{}}>
                     <img className="h-6" src="/icons/Frame inspect.svg" alt="" loading="lazy"/>
                     <span className="text-sm font-semibold text-white transition-all duration-150 ease-in">Click to zoom</span>
