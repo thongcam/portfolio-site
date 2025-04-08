@@ -5,6 +5,9 @@ interface Props {
   fromCorner: boolean;
 }
 const { class: className, enableAnimation, fromCorner } = Astro.props;
+const initialOffsetY = fromCorner
+  ? "translate(-50px, 80px)"
+  : "translate(-50px, 0)";
 ---
 
 <div class:list={className}>
@@ -16,10 +19,8 @@ const { class: className, enableAnimation, fromCorner } = Astro.props;
         viewBox="0 0 421 421"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        class:list={[
-          "threeCircles md:translate-x-[-50px]",
-          fromCorner && " md:translate-y-[80px] ",
-        ]}
+        class="threeCircles"
+        style={`transform: translate(-50px,${fromCorner ? "80px" : "0"});`}
       >
         <circle
           cx="210"
@@ -148,7 +149,6 @@ const { class: className, enableAnimation, fromCorner } = Astro.props;
 
   @keyframes threeCircles {
     from {
-      /* transform: translate(-50px, 80px); */
     }
     to {
       transform: translate(0);
