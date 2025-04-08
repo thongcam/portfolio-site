@@ -29,6 +29,7 @@ const navData = await navDataResponse.json();
         src={cmsURL + logos.logoSmall.url}
         height={logos.logoSmall.height}
         width={logos.logoSmall.width}
+        densities={[2]}
         alt="Portfolio site Home"
         class={"md:hidden"}
         loading={"eager"}
@@ -37,6 +38,7 @@ const navData = await navDataResponse.json();
         src={cmsURL + logos.logoLarge.url}
         height={logos.logoLarge.height}
         width={logos.logoLarge.width}
+        densities={[2]}
         alt="Portfolio site Home"
         class:list={"hidden md:block"}
         loading={"eager"}
@@ -65,7 +67,7 @@ const navData = await navDataResponse.json();
             width={CloseMenu.width}
             height={CloseMenu.height}
             alt="Close hamburger menu"
-            height={25}
+            densities={[2]}
             loading={"eager"}
           />
         </button>
@@ -94,10 +96,8 @@ const navData = await navDataResponse.json();
     >
       <Image
         src={OpenMenu}
-        width={OpenMenu.width}
-        height={OpenMenu.height}
+        densities={[2]}
         alt="Open hamburger menu"
-        height={25}
         loading={"eager"}
       />
     </button>
