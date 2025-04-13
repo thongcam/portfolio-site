@@ -1,17 +1,38 @@
 ---
 import NavbarLink from "./navbarLink/navbarLink.astro";
-import LogoSmall from "/public/images/logo-small.svg";
-import LogoLarge from "/public/images/logo-large.svg";
 import CloseMenu from "/public/icons/Close menu.svg";
 import OpenMenu from "/public/icons/Open menu.svg";
-import ExternalLinkIcon from "/public/icons/External link.svg";
-import TouchButton from "../buttons/touchButton.astro";
 import Image from "astro/components/Image.astro";
 import MaxWidth from "@components/container/maxWidth.astro";
-import { string } from "astro/zod";
 import type { NavLinkType } from "../../types/navLinkType";
 import { cmsURL } from "../../constants";
-const { logos } = Astro.props;
+import generateArticleColors from "@/utils/generateArticleColors";
+import Color from "color";
+
+interface Props {
+  logos: {
+    logoSmall: {
+      url: string;
+      height: number;
+      width: number;
+    };
+    logoLarge: {
+      url: string;
+      height: number;
+      width: number;
+    };
+  };
+  themeColor?: string;
+}
+
+const { logos, themeColor } = Astro.props;
+
+let themeColorLighterRGB = "inherit";
+
+if (themeColor) {
+  const { themeColorLighter } = generateArticleColors(Color(themeColor));
+  themeColorLighterRGB = themeColorLighter.rgb().string();
+}
 
 const navDataResponse = await fetch(`${cmsURL}/api/globals/nav`, {
   credentials: "include",
@@ -20,7 +41,10 @@ const navDataResponse = await fetch(`${cmsURL}/api/globals/nav`, {
 const navData = await navDataResponse.json();
 ---
 
-<div class="h-full bg-gray/80 sticky top-0 backdrop-blur z-50" id="navBar">
+<div
+  class="h-full bg-gray/80 sticky top-0 backdrop-blur z-50 top transition-colors"
+  id="navBar"
+>
   <MaxWidth
     class="flex flex-row justify-between content-middle items-center py-6"
   >
@@ -238,9 +262,19 @@ const navData = await navDataResponse.json();
         toggleHamburgerMenu();
       }
     });
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY === 0) {
+      // At the top
+      navBar!.classList.add("top");
+    } else {
+      // Scrolled down
+      navBar!.classList.remove("top");
+    }
+  });
 </script>
 
-<style>
+<style define:vars={{ themeColorLighterRGB }}>
   button:after {
     --extend-clickable-area-by: -10px;
     content: "";
@@ -264,5 +298,16 @@ const navData = await navDataResponse.json();
   }
   .headroom--unpinned {
     transform: translateY(-100%);
+  }
+
+  #navBar {
+    transition-property:
+      transform, color, background-color, border-color, outline-color,
+      text-decoration-color, fill, stroke, --tw-gradient-from,
+      --tw-gradient-via, --tw-gradient-to;
+  }
+
+  #navBar.top {
+    background-color: var(--themeColorLighterRGB);
   }
 </style>

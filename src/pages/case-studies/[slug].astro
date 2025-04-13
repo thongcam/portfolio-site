@@ -59,6 +59,7 @@ Astro.response.headers.set("Cache-Tag", currentCaseStudy.id!);
     imageUrl: cmsURL + page.thumbnail.thumbnailImage.thumbnailURL,
     imageUrlSecure: cmsURL + page.thumbnail.thumbnailImage.thumbnailURL,
   }}
+  themeColor={page.themeColor}
 >
   <CaseStudyIntroduction page={page} />
   <CaseStudyContent page={page} />

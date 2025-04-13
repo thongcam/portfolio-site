@@ -6,6 +6,7 @@ import Navbar from "@/components/navbar/navbar.astro";
 import { cmsURL } from "@/constants";
 import getGlobals from "@/utils/getGlobals";
 import "../styles/global.css";
+import type { ColorInstance, ColorObject } from "color";
 
 interface Props {
     pageMetaDescription?: string;
@@ -17,10 +18,11 @@ interface Props {
         imageUrl: string;
         imageUrlSecure: string;
     }
+    themeColor?: string;
 }
 
 const { logos, settings } = await getGlobals();
-const { pageMetaDescription, pageTitle, pageOgMeta } = Astro.props as Props;
+const { pageMetaDescription, pageTitle, pageOgMeta, themeColor } = Astro.props as Props;
 ---
 
 <html lang="en" class="scroll-smooth scroll-p-15 md:scroll-m-0">
@@ -54,7 +56,7 @@ const { pageMetaDescription, pageTitle, pageOgMeta } = Astro.props as Props;
       src="https://plausible.thong.cam/js/script.js"></script>
   </head>
   <body class="text-dark-blue font-body">
-    <Navbar logos={logos} />
+    <Navbar logos={logos} themeColor={themeColor}/>
     <slot />
     <Footer />
   </body>
