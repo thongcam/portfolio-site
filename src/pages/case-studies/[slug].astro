@@ -1,36 +1,24 @@
 ---
-import Section from "@components/sections/section.astro";
 import { cmsURL } from "@/constants";
-import ContactLink from "@components/buttons/contactLink.astro";
-import type { ContactLinkType } from "@customTypes/contactLinkType";
-import ScrollSpy from "@components/scroll-spy/scrollSpy.astro";
 import extractPlainTextFromRichText from "@utils/extractPlainTextFromRichText";
-import { RichTextLexical } from "@components/rich-text/richTextLexical";
-import type { SerializedEditorState } from "lexical";
-import Color from "color";
-import { Image } from "astro:assets";
-import useAstroImage from "@utils/useAstroImage";
-import getGlobals from "@/utils/getGlobals";
-import generateArticleColors from "@/utils/generateArticleColors";
 import Layout from "@/layouts/layout.astro";
+import CaseStudyIntroduction from "./sections/caseStudyIntroduction.astro";
+import CaseStudyContent from "./sections/caseStudyContent.astro";
+import CaseStudyOtherProjects from "./sections/caseStudyOtherProjects.astro";
+import CaseStudyContactLinks from "./sections/caseStudyContactLinks.astro";
 
-interface SummaryBlockType {
+export interface CaseStudyType {
   title: string;
-  content: SerializedEditorState;
+  id: string;
+  slug: string;
+  thumbnailImage: { url: string; alt: string };
 }
-
-const { contacts } = await getGlobals();
 
 const caseStudiesResponse = await fetch(`${cmsURL}/api/case-studies/all`, {
   credentials: "include",
 });
 
-const caseStudies: {
-  title: string;
-  id: string;
-  slug: string;
-  thumbnailImage: { url: string; alt: string };
-}[] = await caseStudiesResponse.json();
+const caseStudies: CaseStudyType[] = await caseStudiesResponse.json();
 
 const { slug } = Astro.params;
 
@@ -48,19 +36,6 @@ const pageResponse = await fetch(`${cmsURL}/api/case-studies/by-slug/${slug}`);
 
 const page = await pageResponse.json();
 
-const pageDescription = extractPlainTextFromRichText(
-  page.thumbnail.description
-);
-
-const pageContent = page.content;
-
-await useAstroImage(pageContent);
-
-const themeColor = Color(page.themeColor);
-
-const { themeColorLight, themeColorLighter } =
-  generateArticleColors(themeColor);
-
 // The browser should always check freshness
 Astro.response.headers.set(
   "Cache-Control",
@@ -75,124 +50,18 @@ Astro.response.headers.set("Cache-Tag", currentCaseStudy.id!);
 ---
 
 <Layout
-  pageMetaDescription={pageDescription}
+  pageMetaDescription={page.thumbnail.description}
   pageTitle={page.title}
   pageOgMeta={{
     title: page.title,
-    description: pageDescription,
+    description: page.thumbnail.description,
     url: Astro.url,
     imageUrl: cmsURL + page.thumbnail.thumbnailImage.thumbnailURL,
     imageUrlSecure: cmsURL + page.thumbnail.thumbnailImage.thumbnailURL,
   }}
 >
-  <Section
-    class={["py-12"]}
-    style={{ backgroundColor: themeColorLighter.rgb().string() }}
-    id="introduction"
-  >
-    <Image
-      src={cmsURL + page.bannerImage.url}
-      alt={page.bannerImage.alt}
-      inferSize
-      densities={[0.5, 1]}
-      class="rounded-xl hidden sm:block"
-      loading={"eager"}
-    />
-    <Image
-      src={cmsURL + page.thumbnail.thumbnailImage.thumbnailURL}
-      alt={page.thumbnail.thumbnailImage.alt}
-      inferSize
-      densities={[0.75, 1]}
-      class="rounded-xl block sm:hidden"
-      loading={"eager"}
-    />
-    <!-- <picture>
-  <source
-    media="(min-width:1024px)"
-    srcset={cmsURL + page.bannerImage.url}
-  />
-  <source
-    media="(min-width:640px)"
-    srcset={cmsURL + encodeURI(page.bannerImage.sizes.tablet.url)}
-  />
-  <img
-    src={cmsURL + page.thumbnail.thumbnailImage.thumbnailURL}
-    alt=""
-    class="rounded-xl"
-  />
-</picture> -->
-    <div class="flex flex-col gap-4">
-      <h1 class="mt-12 text-4xl/[1.25] font-display font-bold">
-        {page.title}
-      </h1>
-      <span class="text-md text-pale-blue/80">{page.timeline}</span>
-    </div>
-    <div class="mt-10">
-      <h2 class="text-2xl font-body scroll-spy-item" id="summary">Summary</h2>
-      <div
-        class="my-6 py-6 border-y-[0.5px] border-dark-gray grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6"
-      >
-        {
-          page.summaryBlocks.map((summaryBlock: SummaryBlockType) => (
-            <div class="flex flex-col gap-3">
-              <span
-                class={`font-bold`}
-                style={{ backgroundColor: themeColorLight.rgb().string() }}
-              >
-                {summaryBlock.title}
-              </span>
-
-              <RichTextLexical data={summaryBlock.content} />
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </Section>
-  <Section class={["mb-15"]} id="content">
-    <div class="relative">
-      <div class="absolute right-[calc(-1*max(5vw,20px))] h-[100%] top-10">
-        <ScrollSpy page={page} />
-      </div>
-      <article class="md:w-[80%] max-w-[80ch] flow-root">
-        <RichTextLexical data={page.content} client:idle />
-      </article>
-    </div>
-  </Section>
-  <Section class={["mb-30"]} id="other-projects">
-    <div class="border-t-[0.5px] border-dark-gray"></div>
-    <h2 class="text-2xl font-body mt-10 mb-10">Other projects</h2>
-    <div class="flex flex-row gap-12 flex-wrap">
-      {
-        otherCaseStudies.map((data) => (
-          <div class="flex flex-col gap-5 max-w-75">
-            <Image
-              src={cmsURL + data.thumbnailImage.url}
-              alt={data.thumbnailImage.alt}
-              inferSize
-            />
-            <a
-              href={data.slug}
-              class="text-xl/[1.25] font-display font-bold underline hover:text-pale-blue/80"
-              tabindex="0"
-              data-astro-prefetch
-            >
-              {data.title}
-            </a>
-          </div>
-        ))
-      }
-    </div>
-  </Section>
-  <Section class={[""]} id="contact">
-    <ul class="flex flex-row flex-wrap gap-y-10 gap-x-30 mb-15">
-      {
-        contacts.contactLinks.map((link: ContactLinkType) => (
-          <ContactLink href={link.url} label={link.title}>
-            {link.title}
-          </ContactLink>
-        ))
-      }
-    </ul>
-  </Section>
+  <CaseStudyIntroduction page={page} />
+  <CaseStudyContent page={page} />
+  <CaseStudyOtherProjects otherCaseStudies={otherCaseStudies} />
+  <CaseStudyContactLinks />
 </Layout>

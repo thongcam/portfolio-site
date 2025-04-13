@@ -1,0 +1,20 @@
+---
+import ContactLink from "@/components/buttons/contactLink.astro";
+import Section from "@/components/sections/section.astro";
+import type { ContactLinkType } from "@/types/contactLinkType";
+import getGlobals from "@/utils/getGlobals";
+
+const { contacts } = await getGlobals();
+---
+
+<Section class={[""]} id="contact">
+  <ul class="flex flex-row flex-wrap gap-y-10 gap-x-30 mb-15">
+    {
+      contacts.contactLinks.map((link: ContactLinkType) => (
+        <ContactLink href={link.url} label={link.title}>
+          {link.title}
+        </ContactLink>
+      ))
+    }
+  </ul>
+</Section>

@@ -1,0 +1,86 @@
+---
+import { RichTextLexical } from "@/components/rich-text/richTextLexical";
+import Section from "@/components/sections/section.astro";
+import { cmsURL } from "@/constants";
+import generateArticleColors from "@/utils/generateArticleColors";
+import { Image } from "astro:assets";
+import Color from "color";
+import type { SerializedEditorState } from "lexical";
+
+interface SummaryBlockType {
+  title: string;
+  content: SerializedEditorState;
+}
+
+const { page } = Astro.props;
+
+const themeColor = Color(page.themeColor);
+
+const { themeColorLight, themeColorLighter } =
+  generateArticleColors(themeColor);
+---
+
+<Section
+  class={["py-12"]}
+  style={{ backgroundColor: themeColorLighter.rgb().string() }}
+  id="introduction"
+>
+  <Image
+    src={cmsURL + page.bannerImage.url}
+    alt={page.bannerImage.alt}
+    inferSize
+    densities={[0.5, 1]}
+    class="rounded-xl hidden sm:block"
+    loading={"eager"}
+  />
+  <Image
+    src={cmsURL + page.thumbnail.thumbnailImage.thumbnailURL}
+    alt={page.thumbnail.thumbnailImage.alt}
+    inferSize
+    densities={[0.75, 1]}
+    class="rounded-xl block sm:hidden"
+    loading={"eager"}
+  />
+  <!-- <picture>
+  <source
+    media="(min-width:1024px)"
+    srcset={cmsURL + page.bannerImage.url}
+  />
+  <source
+    media="(min-width:640px)"
+    srcset={cmsURL + encodeURI(page.bannerImage.sizes.tablet.url)}
+  />
+  <img
+    src={cmsURL + page.thumbnail.thumbnailImage.thumbnailURL}
+    alt=""
+    class="rounded-xl"
+  />
+</picture> -->
+  <div class="flex flex-col gap-4">
+    <h1 class="mt-12 text-4xl/[1.25] font-display font-bold">
+      {page.title}
+    </h1>
+    <span class="text-md text-pale-blue/80">{page.timeline}</span>
+  </div>
+  <div class="mt-10">
+    <h2 class="text-2xl font-body scroll-spy-item" id="summary">Summary</h2>
+    <div
+      class="my-6 py-6 border-y-[0.5px] border-dark-gray grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6"
+    >
+      {
+        page.summaryBlocks.map((summaryBlock: SummaryBlockType) => (
+          <div class="flex flex-col gap-3">
+            <span
+              class={`font-bold`}
+              style={{ backgroundColor: themeColorLight.rgb().string() }}
+            >
+              {summaryBlock.title}
+            </span>
+
+            <RichTextLexical data={summaryBlock.content} />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</Section>
