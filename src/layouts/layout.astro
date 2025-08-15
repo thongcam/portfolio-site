@@ -50,10 +50,7 @@ const { pageMetaDescription, pageTitle, pageOgMeta, themeColor } = Astro.props a
         )
     }
     <title>{`${pageTitle ? pageTitle + " | " : ""}${settings.siteTitle}`}</title>
-    <script
-      defer
-      data-domain="thong.cam"
-      src="https://plausible.thong.cam/js/script.js"></script>
+    <script defer src="https://umami.thong.cam/script.js" data-website-id="b924d487-517b-4512-a0e0-4ba9d69b1c36"></script>
   </head>
   <body class="text-dark-blue font-body">
     <Navbar logos={logos} themeColor={themeColor}/>
