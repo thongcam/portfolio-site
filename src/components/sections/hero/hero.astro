@@ -26,6 +26,7 @@ const imageAlt = data.heroPortrait.alt;
         height={image.height}
         alt={imageAlt || ""}
         class:list={"z-10 w-full relative md:h-[100%] md:max-w-xl pb-5 aspect-[4/5] object-cover "}
+        fetchpriority={"high"}
       />
       <StandOutCard
         class="z-10 md:flex md:flex-col md:justify-between md:w-full md:h-fit md:min-h-[20rem] md:translate-y-10"
