@@ -1,6 +1,8 @@
 ---
 import "@fontsource-variable/nunito";
+import Nunito from "@fontsource-variable/nunito/files/nunito-latin-wght-normal.woff2";
 import "@fontsource-variable/noto-serif";
+import NotoSerif from "@fontsource-variable/noto-serif/files/noto-serif-latin-wght-normal.woff2";
 import Footer from "@/components/footer/footer.astro";
 import Navbar from "@/components/navbar/navbar.astro";
 import { cmsURL } from "@/constants";
@@ -29,6 +31,8 @@ const { pageMetaDescription, pageTitle, pageOgMeta, themeColor } = Astro.props a
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href={cmsURL + logos.logoSmall.url} />
+    <link rel="preload" as="font" type="font/woff2" href={Nunito} crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href={NotoSerif} crossorigin="anonymous" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     {
