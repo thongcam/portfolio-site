@@ -59,7 +59,9 @@ const { pageMetaDescription, pageTitle, pageOgMeta, themeColor } = Astro.props a
   </head>
   <body class="text-dark-blue font-body">
     <Navbar logos={logos} themeColor={themeColor}/>
-    <slot />
+    <main>
+      <slot />
+    </main>
     <Footer />
   </body>
 </html>
