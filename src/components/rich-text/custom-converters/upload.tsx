@@ -21,12 +21,11 @@ type ImageDocument = SerializedUploadNode & {
 }
 
 const updateImageURLs = (uploadDocument : any) => {
+  if (!uploadDocument) return;
   Object.keys(uploadDocument).forEach(function(key) {
-    if (typeof uploadDocument[key] === "object") {
-      if (uploadDocument[key] !== undefined) {
-        updateImageURLs(uploadDocument[key]);
-      }
-    } else {
+    if (typeof uploadDocument[key] === "object" && uploadDocument[key] !== null) {
+      updateImageURLs(uploadDocument[key]);
+    } else if (typeof uploadDocument[key] === "string") {
       if (key === "url" || key === "thumbnailURL") {
         uploadDocument[key] = cmsURL + uploadDocument[key]
       }
@@ -36,7 +35,7 @@ const updateImageURLs = (uploadDocument : any) => {
 
 export const CustomUploadJSXConverter : JSXConverters = {
     upload: ({node, ...args}) => {
-      if(node.fields.zoomable) {
+      if(node.fields && node.fields.zoomable) {
         const imageDocument =  node as ImageDocument;
           const srcSet = [
             ...Object.entries(imageDocument.value.sizes).filter(([imageSize,imageSizeData]) => imageSizeData).map(([imageSize, imageSizeData]) => {
@@ -62,9 +61,16 @@ export const CustomUploadJSXConverter : JSXConverters = {
             srcSet={srcSet}
           ></LightboxImage>
         } else {
+          const imageDocument =  node as ImageDocument;
           return (<figure className="flex flex-col my-5 gap-2">
-              {UploadJSXConverter.upload?.({node, ...args})}
-              {node.fields.caption && <figcaption className="text-sm text-pale-blue/80"><RichTextLexical data={node.fields.caption}/>
+              <img 
+                src={imageDocument.value.url} 
+                alt={imageDocument.value.alt} 
+                width={imageDocument.value.width} 
+                height={imageDocument.value.height} 
+                className="max-w-full h-auto rounded-md" 
+              />
+              {node.fields && node.fields.caption && <figcaption className="text-sm text-pale-blue/80"><RichTextLexical data={node.fields.caption}/>
               </figcaption>}
           </figure>)
         }

@@ -74,3 +74,22 @@
         margin: 1.25rem 0;
      }
 }
+
+// Payload CMS TextStateFeature Colors
+.text-red { color: light-dark(oklch(0.577 0.245 27.325), oklch(0.704 0.191 22.216)); }
+.text-orange { color: light-dark(oklch(0.646 0.222 41.116), oklch(0.75 0.183 55.934)); }
+.text-yellow { color: light-dark(oklch(0.554 0.135 66.442), oklch(0.905 0.182 98.111)); }
+.text-green { color: light-dark(oklch(0.527 0.154 150.069), oklch(0.792 0.209 151.711)); }
+.text-blue { color: light-dark(oklch(0.546 0.245 262.881), oklch(0.707 0.165 254.624)); }
+.text-purple { color: light-dark(oklch(0.558 0.288 302.321), oklch(0.714 0.203 305.504)); }
+.text-pink { color: light-dark(oklch(0.592 0.249 0.584), oklch(0.718 0.202 349.761)); }
+.text-custom { color: var(--theme-color, #FF5733); }
+
+.bg-red { background-color: light-dark(oklch(0.704 0.191 22.216), oklch(0.577 0.245 27.325)); }
+.bg-orange { background-color: light-dark(oklch(0.75 0.183 55.934), oklch(0.646 0.222 41.116)); }
+.bg-yellow { background-color: light-dark(oklch(0.905 0.182 98.111), oklch(0.554 0.135 66.442)); }
+.bg-green { background-color: light-dark(oklch(0.792 0.209 151.711), oklch(0.527 0.154 150.069)); }
+.bg-blue { background-color: light-dark(oklch(0.707 0.165 254.624), oklch(0.546 0.245 262.881)); }
+.bg-purple { background-color: light-dark(oklch(0.714 0.203 305.504), oklch(0.558 0.288 302.321)); }
+.bg-pink { background-color: light-dark(oklch(0.718 0.202 349.761), oklch(0.592 0.249 0.584)); }
+.bg-custom { background-color: hsl(from var(--theme-color, #FFD700) h s 95%); }

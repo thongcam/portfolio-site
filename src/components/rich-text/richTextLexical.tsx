@@ -12,6 +12,7 @@ import { CustomUploadJSXConverter } from './custom-converters/upload'
 import styles from "./richTextLexical.module.scss"
 import { CustomTextJSXConverter } from './custom-converters/text'
 import { YoutubeJSXConverter } from './custom-converters/youtube'
+import { MuxVideo } from './blocks/MuxVideo'
 
 
 const jsxConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
@@ -26,7 +27,8 @@ const jsxConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
   blocks: {
     // myTextBlock is the slug of the block
     CalloutBlock: ({node} : {node : SerializedBlockNode}) => <CalloutBlock emoji={node.fields.emoji} content={node.fields.content} color={node.fields.color}></CalloutBlock>,
-    FigmaEmbedBlock: ({node} : {node: SerializedBlockNode}) => <div className="flex my-5" dangerouslySetInnerHTML={{__html: node.fields.figmaEmbedCode}}></div>
+    FigmaEmbedBlock: ({node} : {node: SerializedBlockNode}) => <div className="flex my-5" dangerouslySetInnerHTML={{__html: node.fields.figmaEmbedCode}}></div>,
+    MuxVideoBlock: ({node} : {node: SerializedBlockNode}) => <MuxVideo playbackId={node.fields.muxPlaybackId} />
   },
 })
 

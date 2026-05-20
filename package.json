@@ -19,6 +19,7 @@
     "@lexical/headless": "^0.24.0",
     "@lexical/html": "^0.24.0",
     "@makotot/ghostui": "^2.0.0",
+    "@mux/mux-player-react": "^3.13.0",
     "@payloadcms/richtext-lexical": "^3.23.0",
     "@sidsbrmnn/scrollspy": "^1.1.0",
     "@tailwindcss/vite": "^4.1.3",
