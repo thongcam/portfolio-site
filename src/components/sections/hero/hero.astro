@@ -6,7 +6,7 @@ import ThreeRings from "@components/decorators/threeRings.astro";
 import StandOutCard from "@/components/cards/standOutCard.astro";
 import { cmsURL } from "@/constants";
 const { data } = Astro.props;
-const image = data.heroPortrait.sizes.portrait;
+const image = data.heroPortrait;
 const imageAlt = data.heroPortrait.alt;
 ---
 
@@ -24,6 +24,7 @@ const imageAlt = data.heroPortrait.alt;
         src={cmsURL + image.url}
         width={image.width}
         height={image.height}
+        inferSize
         alt={imageAlt || ""}
         class:list={"z-10 w-full relative md:h-[100%] md:max-w-xl pb-5 aspect-[4/5] object-cover "}
         fetchpriority={"high"}

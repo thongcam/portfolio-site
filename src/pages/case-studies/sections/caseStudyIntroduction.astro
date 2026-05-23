@@ -28,16 +28,18 @@ const { themeColorLight, themeColorLighter } =
   <Image
     src={cmsURL + page.bannerImage.url}
     alt={page.bannerImage.alt}
+    width={page.bannerImage.width}
+    height={page.bannerImage.height}
     inferSize
-    densities={[0.5, 1]}
     class="rounded-xl hidden sm:block"
     loading={"eager"}
   />
   <Image
-    src={cmsURL + page.thumbnail.thumbnailImage.thumbnailURL}
+    src={cmsURL + page.thumbnail.thumbnailImage.url}
     alt={page.thumbnail.thumbnailImage.alt}
+    width={page.thumbnail.thumbnailImage.width}
+    height={page.thumbnail.thumbnailImage.height}
     inferSize
-    densities={[0.75, 1]}
     class="rounded-xl block sm:hidden"
     loading={"eager"}
   />

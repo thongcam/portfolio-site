@@ -19,8 +19,10 @@ export default defineConfig({
   site: "https://thong.cam",
 
   image: {
-    domains: ["astro.build", "thong.cam", "admin.thong.cam"],
-    remotePatterns: [{ protocol: "https" }],
+    domains: ["astro.build", "thong.cam", "admin.thong.cam","localhost:3000"],
+    remotePatterns: [{ protocol: process.env.NODE_ENV === "development" ? "http" : "https" }],
+    layout: "constrained",
+    breakpoints: [400, 750, 1024, 1668, 2048, 2560],
   },
 
   prefetch: {

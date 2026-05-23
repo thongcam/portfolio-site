@@ -21,7 +21,7 @@ const { content, imageAlign, decorator, bg } = Astro.props;
 const { title, description, subDescription, linkLabel, url, thumbnailImage } =
   content;
 let checkURL = new URL(
-  url.includes("http") ? url : Astro.url.origin + "/" + url
+  url.includes("http") ? url : Astro.url.origin + "/" + url,
 );
 const external = checkURL.origin !== Astro.url.origin;
 ---
@@ -33,15 +33,15 @@ const external = checkURL.origin !== Astro.url.origin;
   ]}
 >
   <Image
-    src={`${cmsURL}${thumbnailImage.sizes.cardThumbnail.url}`}
+    src={`${cmsURL}${thumbnailImage.url}`}
     alt={thumbnailImage.alt}
     class:list={[
       "object-cover w-full h-full border border-dark-gray/50",
       imageAlign == "right" ? "lg:order-1" : "lg:order-0",
     ]}
-    width={thumbnailImage.sizes.cardThumbnail.width}
-    height={thumbnailImage.sizes.cardThumbnail.height}
-    densities={[0.7, 1]}
+    width={thumbnailImage.width}
+    height={thumbnailImage.height}
+    inferSize
   />
   <div
     class:list={[

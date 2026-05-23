@@ -144,11 +144,11 @@ const navData = await navDataResponse.json();
       menuButton.classList.toggle("hidden");
       menuButton.setAttribute(
         "aria-expanded",
-        `${(menuButton.getAttribute("aria-expanded") !== "true").toString()}`
+        `${(menuButton.getAttribute("aria-expanded") !== "true").toString()}`,
       );
       menuButton.setAttribute(
         "aria-disabled",
-        `${(menuButton.getAttribute("aria-disabled") !== "true").toString()}`
+        `${(menuButton.getAttribute("aria-disabled") !== "true").toString()}`,
       );
     }
   };
@@ -165,7 +165,7 @@ const navData = await navDataResponse.json();
     const closeMenuButton: HTMLElement | null =
       document.getElementById("close-menu-button");
     const navLinksAndButton: HTMLElement | null = document.getElementById(
-      "nav-links-and-buttons"
+      "nav-links-and-buttons",
     );
     const navLinksAndButtonOpenedClasses = [
       "absolute",
@@ -201,7 +201,7 @@ const navData = await navDataResponse.json();
           navRightWrapper?.classList.add("bg-dark-blue/25");
           navLinksAndButton?.classList.add(...navLinksAndButtonOpenedClasses);
           navLinksAndButton?.classList.toggle(
-            "translate-x-[calc(100vw-100px)]"
+            "translate-x-[calc(100vw-100px)]",
           );
           navList?.classList.toggle("max-md:hidden");
           toggleMenuButton(openMenuButton);
@@ -210,14 +210,14 @@ const navData = await navDataResponse.json();
           break;
         case "false":
           navLinksAndButton?.classList.toggle(
-            "translate-x-[calc(100vw-100px)]"
+            "translate-x-[calc(100vw-100px)]",
           );
           navRightWrapper?.classList.remove("bg-dark-blue/25");
           toggleMenuButton(openMenuButton);
           setTimeout(() => {
             navRightWrapper?.classList.remove(...navRightWrapperOpenedClasses);
             navLinksAndButton?.classList.remove(
-              ...navLinksAndButtonOpenedClasses
+              ...navLinksAndButtonOpenedClasses,
             );
             toggleMenuButton(closeMenuButton);
             navList?.classList.toggle("max-md:hidden");

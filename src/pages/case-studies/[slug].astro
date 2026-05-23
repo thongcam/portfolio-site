@@ -11,7 +11,7 @@ export interface CaseStudyType {
   title: string;
   id: string;
   slug: string;
-  thumbnailImage: { url: string; alt: string };
+  thumbnailImage: { url: string; alt: string; width: number; height: number };
 }
 
 const caseStudiesResponse = await fetch(`${cmsURL}/api/case-studies/all`, {
@@ -29,7 +29,7 @@ if (!currentCaseStudy) {
 }
 
 const otherCaseStudies = caseStudies.filter(
-  (caseStudy) => caseStudy.slug !== slug
+  (caseStudy) => caseStudy.slug !== slug,
 );
 
 const pageResponse = await fetch(`${cmsURL}/api/case-studies/by-slug/${slug}`);
@@ -39,7 +39,7 @@ const page = await pageResponse.json();
 // The browser should always check freshness
 Astro.response.headers.set(
   "Cache-Control",
-  "public, max-age=0, must-revalidate"
+  "public, max-age=0, must-revalidate",
 );
 
 // The CDN should cache for a year, but revalidate if the cache tag changes

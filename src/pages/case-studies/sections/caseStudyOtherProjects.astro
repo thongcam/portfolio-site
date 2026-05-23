@@ -17,6 +17,8 @@ const { otherCaseStudies } = Astro.props;
           <Image
             src={cmsURL + data.thumbnailImage.url}
             alt={data.thumbnailImage.alt}
+            width={data.thumbnailImage.width}
+            height={data.thumbnailImage.height}
             inferSize
           />
           <a

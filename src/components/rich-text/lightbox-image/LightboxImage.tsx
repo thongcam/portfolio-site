@@ -61,6 +61,8 @@ return (
                 alt={alt}
                 width={width}
                 height={height}
+                srcSet={srcSet?.map(s => `${s.src} ${s.width}w`).join(', ')}
+                sizes="100vw"
                 loading="lazy"
                 />
             </button>
