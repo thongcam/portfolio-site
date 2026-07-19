@@ -7,6 +7,7 @@ import "yet-another-react-lightbox/plugins/captions.css";
 import styles from "./LightboxImage.module.css";
 import type { SerializedEditorState } from "lexical";
 import { RichTextLexical } from "../richTextLexical";
+import { RICH_TEXT_IMAGE_SIZES } from "../constants";
 
 interface LightboxImageProps {
     src: string;
@@ -53,7 +54,7 @@ return (
         <figure className="flex flex-col gap-2 my-5">
             <button className="relative cursor-pointer" onClick={() => setOpen(true)}>
                 <span className={"absolute bottom-2 right-3 md:bottom-4 md:right-5 p-2 bg-pale-blue/50 rounded-full flex flex-row items-center  " + styles.zoomHint} style={{}}>
-                    <img className="h-6" src="/icons/Frame inspect.svg" alt="" loading="lazy"/>
+                    <img className="h-6" src="/icons/Frame inspect.svg" alt="" width={24} height={24} loading="lazy"/>
                     <span className="text-sm font-semibold text-white transition-all duration-150 ease-in">Click to zoom</span>
                 </span>
                 <img
@@ -62,7 +63,10 @@ return (
                 width={width}
                 height={height}
                 srcSet={srcSet?.map(s => `${s.src} ${s.width}w`).join(', ')}
-                sizes="100vw"
+                // Only affects which srcSet candidate the inline thumbnail
+                // fetches — layout is unchanged, and the Lightbox receives the
+                // full srcSet separately so zoomed quality is untouched.
+                sizes={RICH_TEXT_IMAGE_SIZES}
                 loading="lazy"
                 />
             </button>

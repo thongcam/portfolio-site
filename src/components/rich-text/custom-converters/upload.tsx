@@ -2,6 +2,7 @@ import type { SerializedUploadNode } from "@payloadcms/richtext-lexical";
 import { UploadJSXConverter, type JSXConverters } from "@payloadcms/richtext-lexical/react";
 import { cmsURL } from "@/constants";
 import LightboxImage from "../lightbox-image/LightboxImage";
+import { RICH_TEXT_IMAGE_SIZES } from "../constants";
 import { RichTextLexical } from "../richTextLexical";
 
 interface SingleImage {
@@ -33,24 +34,26 @@ const updateImageURLs = (uploadDocument : any) => {
   });
 }
 
+const buildSrcSet = (imageDocument: ImageDocument) => [
+  ...Object.entries(imageDocument.value.sizes)
+    .filter(([, imageSizeData]) => imageSizeData)
+    .map(([, imageSizeData]) => ({
+      src: imageSizeData.url,
+      width: imageSizeData.width,
+      height: imageSizeData.height,
+    })),
+  {
+    src: imageDocument.value.url,
+    width: imageDocument.value.width,
+    height: imageDocument.value.height,
+  },
+];
+
 export const CustomUploadJSXConverter : JSXConverters = {
-    upload: ({node, ...args}) => {
+    upload: ({node}) => {
       if(node.fields && node.fields.zoomable) {
         const imageDocument =  node as ImageDocument;
-          const srcSet = [
-            ...Object.entries(imageDocument.value.sizes).filter(([imageSize,imageSizeData]) => imageSizeData).map(([imageSize, imageSizeData]) => {
-              return {
-                src: imageSizeData.url,
-                width: imageSizeData.width,
-                height: imageSizeData.height,
-              }
-            }),
-            {
-                src: imageDocument.value.url,
-                width: imageDocument.value.width,
-                height: imageDocument.value.height
-            }
-          ]
+          const srcSet = buildSrcSet(imageDocument)
           return <LightboxImage
             
             src={(imageDocument.value.sizes.tablet.url || imageDocument.value.url) }
@@ -62,13 +65,21 @@ export const CustomUploadJSXConverter : JSXConverters = {
           ></LightboxImage>
         } else {
           const imageDocument =  node as ImageDocument;
+          // width/height stay at the original dimensions so the reserved
+          // aspect-ratio box is unchanged; srcSet/sizes only steer which
+          // resolution is downloaded. Previously this served the full-size
+          // original (often ~3840w) for an image rendered ~354px wide.
+          const srcSet = buildSrcSet(imageDocument)
           return (<figure className="flex flex-col my-5 gap-2">
-              <img 
-                src={imageDocument.value.url} 
-                alt={imageDocument.value.alt} 
-                width={imageDocument.value.width} 
-                height={imageDocument.value.height} 
-                className="max-w-full h-auto rounded-md" 
+              <img
+                src={imageDocument.value.sizes.tablet?.url || imageDocument.value.url}
+                alt={imageDocument.value.alt}
+                width={imageDocument.value.width}
+                height={imageDocument.value.height}
+                srcSet={srcSet.map(s => `${s.src} ${s.width}w`).join(', ')}
+                sizes={RICH_TEXT_IMAGE_SIZES}
+                loading="lazy"
+                className="max-w-full h-auto rounded-md"
               />
               {node.fields && node.fields.caption && <figcaption className="text-sm text-pale-blue/80"><RichTextLexical data={node.fields.caption}/>
               </figcaption>}
