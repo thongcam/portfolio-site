@@ -10,6 +10,11 @@ export default defineConfig({
   integrations: [react()],
   output: "server",
 
+  // Astro 7 changed the default from `true` to `'jsx'` (React-style
+  // whitespace collapsing). Pinned explicitly to preserve the exact
+  // rendering behavior this site had under Astro 6.
+  compressHTML: true,
+
   adapter: netlify(),
 
   site: "https://thong.cam",
