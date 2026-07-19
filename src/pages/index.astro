@@ -28,12 +28,11 @@ Astro.response.headers.set(
   "public, max-age=0, must-revalidate"
 );
 
-// The CDN should cache for a year, but revalidate if the cache tag changes
-Astro.response.headers.set("Netlify-Cdn-Cache-Control", "s-maxage=31536000, must-revalidate");
-
-// Tag the page with the book ID
-Astro.response.headers.set("Netlify-Cache-Tag", "global,case-studies,websites");
-Astro.response.headers.set("Cache-Tag", "global,case-studies,websites");
+// The CDN caches for a year, invalidated by tag when content changes
+Astro.cache.set({
+  maxAge: 31536000,
+  tags: ["global", "case-studies", "websites"],
+});
 //Teset
 ---
 

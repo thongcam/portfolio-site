@@ -1,5 +1,6 @@
 import { defineConfig, envField } from "astro/config";
 import netlify from "@astrojs/netlify";
+import { cacheNetlify } from "@astrojs/netlify/cache";
 
 import react from "@astrojs/react";
 
@@ -16,6 +17,14 @@ export default defineConfig({
   compressHTML: true,
 
   adapter: netlify(),
+
+  // Route caching provider — Astro.cache.set()/context.cache.set() sets
+  // Netlify-CDN-Cache-Control + Netlify-Cache-Tag under the hood; invalidate()
+  // calls purgeCache() from @netlify/functions. Browser-facing Cache-Control
+  // is NOT touched by this provider — pages still set it explicitly.
+  cache: {
+    provider: cacheNetlify(),
+  },
 
   site: "https://thong.cam",
 
