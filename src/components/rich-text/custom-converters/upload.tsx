@@ -34,20 +34,44 @@ const updateImageURLs = (uploadDocument : any) => {
   });
 }
 
-const buildSrcSet = (imageDocument: ImageDocument) => [
-  ...Object.entries(imageDocument.value.sizes)
-    .filter(([, imageSizeData]) => imageSizeData)
-    .map(([, imageSizeData]) => ({
-      src: imageSizeData.url,
-      width: imageSizeData.width,
-      height: imageSizeData.height,
-    })),
-  {
-    src: imageDocument.value.url,
-    width: imageDocument.value.width,
-    height: imageDocument.value.height,
-  },
-];
+/**
+ * A srcSet may only contain variants of the *same* image at different
+ * resolutions. Most of the Media collection's `imageSizes` are fixed-dimension
+ * centre crops for other purposes (cardThumbnail 750x500, portrait 400x500,
+ * ogImage 1200x630) — offering those as srcSet candidates lets the browser
+ * swap in a cropped image and silently cut off part of the picture. Only
+ * `tablet` (width-only, height auto) preserves the original aspect ratio, so
+ * candidates are matched against the original's ratio rather than hardcoded
+ * by name, keeping this correct if the CMS sizes change.
+ */
+const RATIO_TOLERANCE = 0.01;
+
+const buildSrcSet = (imageDocument: ImageDocument) => {
+  const { url, width, height, sizes } = imageDocument.value;
+  const originalRatio = width / height;
+
+  const aspectPreserving = Object.values(sizes ?? {})
+    .filter(
+      (size) =>
+        size?.url &&
+        size.width &&
+        size.height &&
+        Math.abs(size.width / size.height - originalRatio) < RATIO_TOLERANCE,
+    )
+    .map((size) => ({
+      src: size.url,
+      width: size.width,
+      height: size.height,
+    }));
+
+  return [...aspectPreserving, { src: url, width, height }];
+};
+
+/** Largest aspect-ratio-preserving variant below the original, if any. */
+const preferredSrc = (imageDocument: ImageDocument) => {
+  const candidates = buildSrcSet(imageDocument);
+  return candidates.length > 1 ? candidates[candidates.length - 2].src : imageDocument.value.url;
+};
 
 export const CustomUploadJSXConverter : JSXConverters = {
     upload: ({node}) => {
@@ -55,12 +79,12 @@ export const CustomUploadJSXConverter : JSXConverters = {
         const imageDocument =  node as ImageDocument;
           const srcSet = buildSrcSet(imageDocument)
           return <LightboxImage
-            
-            src={(imageDocument.value.sizes.tablet.url || imageDocument.value.url) }
+
+            src={preferredSrc(imageDocument)}
             alt={imageDocument.value.alt}
             caption={imageDocument.fields.caption}
-            width={imageDocument.value.sizes.tablet.width}
-            height={imageDocument.value.sizes.tablet.height}
+            width={imageDocument.value.width}
+            height={imageDocument.value.height}
             srcSet={srcSet}
           ></LightboxImage>
         } else {
@@ -72,7 +96,7 @@ export const CustomUploadJSXConverter : JSXConverters = {
           const srcSet = buildSrcSet(imageDocument)
           return (<figure className="flex flex-col my-5 gap-2">
               <img
-                src={imageDocument.value.sizes.tablet?.url || imageDocument.value.url}
+                src={preferredSrc(imageDocument)}
                 alt={imageDocument.value.alt}
                 width={imageDocument.value.width}
                 height={imageDocument.value.height}
