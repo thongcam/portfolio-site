@@ -3,13 +3,9 @@ import { Image } from "astro:assets";
 import MaxWidth from "@components/container/maxWidth.astro";
 import HalfRing from "/public/decorators/half ring.svg";
 import LogoSmall from "/public/images/logo-small.svg";
-import { cmsURL } from "@/constants";
+import getGlobals from "@/utils/getGlobals";
 
-const footerDataResponse = await fetch(`${cmsURL}/api/globals/footer`, {
-  credentials: "include",
-});
-
-const footerData = await footerDataResponse.json();
+const { footer: footerData } = await getGlobals(Astro.locals);
 ---
 
 <footer class="relative bg-gray">

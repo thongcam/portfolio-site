@@ -7,6 +7,7 @@ import MaxWidth from "@components/container/maxWidth.astro";
 import type { NavLinkType } from "../../types/navLinkType";
 import { cmsURL } from "../../constants";
 import generateArticleColors from "@/utils/generateArticleColors";
+import getGlobals from "@/utils/getGlobals";
 import Color from "color";
 
 interface Props {
@@ -34,11 +35,7 @@ if (themeColor) {
   themeColorLighterRGB = themeColorLighter.rgb().string();
 }
 
-const navDataResponse = await fetch(`${cmsURL}/api/globals/nav`, {
-  credentials: "include",
-});
-
-const navData = await navDataResponse.json();
+const { nav: navData } = await getGlobals(Astro.locals);
 ---
 
 <div

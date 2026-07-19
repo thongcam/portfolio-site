@@ -3,10 +3,16 @@ import { RichTextLexical } from "@/components/rich-text/richTextLexical";
 import ScrollSpy from "@/components/scroll-spy/scrollSpy.astro";
 import Section from "@/components/sections/section.astro";
 import useAstroImage from "@utils/useAstroImage";
+import hasZoomableImage from "@utils/hasZoomableImage";
 
 const { page } = Astro.props;
 
 await useAstroImage(page.content);
+
+// Only the zoomable-image lightbox needs client JS. Mux video is a plain
+// <mux-player> custom element enhanced by the vanilla script below —
+// everything else in the rich text is static HTML.
+const needsHydration = hasZoomableImage(page.content);
 ---
 
 <Section class={["mb-15"]} id="content">
@@ -15,7 +21,53 @@ await useAstroImage(page.content);
       <ScrollSpy page={page} />
     </div>
     <article class="md:w-[80%] max-w-[80ch] flow-root">
-      <RichTextLexical data={page.content} client:idle />
+      {
+        needsHydration ? (
+          <RichTextLexical data={page.content} client:idle />
+        ) : (
+          <RichTextLexical data={page.content} />
+        )
+      }
     </article>
   </div>
 </Section>
+
+<script>
+  const wrappers = document.querySelectorAll<HTMLElement>(
+    ".mux-video-wrapper mux-player",
+  );
+
+  if (wrappers.length) {
+    import("@mux/mux-player");
+
+    const players = Array.from(wrappers);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const player = entry.target as HTMLElement & {
+            play?: () => Promise<void>;
+            pause?: () => void;
+          };
+          if (entry.isIntersecting) {
+            player.play?.()?.catch(() => {});
+          } else {
+            player.pause?.();
+          }
+        });
+      },
+      { rootMargin: "-40% 0px -40% 0px", threshold: 0 },
+    );
+
+    players.forEach((player) => {
+      observer.observe(player);
+      player.addEventListener("play", () => {
+        players.forEach((other) => {
+          if (other !== player) {
+            (other as HTMLElement & { pause?: () => void }).pause?.();
+          }
+        });
+      });
+    });
+  }
+</script>

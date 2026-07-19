@@ -1,29 +1,50 @@
 import { cmsURL } from "@/constants";
 
-export default async function getGlobals()  {
-    const homepageDataResponse = await fetch(`${cmsURL}/api/globals/homepage`, {
-        credentials: "include",
-      });
-      
-      const homepageData = await homepageDataResponse.json();
-      
-      const logosResponse = await fetch(`${cmsURL}/api/globals/logos`, {
-        credentials: "include",
-      });
-      
-      const logos = await logosResponse.json();
-      
-      const contactsResponse = await fetch(`${cmsURL}/api/globals/contacts`, {
-        credentials: "include",
-      });
-      
-      const contacts = await contactsResponse.json();
-      
-      const settingsResponse = await fetch(`${cmsURL}/api/globals/settings`, {
-        credentials: "include",
-      });
-      
-      const settings = await settingsResponse.json();
+const GLOBAL_ENDPOINTS = [
+  "homepage",
+  "logos",
+  "contacts",
+  "settings",
+  "nav",
+  "footer",
+] as const;
 
-      return {homepageData, logos, contacts, settings};
+export interface GlobalsData {
+  homepageData: any;
+  logos: any;
+  contacts: any;
+  settings: any;
+  nav: any;
+  footer: any;
+}
+
+async function fetchGlobals(): Promise<GlobalsData> {
+  const [homepageData, logos, contacts, settings, nav, footer] =
+    await Promise.all(
+      GLOBAL_ENDPOINTS.map((name) =>
+        fetch(`${cmsURL}/api/globals/${name}`, {
+          credentials: "include",
+        }).then((res) => res.json()),
+      ),
+    );
+
+  return { homepageData, logos, contacts, settings, nav, footer };
+}
+
+/**
+ * Fetches all CMS globals in one parallel batch. Pass Astro.locals so
+ * repeated calls within the same request (layout, navbar, footer, page)
+ * share a single in-flight fetch instead of each re-requesting the CMS.
+ */
+export default async function getGlobals(
+  locals?: App.Locals,
+): Promise<GlobalsData> {
+  if (locals) {
+    if (!locals.globalsPromise) {
+      locals.globalsPromise = fetchGlobals();
+    }
+    return locals.globalsPromise;
+  }
+
+  return fetchGlobals();
 }

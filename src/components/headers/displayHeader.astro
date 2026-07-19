@@ -1,11 +1,13 @@
 ---
 interface Props {
   class: string;
+  level?: "h1" | "h2";
 }
-const { class: className } = Astro.props;
+const { class: className, level = "h1" } = Astro.props;
+const Tag = level;
 ---
 
-<h1
+<Tag
   class:list={[
     "display-header text-6xl leading-tight md:leading-snug font-display font-bold max-w-4xl text-balance md:text-wrap",
     className,
@@ -15,7 +17,7 @@ const { class: className } = Astro.props;
     class="decoration-none bg-gradient-to-r from-yellow/50 to-yellow/50 bg-[-10%_82%] bg-[length:0%_0.8rem] bg-no-repeat"
     ><slot /></span
   >
-</h1>
+</Tag>
 
 <script>
   let options = {

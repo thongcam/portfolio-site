@@ -1,7 +1,5 @@
-import { defineConfig } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 import netlify from "@astrojs/netlify";
-
-import sitemap from "@astrojs/sitemap";
 
 import react from "@astrojs/react";
 
@@ -9,24 +7,34 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [sitemap(), react()],
+  integrations: [react()],
   output: "server",
 
-  adapter: netlify({
-    edgeMiddleware: true,
-  }),
+  adapter: netlify(),
 
   site: "https://thong.cam",
 
   image: {
-    domains: ["astro.build", "thong.cam", "admin.thong.cam","localhost:3000"],
-    remotePatterns: [{ protocol: process.env.NODE_ENV === "development" ? "http" : "https" }],
+    domains: ["astro.build", "thong.cam", "admin.thong.cam"],
+    // Scoped to localhost (any port) for the local dev CMS — unlike a bare
+    // domain string, remotePatterns properly matches regardless of port on
+    // both Astro's own check and the Netlify adapter's generated allowlist.
+    remotePatterns: [{ protocol: "http", hostname: "localhost" }],
     layout: "constrained",
     breakpoints: [400, 750, 1024, 1668, 2048, 2560],
   },
 
   prefetch: {
     defaultStrategy: "viewport",
+  },
+
+  env: {
+    schema: {
+      PAYLOAD_WEBHOOK_SECRET: envField.string({
+        context: "server",
+        access: "secret",
+      }),
+    },
   },
 
   vite: {

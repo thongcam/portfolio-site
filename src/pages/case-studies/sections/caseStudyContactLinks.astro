@@ -4,7 +4,7 @@ import Section from "@/components/sections/section.astro";
 import type { ContactLinkType } from "@/types/contactLinkType";
 import getGlobals from "@/utils/getGlobals";
 
-const { contacts } = await getGlobals();
+const { contacts } = await getGlobals(Astro.locals);
 ---
 
 <Section class={[""]} id="contact">

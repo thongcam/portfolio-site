@@ -6,11 +6,17 @@ import type { ContactLinkType } from "@customTypes/contactLinkType";
 import DisplayHeader from "@components/headers/displayHeader.astro";
 import Section from "@components/sections/section.astro";
 import ContactLink from "@components/buttons/contactLink.astro";
-import { cmsURL } from "@/constants";
+import JsonLd from "@/components/seo/jsonLd.astro";
+import { buildPersonSchema, buildWebsiteSchema } from "@/utils/personSchema";
 import getGlobals from "@/utils/getGlobals";
 import Layout from "@/layouts/layout.astro";
 
-const { homepageData, contacts, settings } = await getGlobals();
+const { homepageData, contacts, settings } = await getGlobals(Astro.locals);
+
+const structuredData = [
+  buildPersonSchema(contacts.contactLinks),
+  buildWebsiteSchema(settings.siteTitle),
+];
 
 const caseStudiesSection = homepageData.caseStudies;
 
@@ -31,16 +37,8 @@ Astro.response.headers.set("Cache-Tag", "global,case-studies,websites");
 //Teset
 ---
 
-<Layout
-  pageMetaDescription={settings.siteDescription}
-  pageOgMeta={{
-    title: settings.ogMetadata.title,
-    description: settings.ogMetadata.description,
-    url: Astro.url,
-    imageUrl: cmsURL + settings.ogMetadata.image.sizes.portrait.url,
-    imageUrlSecure: cmsURL + settings.ogMetadata.image.sizes.portrait.url,
-  }}
->
+<Layout pageMetaDescription={settings.siteDescription}>
+  <JsonLd graph={structuredData} slot="head" />
   <Hero data={homepageData.heroSection} />
   <CardSection
     bg={caseStudiesSection.bg}
@@ -69,7 +67,7 @@ Astro.response.headers.set("Cache-Tag", "global,case-studies,websites");
   <AboutMe data={homepageData.aboutMe} />
   <Section class={["bg-white pt-10 md:pt-15 pb-20"]} id="contact">
     <div>
-      <DisplayHeader class="">{homepageData.contact.header}</DisplayHeader>
+      <DisplayHeader class="" level="h2">{homepageData.contact.header}</DisplayHeader>
       <ul class="pt-15 flex flex-row flex-wrap gap-y-10 gap-x-30">
         {
           contacts.contactLinks.map((link: ContactLinkType) => (

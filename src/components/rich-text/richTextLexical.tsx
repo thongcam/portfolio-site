@@ -12,7 +12,6 @@ import { CustomUploadJSXConverter } from './custom-converters/upload'
 import styles from "./richTextLexical.module.scss"
 import { CustomTextJSXConverter } from './custom-converters/text'
 import { YoutubeJSXConverter } from './custom-converters/youtube'
-import { MuxVideo } from './blocks/MuxVideo'
 
 
 const jsxConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
@@ -28,7 +27,20 @@ const jsxConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
     // myTextBlock is the slug of the block
     CalloutBlock: ({node} : {node : SerializedBlockNode}) => <CalloutBlock emoji={node.fields.emoji} content={node.fields.content} color={node.fields.color}></CalloutBlock>,
     FigmaEmbedBlock: ({node} : {node: SerializedBlockNode}) => <div className="flex my-5" dangerouslySetInnerHTML={{__html: node.fields.figmaEmbedCode}}></div>,
-    MuxVideoBlock: ({node} : {node: SerializedBlockNode}) => <MuxVideo playbackId={node.fields.muxPlaybackId} />
+    // Rendered as the native <mux-player> custom element (no React runtime
+    // needed) — see caseStudyContent.astro for the vanilla enhancement script
+    // that lazy-loads the player and wires up autoplay-on-scroll.
+    MuxVideoBlock: ({node} : {node: SerializedBlockNode}) => (
+      <div className="w-full my-8 aspect-video mux-video-wrapper">
+        <mux-player
+          playback-id={node.fields.muxPlaybackId}
+          muted
+          loop
+          playsinline
+          style={{ width: '100%', height: '100%' }}
+        ></mux-player>
+      </div>
+    ),
   },
 })
 

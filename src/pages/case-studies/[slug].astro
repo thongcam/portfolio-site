@@ -1,7 +1,10 @@
 ---
 import { cmsURL } from "@/constants";
 import extractPlainTextFromRichText from "@utils/extractPlainTextFromRichText";
+import resolveOgImage from "@/utils/resolveOgImage";
+import { personRef } from "@/utils/personSchema";
 import Layout from "@/layouts/layout.astro";
+import JsonLd from "@/components/seo/jsonLd.astro";
 import CaseStudyIntroduction from "./sections/caseStudyIntroduction.astro";
 import CaseStudyContent from "./sections/caseStudyContent.astro";
 import CaseStudyOtherProjects from "./sections/caseStudyOtherProjects.astro";
@@ -11,16 +14,23 @@ export interface CaseStudyType {
   title: string;
   id: string;
   slug: string;
-  thumbnailImage: { url: string; alt: string; width: number; height: number };
+  // /api/case-studies/all does not include width/height, unlike other
+  // endpoints that return the full media doc — inferSize is required here.
+  // Null when the case study has no thumbnail set.
+  thumbnailImage: { url: string; alt: string } | null;
 }
 
-const caseStudiesResponse = await fetch(`${cmsURL}/api/case-studies/all`, {
-  credentials: "include",
-});
-
-const caseStudies: CaseStudyType[] = await caseStudiesResponse.json();
-
 const { slug } = Astro.params;
+
+const [caseStudiesResponse, pageResponse] = await Promise.all([
+  fetch(`${cmsURL}/api/case-studies/all`, { credentials: "include" }),
+  fetch(`${cmsURL}/api/case-studies/by-slug/${slug}`),
+]);
+
+const [caseStudies, page]: [CaseStudyType[], any] = await Promise.all([
+  caseStudiesResponse.json(),
+  pageResponse.json(),
+]);
 
 const currentCaseStudy = caseStudies.find((_) => _.slug === slug);
 
@@ -32,10 +42,6 @@ const otherCaseStudies = caseStudies.filter(
   (caseStudy) => caseStudy.slug !== slug,
 );
 
-const pageResponse = await fetch(`${cmsURL}/api/case-studies/by-slug/${slug}`);
-
-const page = await pageResponse.json();
-
 // The browser should always check freshness
 Astro.response.headers.set(
   "Cache-Control",
@@ -45,22 +51,60 @@ Astro.response.headers.set(
 // The CDN should cache for a year, but revalidate if the cache tag changes
 Astro.response.headers.set("Netlify-Cdn-Cache-Control", "s-maxage=31536000");
 
-Astro.response.headers.set("Netlify-Cache-Tag", currentCaseStudy.id!);
-Astro.response.headers.set("Cache-Tag", currentCaseStudy.id!);
+const cacheTags = `global,case-studies,${currentCaseStudy.id}`;
+Astro.response.headers.set("Netlify-Cache-Tag", cacheTags);
+Astro.response.headers.set("Cache-Tag", cacheTags);
+
+const plainDescription =
+  page.meta?.description ||
+  extractPlainTextFromRichText(page.thumbnail.description).slice(0, 155);
+
+const ogImage =
+  resolveOgImage(page.meta?.image) || resolveOgImage(page.thumbnail.thumbnailImage);
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+
+const structuredData = [
+  {
+    "@type": "CreativeWork",
+    headline: page.title,
+    description: plainDescription,
+    url: canonicalURL,
+    image: ogImage?.url,
+    dateModified: page.updatedAt,
+    author: personRef,
+  },
+  {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://thong.cam/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: page.title,
+        item: canonicalURL,
+      },
+    ],
+  },
+];
 ---
 
 <Layout
-  pageMetaDescription={page.thumbnail.description}
+  pageMetaDescription={plainDescription}
   pageTitle={page.title}
   pageOgMeta={{
-    title: page.title,
-    description: page.thumbnail.description,
-    url: Astro.url,
-    imageUrl: cmsURL + page.thumbnail.thumbnailImage.thumbnailURL,
-    imageUrlSecure: cmsURL + page.thumbnail.thumbnailImage.thumbnailURL,
+    title: page.meta?.title || page.title,
+    description: plainDescription,
+    image: ogImage,
   }}
   themeColor={page.themeColor}
 >
+  <JsonLd graph={structuredData} slot="head" />
   <CaseStudyIntroduction page={page} />
   <CaseStudyContent page={page} />
   <CaseStudyOtherProjects otherCaseStudies={otherCaseStudies} />
