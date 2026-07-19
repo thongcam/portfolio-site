@@ -1,9 +1,9 @@
-import { purgeCache } from "@netlify/functions";
+import type { APIContext } from "astro";
 import {
     getSecret,
    } from 'astro:env/server';
 
-export async function POST({ request } : {request : Request}) {
+export async function POST({ request, cache } : APIContext) {
   const body = await request.json();
 
   // See below for information on webhook security
@@ -11,7 +11,7 @@ export async function POST({ request } : {request : Request}) {
     return new Response("Unauthorized", { status: 401 });
   }
     try {
-        await purgeCache({ tags: body.updateTags });
+        await cache.invalidate({ tags: body.updateTags });
         console.info("Purge cache successfully!", body.updateTags)
     } catch {
         console.info("Could not purge cache!")
