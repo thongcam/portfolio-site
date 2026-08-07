@@ -1,6 +1,6 @@
 import { defineConfig, envField } from "astro/config";
-import netlify from "@astrojs/netlify";
-import { cacheNetlify } from "@astrojs/netlify/cache";
+import cloudflare from "@astrojs/cloudflare";
+import { cacheCloudflare } from "@astrojs/cloudflare/cache";
 
 import react from "@astrojs/react";
 
@@ -16,14 +16,14 @@ export default defineConfig({
   // rendering behavior this site had under Astro 6.
   compressHTML: true,
 
-  adapter: netlify(),
+  adapter: cloudflare(),
 
   // Route caching provider — Astro.cache.set()/context.cache.set() sets
-  // Netlify-CDN-Cache-Control + Netlify-Cache-Tag under the hood; invalidate()
-  // calls purgeCache() from @netlify/functions. Browser-facing Cache-Control
-  // is NOT touched by this provider — pages still set it explicitly.
+  // Cloudflare-CDN-Cache-Control + Cache-Tag under the hood; invalidate() uses
+  // the Worker Cache API. Browser-facing Cache-Control is NOT touched by this
+  // provider — pages still set it explicitly.
   cache: {
-    provider: cacheNetlify(),
+    provider: cacheCloudflare(),
   },
 
   site: "https://thong.cam",
@@ -32,7 +32,7 @@ export default defineConfig({
     domains: ["astro.build", "thong.cam", "admin.thong.cam"],
     // Scoped to localhost (any port) for the local dev CMS — unlike a bare
     // domain string, remotePatterns properly matches regardless of port on
-    // both Astro's own check and the Netlify adapter's generated allowlist.
+    // both Astro's own check and the adapter's generated allowlist.
     remotePatterns: [{ protocol: "http", hostname: "localhost" }],
     layout: "constrained",
     breakpoints: [400, 750, 1024, 1668, 2048, 2560],

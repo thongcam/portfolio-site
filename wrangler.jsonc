@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "portfolio-site",
+  // Unified entrypoint provided by @astrojs/cloudflare (v14+) — works for both
+  // `astro dev` and production. Do NOT point this at ./dist/_worker.js; that
+  // path only exists after a build and breaks config resolution.
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "compatibility_date": "2025-09-09",
+  // Required by @astrojs/cloudflare so server code can use node:* built-ins
+  // (Payload richtext / lexical pull these in at runtime).
+  "compatibility_flags": ["nodejs_compat"],
+  // Static assets emitted by `astro build`, served straight from Cloudflare's
+  // edge without invoking the Worker.
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+  "observability": {
+    "enabled": true
+  }
+  // PAYLOAD_WEBHOOK_SECRET is a runtime secret — do NOT put it here. Set it with
+  // `wrangler secret put PAYLOAD_WEBHOOK_SECRET` (or the dashboard) before deploy.
+}
