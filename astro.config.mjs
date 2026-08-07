@@ -16,7 +16,9 @@ export default defineConfig({
   // rendering behavior this site had under Astro 6.
   compressHTML: true,
 
-  adapter: cloudflare(),
+  adapter: cloudflare({
+    imageService: 'compile',
+  }),
 
   // Route caching provider — Astro.cache.set()/context.cache.set() sets
   // Cloudflare-CDN-Cache-Control + Cache-Tag under the hood; invalidate() uses
