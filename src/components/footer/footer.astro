@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import MaxWidth from "@components/container/maxWidth.astro";
 import HalfRing from "/public/decorators/half ring.svg";
 import LogoSmall from "/public/images/logo-small.svg";
@@ -11,24 +10,26 @@ const { footer: footerData } = await getGlobals(Astro.locals);
 <footer class="relative bg-gray">
   <div class="bg-white md:pt-20">
     <div class="relative w-[clamp(15rem,30vw,18em)] mx-auto">
-      <Image
-        src={HalfRing}
+      <img
+        src={HalfRing.src}
         width={HalfRing.width}
         height={HalfRing.height}
         alt=""
-        class:list={"asbolute mx-auto bottom-0"}
-        loading={"lazy"}
+        class="asbolute mx-auto bottom-0"
+        loading="lazy"
+        decoding="async"
       />
       <div
         class="absolute left-[50%] -translate-x-[50%] translate-y-[50%] bottom-0 w-[50%]"
       >
-        <Image
-          src={LogoSmall}
+        <img
+          src={LogoSmall.src}
           width={LogoSmall.width}
           height={LogoSmall.height}
           alt=""
-          class:list={"w-full transition-transform ease-out duration-75"}
-          loading={"lazy"}
+          class="w-full transition-transform ease-out duration-75"
+          loading="lazy"
+          decoding="async"
           id="rotating-logo"
         />
       </div>

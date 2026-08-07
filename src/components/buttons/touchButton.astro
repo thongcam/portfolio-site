@@ -1,6 +1,4 @@
 ---
-import { Image } from "astro:assets";
-
 interface Props {
   imgsrc: ImageMetadata;
   alttext: string;
@@ -17,11 +15,12 @@ const { imgsrc, buttonlabel, alttext } = Astro.props;
   aria-pressed="false"
   class="relative"
 >
-  <Image
+  <img
     src={imgsrc.src}
     alt={alttext}
     height={imgsrc.height}
     width={imgsrc.width}
+    decoding="async"
   />
 </button>
 

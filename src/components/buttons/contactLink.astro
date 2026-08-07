@@ -1,6 +1,5 @@
 ---
 import ExternalLink from "/public/icons/External link.svg";
-import Image from "astro/components/Image.astro";
 const { href, label } = Astro.props;
 ---
 
@@ -12,13 +11,14 @@ const { href, label } = Astro.props;
     class="relative text-md underline hover:opacity-80 flex flex-row gap-2 items-center md:gap-2 md:after:absolute md:after:inset-[-20px]"
   >
     <slot />
-    <Image
-      src={ExternalLink}
+    <img
+      src={ExternalLink.src}
       alt={"External link to " + label}
       width={ExternalLink.width}
       height={ExternalLink.height}
-      class:list={"s-[1rem]"}
-      loading={"lazy"}
+      class="s-[1rem]"
+      loading="lazy"
+      decoding="async"
     />
   </a>
 </li>

@@ -1,16 +1,16 @@
 ---
-import { Image } from "astro:assets";
 import NumberingDecoratorBackground from "/public/decorators/numberings/background.svg";
 ---
 
 <h2 class="flex flex-col gap-3 md:flex-row md:gap-5 md:align-center">
   <div class="relative w-fit">
-    <Image
-      src={NumberingDecoratorBackground}
+    <img
+      src={NumberingDecoratorBackground.src}
       alt="Numbering decorator"
-      class:list={""}
       width={55}
-      loading={"lazy"}
+      height={36}
+      loading="lazy"
+      decoding="async"
     />
     <div
       class="absolute left-[50%] -translate-x-[45%] top-[45%] -translate-y-[50%] font-display text-[1.7rem] text-yellow font-semibold h-fit"

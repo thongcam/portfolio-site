@@ -37,13 +37,14 @@ const imageAlt = data.aboutMePortrait.alt;
           >
             <span class="fit-content">{data.buttonLabel}</span>
             <div class="flex flex-col justify-center">
-              <Image
-                loading={"lazy"}
-                src={InternalLinkYellow}
+              <img
+                loading="lazy"
+                decoding="async"
+                src={InternalLinkYellow.src}
                 width={InternalLinkYellow.width}
                 height={InternalLinkYellow.height}
                 alt="External link to About me page"
-                class:list={"aspect-auto"}
+                class="aspect-auto"
               />
             </div>
           </a>

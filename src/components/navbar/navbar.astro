@@ -2,7 +2,6 @@
 import NavbarLink from "./navbarLink/navbarLink.astro";
 import CloseMenu from "/public/icons/Close menu.svg";
 import OpenMenu from "/public/icons/Open menu.svg";
-import Image from "astro/components/Image.astro";
 import MaxWidth from "@components/container/maxWidth.astro";
 import type { NavLinkType } from "../../types/navLinkType";
 import { cmsURL } from "../../constants";
@@ -46,23 +45,23 @@ const { nav: navData } = await getGlobals(Astro.locals);
     class="flex flex-row justify-between content-middle items-center py-6"
   >
     <a href="/" tabindex="0">
-      <Image
+      <img
         src={cmsURL + logos.logoSmall.url}
         height={logos.logoSmall.height}
         width={logos.logoSmall.width}
-        densities={[2]}
         alt="Portfolio site Home"
-        class={"md:hidden"}
-        loading={"eager"}
+        class="md:hidden"
+        loading="eager"
+        decoding="async"
       />
-      <Image
+      <img
         src={cmsURL + logos.logoLarge.url}
         height={logos.logoLarge.height}
         width={logos.logoLarge.width}
-        densities={[2]}
         alt="Portfolio site Home"
-        class:list={"hidden md:block"}
-        loading={"eager"}
+        class="hidden md:block"
+        loading="eager"
+        decoding="async"
       />
     </a>
     <div
@@ -83,13 +82,13 @@ const { nav: navData } = await getGlobals(Astro.locals);
           class="menu-button relative size-[50px] hidden place-items-center md:hidden active:bg-dark-gray rounded"
           id="close-menu-button"
         >
-          <Image
-            src={CloseMenu}
+          <img
+            src={CloseMenu.src}
             width={CloseMenu.width}
             height={CloseMenu.height}
             alt="Close hamburger menu"
-            densities={[2]}
-            loading={"eager"}
+            loading="eager"
+            decoding="async"
           />
         </button>
         <nav class="flex flex-col content-end w-full">
@@ -115,11 +114,13 @@ const { nav: navData } = await getGlobals(Astro.locals);
       class="menu-button relative size-[50px] grid place-items-center md:hidden active:bg-dark-gray rounded"
       id="open-menu-button"
     >
-      <Image
-        src={OpenMenu}
-        densities={[2]}
+      <img
+        src={OpenMenu.src}
+        width={OpenMenu.width}
+        height={OpenMenu.height}
         alt="Open hamburger menu"
-        loading={"eager"}
+        loading="eager"
+        decoding="async"
       />
     </button>
   </MaxWidth>
