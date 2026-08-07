@@ -17,7 +17,7 @@ export default defineConfig({
   compressHTML: true,
 
   adapter: cloudflare({
-    imageService: 'compile',
+    imageService: 'cloudflare-binding',
   }),
 
   // Route caching provider — Astro.cache.set()/context.cache.set() sets
