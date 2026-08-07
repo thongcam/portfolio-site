@@ -41,6 +41,7 @@ const cardDecorator =
   <Image
     src={`${cmsURL}${thumbnailImage.url}`}
     alt={thumbnailImage.alt}
+    quality={80}
     class:list={[
       "object-cover w-full h-full border border-dark-gray/50",
       imageAlign == "right" ? "lg:order-1" : "lg:order-0",
