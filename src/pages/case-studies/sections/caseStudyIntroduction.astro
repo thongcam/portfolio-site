@@ -32,7 +32,7 @@ const { themeColorLight, themeColorLighter } =
     height={page.bannerImage.height}
     class="rounded-xl hidden sm:block"
     quality={80}
-    loading={"eager"}
+    priority
   />
   <Image
     src={cmsURL + page.thumbnail.thumbnailImage.url}
@@ -41,7 +41,7 @@ const { themeColorLight, themeColorLighter } =
     height={page.thumbnail.thumbnailImage.height}
     class="rounded-xl block sm:hidden"
     quality={80}
-    loading={"eager"}
+    priority
   />
   <!-- <picture>
   <source
