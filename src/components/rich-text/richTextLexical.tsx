@@ -5,6 +5,7 @@ import {
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import type { SerializedBlockNode, UploadData } from '@payloadcms/richtext-lexical'
 import CalloutBlock from './callout-box/CalloutBox'
+import ImageCollection from './image-collection/ImageCollection'
 import { CustomHeadingJSXConverter } from './custom-converters/heading'
 import { CustomListJSXConverter } from './custom-converters/list'
 import { CustomParagraphJSXConverter } from './custom-converters/paragraph'
@@ -27,6 +28,7 @@ const jsxConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
     // myTextBlock is the slug of the block
     CalloutBlock: ({node} : {node : SerializedBlockNode}) => <CalloutBlock emoji={node.fields.emoji} content={node.fields.content} color={node.fields.color}></CalloutBlock>,
     FigmaEmbedBlock: ({node} : {node: SerializedBlockNode}) => <div className="flex my-5" dangerouslySetInnerHTML={{__html: node.fields.figmaEmbedCode}}></div>,
+    ImageCollectionBlock: ({node} : {node: SerializedBlockNode}) => <ImageCollection images={node.fields.images}></ImageCollection>,
     // Rendered as the native <mux-player> custom element (no React runtime
     // needed) — see caseStudyContent.astro for the vanilla enhancement script
     // that lazy-loads the player and wires up autoplay-on-scroll.

@@ -16,9 +16,17 @@ interface LightboxImageProps {
     width: number;
     height: number;
     srcSet?: ImageSource[]
+    /** Classes for the outer <figure>. Override to drop the default block
+     *  margins when the image sits in a layout that owns its own spacing
+     *  (e.g. the multi-column ImageCollection block). */
+    className?: string;
+    /** `sizes` for the inline thumbnail. Defaults to the full article column;
+     *  override when the image occupies a fraction of it. Only affects which
+     *  srcSet candidate is fetched — the Lightbox still gets the full srcSet. */
+    sizes?: string;
 }
 
-export default function LightboxImage({src, alt, caption, width, height, srcSet} : LightboxImageProps) {
+export default function LightboxImage({src, alt, caption, width, height, srcSet, className = "flex flex-col gap-2 my-5", sizes = RICH_TEXT_IMAGE_SIZES} : LightboxImageProps) {
     const [open, setOpen] = useState(false);
     const zoomRef = useRef(null);
     const captionsRef = useRef(null);
@@ -51,7 +59,7 @@ return (
         >
 
         </Lightbox>
-        <figure className="flex flex-col gap-2 my-5">
+        <figure className={className}>
             <button className="relative cursor-pointer" onClick={() => setOpen(true)}>
                 <span className={"absolute bottom-2 right-3 md:bottom-4 md:right-5 p-2 bg-pale-blue/50 rounded-full flex flex-row items-center  " + styles.zoomHint} style={{}}>
                     <img className="h-6" src="/icons/Frame inspect.svg" alt="" width={24} height={24} loading="lazy"/>
@@ -66,7 +74,7 @@ return (
                 // Only affects which srcSet candidate the inline thumbnail
                 // fetches — layout is unchanged, and the Lightbox receives the
                 // full srcSet separately so zoomed quality is untouched.
-                sizes={RICH_TEXT_IMAGE_SIZES}
+                sizes={sizes}
                 loading="lazy"
                 />
             </button>

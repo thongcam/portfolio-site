@@ -1,9 +1,10 @@
 import type { SerializedLexicalNode } from "lexical";
 
 /**
- * Walks the Lexical tree checking for an upload node with `fields.zoomable`
- * set — the only reason case-study rich text needs client hydration
- * (LightboxImage). Mux video and everything else render as static HTML.
+ * Walks the Lexical tree checking for anything that opens a lightbox — an
+ * upload node with `fields.zoomable` set, or an ImageCollection block (every
+ * image in one is zoomable). Those are the only reasons case-study rich text
+ * needs client hydration. Mux video and everything else render as static HTML.
  */
 export default function hasZoomableImage(obj: SerializedLexicalNode): boolean {
   function traverse(value: unknown): boolean {
@@ -14,6 +15,14 @@ export default function hasZoomableImage(obj: SerializedLexicalNode): boolean {
       (value as { type?: string }).type === "upload" &&
       "fields" in value &&
       (value as { fields?: { zoomable?: boolean } }).fields?.zoomable
+    ) {
+      return true;
+    }
+
+    if (
+      "fields" in value &&
+      (value as { fields?: { blockType?: string } }).fields?.blockType ===
+        "ImageCollectionBlock"
     ) {
       return true;
     }

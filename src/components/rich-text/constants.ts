@@ -9,3 +9,17 @@
  */
 export const RICH_TEXT_IMAGE_SIZES =
   "(min-width: 1280px) 700px, (min-width: 768px) 70vw, calc(100vw - 3.5rem)";
+
+/**
+ * `sizes` for images inside an ImageCollection block, which flows the article
+ * column into `columns-xs` (20rem) tracks with a 1.25rem gap.
+ *
+ * A second column only appears once the article itself is ~660px wide
+ * (`floor((W + 20) / (320 + 20)) >= 2`), which happens at a ~940px viewport —
+ * hence the extra breakpoint that RICH_TEXT_IMAGE_SIZES has no need for.
+ * Above it each image occupies roughly half the column minus the gap; the
+ * values below round up slightly, since over-estimating only costs a larger
+ * candidate while under-estimating shows a blurry one.
+ */
+export const IMAGE_COLLECTION_SIZES =
+  "(min-width: 1280px) 350px, (min-width: 940px) 35vw, (min-width: 768px) 70vw, calc(100vw - 3.5rem)";
