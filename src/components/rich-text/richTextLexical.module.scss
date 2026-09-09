@@ -1,13 +1,100 @@
 .richText {
+    /* ------------------------------------------------------------------
+       Vertical rhythm for the article body.
+
+       Spacing is expressed as relationships between adjacent blocks rather
+       than margins on the blocks themselves, so a block's spacing depends on
+       what precedes it and no block has to know about its neighbours. Every
+       converter therefore renders without its own margin — do not reintroduce
+       `my-*`/`mt-*` utilities on rich-text blocks or they will fight these.
+
+       Section titles use padding rather than margin so the figure below is
+       the whole gap above them, and so scroll-spy anchors land above the
+       heading rather than tight against it.
+       ------------------------------------------------------------------ */
+    > * {
+        margin-block: 0;
+    }
+
+    /* Any block after any other block */
+    > * + * {
+        margin-top: 28px;
+    }
+
+    /* Consecutive paragraphs sit tighter */
+    > p + p,
+    > p + ul,
+    > p + ol,
+    > ul + p,
+    > ul + ul,
+    > ul + ol,
+    > ol + p,
+    > ol + ul,
+    > ol + ol {
+        margin-top: 22px;
+    }
+
+    /* Section title. `margin-top: 0` so the padding below is the entire gap
+       above it, rather than stacking on the generic block margin. */
+    > h2 {
+        margin-top: 0;
+        padding-top: 56px;
+    }
+
+    /* Subtitle */
+    > h3 {
+        margin-top: 28px;
+    }
+
+    /* A title to whatever follows it — declared after `> h3` so it wins the
+       specificity tie for `h2 + h3`. */
+    > h2 + *,
+    > h3 + *,
+    > h2 + h3 {
+        margin-top: 24px;
+    }
+
+    @media (min-width: 741px) {
+        > * + * {
+            margin-top: 32px;
+        }
+
+        > p + p,
+        > p + ul,
+        > p + ol,
+        > ul + p,
+        > ul + ul,
+        > ul + ol,
+        > ol + p,
+        > ol + ul,
+        > ol + ol {
+            margin-top: 24px;
+        }
+
+        > h2 {
+            margin-top: 0;
+            padding-top: 88px;
+        }
+
+        > h3 {
+            margin-top: 32px;
+        }
+
+        > h2 + *,
+        > h3 + *,
+        > h2 + h3 {
+            margin-top: 26px;
+        }
+    }
+
     a {
         -webkit-appearance: none;
         text-decoration: underline;
-        color: rgb(33 50 76 / 0.8);
+        color: color-mix(in oklab, var(--color-blue-900) 80%, transparent);
     }
     table {
         table-layout: fixed;
         width: 100%;
-        margin: 1.25rem 0;
         border: none;
         border-collapse: collapse;
         figcaption {
@@ -16,7 +103,7 @@
         }
 
         th {
-            background-color: #f9f9fa;
+            background-color: var(--color-gray-50);
         }
 
         th:has(figure, picture) {
@@ -67,11 +154,10 @@
         column-gap: 1.25rem;
     } */
      blockquote {
-        border-left: 2px solid #111F31 ;
+        border-left: 2px solid var(--color-blue-950);
         padding-left: 1rem;
-        color: rgb(33 50 76 / 0.8);
+        color: color-mix(in oklab, var(--color-blue-900) 80%, transparent);
         font-style: italic;
-        margin: 1.25rem 0;
      }
 }
 
@@ -93,3 +179,12 @@
 .bg-purple { background-color: light-dark(oklch(0.714 0.203 305.504), oklch(0.558 0.288 302.321)); }
 .bg-pink { background-color: light-dark(oklch(0.718 0.202 349.761), oklch(0.592 0.249 0.584)); }
 .bg-custom { background-color: hsl(from var(--theme-color, #FFD700) h s 95%); }
+// Semantic text colours. Keys mirror the state names registered in the CMS
+// (src/fields/lexicalFeatures.ts); the text converter emits them as class
+// names. Values come from the Tailwind theme so the palette has one source.
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-tertiary { color: var(--color-text-tertiary); }
+.text-accent-yellow { color: var(--color-text-accent-yellow); }
+.text-accent-cyan { color: var(--color-text-accent-cyan); }
+.text-accent-blue { color: var(--color-text-accent-blue); }

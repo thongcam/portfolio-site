@@ -1,0 +1,24 @@
+---
+/**
+ * The site's layout grid: 12 columns, 32px gutter.
+ *
+ * Within the 1200px container this reproduces the design's measurements
+ * exactly — a column is 70.67px, so 3 columns is 276px (hero portrait),
+ * 4 is 379px (case-study copy), 6 is 584px (development card) and 8 is
+ * 789px (case-study screenshot).
+ *
+ * Only the column gutter is fixed here; row spacing varies per section and
+ * is passed in via `class` (e.g. `gap-y-12`).
+ */
+interface Props {
+  class?: string;
+  /** Rendered element. `ul`/`ol` for lists of cards. */
+  as?: "div" | "ul" | "ol";
+}
+
+const { class: className, as: Tag = "div" } = Astro.props;
+---
+
+<Tag class:list={["grid grid-cols-12 gap-x-8", className]}>
+  <slot />
+</Tag>

@@ -26,7 +26,7 @@ interface LightboxImageProps {
     sizes?: string;
 }
 
-export default function LightboxImage({src, alt, caption, width, height, srcSet, className = "flex flex-col gap-2 my-5", sizes = RICH_TEXT_IMAGE_SIZES} : LightboxImageProps) {
+export default function LightboxImage({src, alt, caption, width, height, srcSet, className = "flex flex-col gap-2", sizes = RICH_TEXT_IMAGE_SIZES} : LightboxImageProps) {
     const [open, setOpen] = useState(false);
     const zoomRef = useRef(null);
     const captionsRef = useRef(null);
@@ -61,9 +61,9 @@ return (
         </Lightbox>
         <figure className={className}>
             <button className="relative cursor-pointer" onClick={() => setOpen(true)}>
-                <span className={"absolute bottom-2 right-3 md:bottom-4 md:right-5 p-2 bg-pale-blue/50 rounded-full flex flex-row items-center  " + styles.zoomHint} style={{}}>
+                <span className={"absolute bottom-2 right-3 md:bottom-4 md:right-5 p-2 bg-blue-900/50 rounded-full flex flex-row items-center  " + styles.zoomHint} style={{}}>
                     <img className="h-6" src="/icons/Frame inspect.svg" alt="" width={24} height={24} loading="lazy"/>
-                    <span className="text-sm font-semibold text-white transition-all duration-150 ease-in">Click to zoom</span>
+                    <span className="text-caption text-white transition-all duration-150 ease-in">Click to zoom</span>
                 </span>
                 <img
                 src={src}
@@ -80,7 +80,7 @@ return (
             </button>
             {
                 caption &&
-                <figcaption className="text-sm text-pale-blue/80">
+                <figcaption className="text-caption text-blue-900/80">
                     <RichTextLexical data={caption}/>
                 </figcaption>
             }

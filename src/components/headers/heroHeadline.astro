@@ -1,0 +1,81 @@
+---
+/**
+ * Renders the homepage headline from the CMS `heroSection.mainHeader` field.
+ *
+ * Deliberately not routed through <RichTextLexical>: that pipeline wraps
+ * output in the article prose styles and maps paragraphs to `text-body`,
+ * whereas this is a single display heading. All this needs from Lexical is
+ * the text runs and their colour state, so it walks the tree directly and
+ * emits spans — no React island, no hydration.
+ *
+ * Accepts a plain string too, so the page still renders if the field has not
+ * been migrated to rich text yet.
+ */
+interface LexicalTextNode {
+  type: string;
+  text?: string;
+  format?: number;
+  children?: LexicalTextNode[];
+  $?: { textColor?: string };
+}
+
+interface Props {
+  /** Lexical editor state, or a bare string for un-migrated content. */
+  data: { root?: { children?: LexicalTextNode[] } } | string | null | undefined;
+  class?: string;
+}
+
+const { data, class: className } = Astro.props;
+
+const IS_BOLD = 1;
+
+/**
+ * Semantic text-colour states the CMS can apply, mapped to the matching
+ * Tailwind utility. Keys must match the state names in the CMS's
+ * customTextStateFeature.
+ */
+const COLOR_CLASSES: Record<string, string> = {
+  "text-primary": "text-text-primary",
+  "text-secondary": "text-text-secondary",
+  "text-tertiary": "text-text-tertiary",
+  "text-accent-yellow": "text-text-accent-yellow",
+  "text-accent-cyan": "text-text-accent-cyan",
+  "text-accent-blue": "text-text-accent-blue",
+};
+
+type Run = { text: string; className: string };
+
+/** Flatten the tree into styled text runs, ignoring block structure. */
+function collectRuns(nodes: LexicalTextNode[] | undefined): Run[] {
+  if (!nodes) return [];
+  return nodes.flatMap((node) => {
+    if (node.type === "linebreak") return [{ text: "\n", className: "" }];
+    if (node.children) return collectRuns(node.children);
+    if (typeof node.text !== "string") return [];
+
+    const classes = [
+      COLOR_CLASSES[node.$?.textColor ?? ""] ?? "",
+      // The scale's weight is the headline's baseline; bold marks a phrase as
+      // emphasised relative to it rather than setting an absolute weight.
+      node.format && node.format & IS_BOLD ? "font-bold" : "",
+    ].filter(Boolean);
+
+    return [{ text: node.text, className: classes.join(" ") }];
+  });
+}
+
+const runs: Run[] =
+  typeof data === "string"
+    ? [{ text: data, className: "" }]
+    : collectRuns(data?.root?.children);
+---
+
+{
+  runs.length > 0 && (
+    <h1 class:list={["text-hero-title text-text-tertiary text-balance", className]}>
+      {runs.map((run) =>
+        run.className ? <span class={run.className}>{run.text}</span> : run.text,
+      )}
+    </h1>
+  )
+}

@@ -30,7 +30,7 @@ export const CustomUploadJSXConverter : JSXConverters = {
           // resolution is downloaded. Previously this served the full-size
           // original (often ~3840w) for an image rendered ~354px wide.
           const srcSet = buildSrcSet(imageDocument.value)
-          return (<figure className="flex flex-col my-5 gap-2">
+          return (<figure className="flex flex-col gap-2">
               <img
                 src={preferredSrc(imageDocument.value)}
                 alt={imageDocument.value.alt}
@@ -41,7 +41,7 @@ export const CustomUploadJSXConverter : JSXConverters = {
                 loading="lazy"
                 className="max-w-full h-auto rounded-md"
               />
-              {node.fields && node.fields.caption && <figcaption className="text-sm text-pale-blue/80"><RichTextLexical data={node.fields.caption}/>
+              {node.fields && node.fields.caption && <figcaption className="text-caption text-blue-900/80"><RichTextLexical data={node.fields.caption}/>
               </figcaption>}
           </figure>)
         }

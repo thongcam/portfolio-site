@@ -1,20 +1,37 @@
 ---
+/**
+ * Large display heading with a yellow highlight that wipes in when the
+ * heading scrolls fully into view.
+ *
+ * The highlight is a background gradient on an inline span with
+ * `box-decoration-clone`, so a heading that wraps gets one bar per line —
+ * which is what the mobile design shows — rather than a single bar spanning
+ * the whole block.
+ */
 interface Props {
-  class: string;
+  class?: string;
   level?: "h1" | "h2";
+  /** Thickness of the highlight bar. */
+  underlineHeight?: string;
 }
-const { class: className, level = "h1" } = Astro.props;
+
+const {
+  class: className,
+  level = "h1",
+  underlineHeight = "1.25rem",
+} = Astro.props;
 const Tag = level;
 ---
 
 <Tag
   class:list={[
-    "display-header text-6xl leading-tight md:leading-snug font-display font-bold max-w-4xl text-balance md:text-wrap",
+    "display-header text-article-title text-text-primary max-w-4xl text-balance md:text-wrap",
     className,
   ]}
+  style={`--underline-height: ${underlineHeight}`}
 >
   <span
-    class="decoration-none bg-gradient-to-r from-yellow/50 to-yellow/50 bg-[-10%_82%] bg-[length:0%_0.8rem] bg-no-repeat"
+    class="box-decoration-clone decoration-none bg-gradient-to-r from-yellow-400/50 to-yellow-400/50 bg-[position:0_82%] bg-[length:0%_var(--underline-height)] bg-no-repeat"
     ><slot /></span
   >
 </Tag>

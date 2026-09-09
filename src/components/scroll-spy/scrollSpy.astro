@@ -3,14 +3,10 @@ import extractHeadingsFromRichText from "@/utils/extractHeadingsFromRichText";
 
 const {page} = Astro.props;
 
-const scrollSpyItems = [
-  {
-    title: "Summary",
-    id: "summary0",
-    heading: "h2",
-  },
-  ...extractHeadingsFromRichText(page),
-];
+// Headings come from the article body only. A hard-coded "Summary" entry used
+// to sit at the top pointing at `#summary0`, an id nothing ever rendered — and
+// the redesign drops that heading from the intro entirely.
+const scrollSpyItems = extractHeadingsFromRichText(page);
 
 const calculateScrollSpyItemPadding = (heading: string) => {
   const headingLevelNumber = parseInt(heading.charAt(1), 10);
@@ -19,16 +15,16 @@ const calculateScrollSpyItemPadding = (heading: string) => {
 ---
 
 <aside
-class="p-5 bg-gray rounded-lg hidden md:block sticky top-5 w-[20vw] max-w-75 max-h-[calc(100vh-2.5rem)] overflow-y-auto scroll-spy-menu"
+class="p-5 bg-gray-50 rounded-lg hidden md:block sticky top-5 w-full max-h-[calc(100vh-2.5rem)] overflow-y-auto scroll-spy-menu"
 >
 <ul
-    class="text-sm text-pale-blue/80 leading-[1.25] overflow-ellipsis flex flex-col gap-2"
+    class="text-caption text-blue-900/80 overflow-ellipsis flex flex-col gap-2"
 >
     {
     scrollSpyItems.map((scrollSpyItem) => {
         return (
         <li
-            class="hover:text-dark-blue hover:cursor-pointer line-clamp-2"
+            class="hover:text-blue-950 hover:cursor-pointer line-clamp-2"
             style={{
             paddingInlineStart: calculateScrollSpyItemPadding(
                 scrollSpyItem.heading
@@ -50,7 +46,7 @@ class="p-5 bg-gray rounded-lg hidden md:block sticky top-5 w-[20vw] max-w-75 max
 
     .scroll-spy-menu {
       scrollbar-width: thin;
-      scrollbar-color: rgb(33 50 76 / 0.25) transparent;
+      scrollbar-color: color-mix(in oklab, var(--color-blue-900) 25%, transparent) transparent;
       scrollbar-arrow-color: transparent;
       scroll-behavior: smooth;
     }
@@ -62,7 +58,7 @@ class="p-5 bg-gray rounded-lg hidden md:block sticky top-5 w-[20vw] max-w-75 max
       background: transparent;
     }
     .scroll-spy-menu::-webkit-scrollbar-thumb {
-      background-color: rgb(33 50 76 / 0.25);
+      background-color: color-mix(in oklab, var(--color-blue-900) 25%, transparent);
       border-radius: 20px;
       border: transparent;
     }

@@ -1,15 +1,20 @@
 ---
 import Hero from "@components/sections/hero/hero.astro";
-import CardSection from "@components/sections/card-section/cardSection.astro";
 import AboutMe from "@components/sections/about-me/aboutMe.astro";
-import type { ContactLinkType } from "@customTypes/contactLinkType";
+import SectionHeader from "@components/headers/sectionHeader.astro";
+import CaseStudyCard from "@components/cards/caseStudyCard.astro";
+import WebsiteCard from "@components/cards/websiteCard.astro";
 import DisplayHeader from "@components/headers/displayHeader.astro";
 import Section from "@components/sections/section.astro";
-import ContactLink from "@components/buttons/contactLink.astro";
+import Grid from "@components/container/grid.astro";
+import SocialLink from "@components/buttons/socialLink.astro";
 import JsonLd from "@/components/seo/jsonLd.astro";
 import { buildPersonSchema, buildWebsiteSchema } from "@/utils/personSchema";
 import getGlobals from "@/utils/getGlobals";
+import { cmsURL } from "@/constants";
 import Layout from "@/layouts/layout.astro";
+import type { ContactLinkType } from "@customTypes/contactLinkType";
+import type { CardContentType } from "@customTypes/cardContentType";
 
 const { homepageData, contacts, settings } = await getGlobals(Astro.locals);
 
@@ -18,9 +23,47 @@ const structuredData = [
   buildWebsiteSchema(settings.siteTitle),
 ];
 
-const caseStudiesSection = homepageData.caseStudies;
+// The hero shows whichever links are ticked under Homepage -> Hero; the CTA
+// row and case-study footer always keep every link. An empty selection means
+// "all", so the hero is never accidentally left bare.
+const allContactLinks = contacts.contactLinks as ContactLinkType[];
+const heroSelection: string[] = homepageData.heroSection?.contactLinks ?? [];
+const heroContactLinks = heroSelection.length
+  ? allContactLinks.filter((link) => link.id && heroSelection.includes(link.id))
+  : allContactLinks;
 
+const caseStudiesSection = homepageData.caseStudies;
 const websitesSection = homepageData.websites;
+
+// Showcased projects come back as ids at depth 0. Each collection exposes a
+// `/:id/thumbnail` endpoint returning the flattened card content (title, rich
+// text description, link label, url, image) — same contract the previous
+// card section used.
+async function loadThumbnails(
+  collection: "case-studies" | "websites",
+  ids: string[] = [],
+): Promise<CardContentType[]> {
+  const results = await Promise.all(
+    ids.map(async (projectID) => {
+      try {
+        const res = await fetch(
+          `${cmsURL}/api/${collection}/${projectID}/thumbnail`,
+        );
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data?.error ? null : (data as CardContentType);
+      } catch {
+        return null;
+      }
+    }),
+  );
+  return results.filter((r): r is CardContentType => r !== null);
+}
+
+const [caseStudies, websites] = await Promise.all([
+  loadThumbnails("case-studies", caseStudiesSection.showcasedProjects),
+  loadThumbnails("websites", websitesSection.showcasedProjects),
+]);
 
 // The browser should always check freshness
 Astro.response.headers.set(
@@ -33,55 +76,61 @@ Astro.cache.set({
   maxAge: 31536000,
   tags: ["global", "case-studies", "websites"],
 });
-//Teset
 ---
 
 <Layout pageMetaDescription={settings.siteDescription}>
   <JsonLd graph={structuredData} slot="head" />
-  <Hero data={homepageData.heroSection} />
-  <CardSection
-    bg={caseStudiesSection.bg}
-    class=""
-    imageAlign={caseStudiesSection.imageAlign}
-    decorator={caseStudiesSection.decorator}
-    subheading={caseStudiesSection.sectionSubtitle || ""}
-    content={caseStudiesSection.showcasedProjects}
-    id="case-studies"
-  >
-    <span slot="numbering">{caseStudiesSection.sectionNumber}.</span>
-    <span slot="content">{caseStudiesSection.sectionTitle}</span>
-  </CardSection>
-  <CardSection
-    bg={websitesSection.bg}
-    class=""
-    imageAlign={websitesSection.imageAlign}
-    decorator={websitesSection.decorator}
-    subheading={websitesSection.sectionSubtitle || ""}
-    content={websitesSection.showcasedProjects}
-    id="websites"
-  >
-    <span slot="numbering">{websitesSection.sectionNumber}.</span>
-    <span slot="content">{websitesSection.sectionTitle}</span>
-  </CardSection>
-  <AboutMe data={homepageData.aboutMe} />
-  <Section class={["bg-white pt-10 md:pt-15 pb-20"]} id="contact">
-    <div>
-      <DisplayHeader class="" level="h2">{homepageData.contact.header}</DisplayHeader>
-      <ul class="pt-15 flex flex-row flex-wrap gap-y-10 gap-x-30">
-        {
-          contacts.contactLinks.map((link: ContactLinkType) => (
-            <ContactLink href={link.url} label={link.title}>
-              {link.title}
-            </ContactLink>
-          ))
-        }
-      </ul>
+
+  <Hero data={homepageData.heroSection} contactLinks={heroContactLinks} />
+
+  <Section class={["bg-white py-16 md:py-24"]} id="case-studies">
+    <SectionHeader number={caseStudiesSection.sectionNumber} class="mb-10 md:mb-12">
+      {caseStudiesSection.sectionTitle}
+    </SectionHeader>
+    <div class="flex flex-col gap-16 md:gap-12">
+      {
+        caseStudies.map((project) => (
+          <CaseStudyCard content={project} href={`/${project.url}`} />
+        ))
+      }
     </div>
   </Section>
-</Layout>
 
-<style>
-  body {
-    background-color: var(--color-gray);
-  }
-</style>
+  <Section class={["bg-gray-50 py-16 md:py-24"]} id="websites">
+    <SectionHeader number={websitesSection.sectionNumber} class="mb-10 md:mb-12">
+      {websitesSection.sectionTitle}
+    </SectionHeader>
+    <Grid class="gap-y-12">
+      {
+        websites.map((project) => (
+          <div class="col-span-12 md:col-span-6">
+            <WebsiteCard content={project} />
+          </div>
+        ))
+      }
+    </Grid>
+  </Section>
+
+  <AboutMe data={homepageData.aboutMe} />
+
+  <Section class={["bg-white pt-16 pb-16 md:pt-24 md:pb-24"]} id="contact">
+    <DisplayHeader level="h2">{homepageData.contact.header}</DisplayHeader>
+    <ul
+      class="mt-16 flex flex-col gap-8 md:mt-32 md:flex-row md:flex-wrap md:justify-between md:gap-x-8 md:gap-y-10"
+    >
+      {
+        contacts.contactLinks.map((link: ContactLinkType) => (
+          <li>
+            <SocialLink
+              href={link.url}
+              label={link.title}
+              class="text-body text-text-secondary"
+            >
+              {link.title}
+            </SocialLink>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+</Layout>

@@ -15,17 +15,17 @@ export const CustomHeadingJSXConverter : JSXConverters<SerializedHeadingNode> = 
     
         switch (NodeTag) {
           case "h1":
-            return <h1>{children}</h1>
+            return <h1 className="scroll-spy-item" id={id}>{children}</h1>
         case "h2":
-          return <h2 className="font-bold text-3xl mt-13 mb-6 scroll-spy-item leading-tight" id={id}>{children}</h2>
+          return <h2 className="text-h2 scroll-spy-item" id={id}>{children}</h2>
         case "h3":
           return <h3
-                    className="font-bold text-xl mt-8 mb-3 scroll-spy-item leading-tight"
+                    className="text-h3 scroll-spy-item"
                     id={id}
                   >{children}</h3>
         case "h4":
           return <h4
-          className="font-bold text-lg mt-6 mb-3 scroll-spy-item leading-tight"
+          className="text-label scroll-spy-item"
           id={id}
         >{children}</h4>
     

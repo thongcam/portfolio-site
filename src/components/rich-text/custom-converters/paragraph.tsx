@@ -13,6 +13,6 @@ export const CustomParagraphJSXConverter : JSXConverters = {
             </p>
             )
         }
-        return <p className="text-base mb-2">{children}</p>
+        return <p className="text-body">{children}</p>
     },
 }

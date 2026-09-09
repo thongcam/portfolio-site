@@ -27,13 +27,13 @@ const jsxConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
   blocks: {
     // myTextBlock is the slug of the block
     CalloutBlock: ({node} : {node : SerializedBlockNode}) => <CalloutBlock emoji={node.fields.emoji} content={node.fields.content} color={node.fields.color}></CalloutBlock>,
-    FigmaEmbedBlock: ({node} : {node: SerializedBlockNode}) => <div className="flex my-5" dangerouslySetInnerHTML={{__html: node.fields.figmaEmbedCode}}></div>,
+    FigmaEmbedBlock: ({node} : {node: SerializedBlockNode}) => <div className="flex" dangerouslySetInnerHTML={{__html: node.fields.figmaEmbedCode}}></div>,
     ImageCollectionBlock: ({node} : {node: SerializedBlockNode}) => <ImageCollection images={node.fields.images}></ImageCollection>,
     // Rendered as the native <mux-player> custom element (no React runtime
     // needed) — see caseStudyContent.astro for the vanilla enhancement script
     // that lazy-loads the player and wires up autoplay-on-scroll.
     MuxVideoBlock: ({node} : {node: SerializedBlockNode}) => (
-      <div className="w-full my-8 aspect-video mux-video-wrapper">
+      <div className="w-full aspect-video mux-video-wrapper">
         <mux-player
           playback-id={node.fields.muxPlaybackId}
           muted

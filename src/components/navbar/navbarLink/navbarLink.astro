@@ -1,12 +1,12 @@
 ---
 import type { NavLinkType } from "@customTypes/navLinkType";
-import ExternalLink from "/public/icons/External link.svg";
+import ArrowUpRight from "@assets/icons/arrow-up-right.svg";
 interface Props extends NavLinkType {}
 const { title, url } = Astro.props;
 ---
 
 <li
-  class="flex-initial w-full flex flex-row content-center items-center gap-3 md:gap-2 hover:underline hover:decoration-1 hover:decoration-dark-blue hover:text-dark-blue/90 underline-offset-4 md:w-auto"
+  class="flex-initial w-full flex flex-row content-center items-center gap-3 md:gap-2 hover:underline hover:decoration-1 hover:decoration-blue-950 hover:text-blue-950/90 underline-offset-4 md:w-auto"
 >
   <a
     href={url}
@@ -17,14 +17,11 @@ const { title, url } = Astro.props;
 
     {
       url.startsWith("http") && (
-        <img
-          src={ExternalLink.src}
-          width={ExternalLink.width}
-          height={ExternalLink.height}
-          alt={"External link to " + title}
-          class="s-[1rem] md:s-[0.8rem] w-auto pe-3 md:pe-0"
-          loading="eager"
-          decoding="async"
+        <ArrowUpRight
+          width={17}
+          height={17}
+          aria-hidden="true"
+          class="shrink-0 me-3 md:me-0"
         />
       )
     }

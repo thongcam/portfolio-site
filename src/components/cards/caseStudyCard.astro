@@ -1,0 +1,64 @@
+---
+/**
+ * Case-study row on the 12-column grid. From xl the copy spans 4 columns
+ * (379px) and the screenshot the remaining 8 (789px), per the design. Between
+ * md and xl the split is 5/7. Stacks on mobile with the image first, matching
+ * the Figma.
+ */
+import { Image } from "astro:assets";
+import Grid from "@components/container/grid.astro";
+import { cmsURL } from "@/constants";
+import { RichTextLexical } from "@components/rich-text/richTextLexical";
+import ArrowRight from "@assets/icons/arrow-right.svg";
+import type { CardContentType } from "@customTypes/cardContentType";
+import type { SerializedEditorState } from "lexical";
+
+interface Props {
+  content: CardContentType;
+  /** Case-study slug or absolute URL. */
+  href: string;
+}
+
+const { content, href } = Astro.props;
+const { title, description, linkLabel, thumbnailImage } = content;
+
+// 7 of 12 columns from md, 8 from xl, full gutter width below.
+const SIZES =
+  "(min-width: 1200px) 57vw, (min-width: 741px) 49vw, calc(100vw - 3rem)";
+---
+
+<Grid as="div" class="gap-y-6">
+  <Image
+    src={`${cmsURL}${thumbnailImage.url}`}
+    alt={thumbnailImage.alt}
+    width={thumbnailImage.width}
+    height={thumbnailImage.height}
+    quality={80}
+    sizes={SIZES}
+    class="col-span-12 w-full object-cover aspect-[16/9] md:col-span-7 md:order-2 xl:col-span-8"
+  />
+
+  <div class="col-span-12 flex flex-col gap-3 md:gap-4 md:col-span-5 md:order-1 md:py-4 lg:py-8 xl:col-span-4">
+    <div class="flex flex-col gap-2 md:gap-3">
+      <h3 class="text-card-title text-text-primary text-balance">{title}</h3>
+      <div class="text-body text-text-primary">
+        <RichTextLexical data={description as SerializedEditorState} />
+      </div>
+    </div>
+
+    <a
+      href={href}
+      tabindex="0"
+      data-astro-prefetch
+      class="group inline-flex w-fit items-center justify-center gap-3 bg-text-primary p-5 text-ui text-white transition-colors hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+    >
+      {linkLabel}
+      <ArrowRight
+        width={24}
+        height={24}
+        aria-hidden="true"
+        class="shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-1"
+      />
+    </a>
+  </div>
+</Grid>

@@ -1,15 +1,23 @@
 ---
+/**
+ * Page container.
+ *
+ * The design's "Container XL" is 1200px of *content*, with the page gutter
+ * outside it — so the cap lives on an inner element rather than on the padded
+ * box. Capping the padded box instead (as this did previously) left only
+ * 1040px of content at wide viewports.
+ *
+ * At the design's 1512px canvas this resolves to a 1200px column with 156px
+ * margins, matching the Figma exactly.
+ */
 interface Props {
   class: string;
 }
 const { class: className } = Astro.props;
 ---
 
-<div
-  class:list={[
-    "px-[clamp(1.5rem,7vw,5rem)] max-w-screen-xl m-auto  ",
-    className,
-  ]}
->
-  <slot />
+<div class="px-[clamp(1.5rem,7vw,5rem)]">
+  <div class:list={["max-w-[1200px] m-auto", className]}>
+    <slot />
+  </div>
 </div>

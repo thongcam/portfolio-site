@@ -1,119 +1,291 @@
 @import "tailwindcss";
 
-/* nunito-latin-wght-normal */
+/* urbanist-latin-wght-normal */
 @font-face {
-  font-family: 'Nunito Variable';
+  font-family: 'Urbanist Variable';
   font-style: normal;
   font-display: swap;
-  font-weight: 200 1000;
-  src: url(@fontsource-variable/nunito/files/nunito-latin-wght-normal.woff2) format('woff2-variations');
+  font-weight: 100 900;
+  src: url(@fontsource-variable/urbanist/files/urbanist-latin-wght-normal.woff2) format('woff2-variations');
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
 
-/* nunito-latin-ext-wght-normal */
+/* urbanist-latin-ext-wght-normal */
 @font-face {
-  font-family: 'Nunito Variable';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 200 1000;
-  src: url(@fontsource-variable/nunito/files/nunito-latin-ext-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
-}
-
-/* nunito-vietnamese-wght-normal */
-@font-face {
-  font-family: 'Nunito Variable';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 200 1000;
-  src: url(@fontsource-variable/nunito/files/nunito-vietnamese-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;
-}
-
-/* noto-serif-latin-wght-normal */
-@font-face {
-  font-family: 'Noto Serif Variable';
+  font-family: 'Urbanist Variable';
   font-style: normal;
   font-display: swap;
   font-weight: 100 900;
-  src: url(@fontsource-variable/noto-serif/files/noto-serif-latin-wght-normal.woff2) format('woff2-variations');
+  src: url(@fontsource-variable/urbanist/files/urbanist-latin-ext-wght-normal.woff2) format('woff2-variations');
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+
+/* albert-sans-latin-wght-normal */
+@font-face {
+  font-family: 'Albert Sans Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url(@fontsource-variable/albert-sans/files/albert-sans-latin-wght-normal.woff2) format('woff2-variations');
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
 
-/* noto-serif-latin-ext-wght-normal */
+/* albert-sans-latin-ext-wght-normal */
 @font-face {
-  font-family: 'Noto Serif Variable';
+  font-family: 'Albert Sans Variable';
   font-style: normal;
   font-display: swap;
   font-weight: 100 900;
-  src: url(@fontsource-variable/noto-serif/files/noto-serif-latin-ext-wght-normal.woff2) format('woff2-variations');
+  src: url(@fontsource-variable/albert-sans/files/albert-sans-latin-ext-wght-normal.woff2) format('woff2-variations');
   unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
-}
-
-/* noto-serif-vietnamese-wght-normal */
-@font-face {
-  font-family: 'Noto Serif Variable';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 100 900;
-  src: url(@fontsource-variable/noto-serif/files/noto-serif-vietnamese-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;
 }
 
 @theme {
-    /* Colors */
-    --color-white: #ffffff;
-    --color-gray: #f9f9fa;
-    --color-dark-gray: #e0e0e1;
-    --color-dark-blue: #111f31;
-    --color-dark-blue-hover: #293546;
-    --color-pale-blue: #21324c;
-    --color-yellow: #ebb723;
-    --color-cyan: #34bab4;
-    --color-dark-cyan: #198f8a;
-  
-    /* Spacing */
-    --spacing-15: 3.75rem;
-    --spacing-25: 6.25rem;
-    --spacing-30: 7.5rem;
-    --spacing-50: 12.5rem;
-    --spacing-75: 18.75rem;
-    --spacing-100: 25rem;
-    --spacing-125: 31.25rem;
-    --spacing-150: 37.5rem;
-  
-    /* Font Sizes */
-    --text-sm: 0.9rem;
-    --text-base: 1rem;
-    --text-md: 1.2rem;
-    --text-lg: 1.4rem;
-    --text-xl: 1.6rem;
-    --text-2xl: 1.728rem;
-    --text-3xl: 2.0735rem;
-    --text-4xl: 2.5rem;
-    --text-6xl: clamp(3rem, 5.5vw, 3.75rem);
-  
-    /* Font Families */
-    --font-display: "Noto Serif Variable", serif;
-    --font-body: "Nunito Variable", sans-serif;
-  
-    /* Breakpoints */
+    /* The former flat colour names (--color-gray, --color-dark-blue,
+       --color-pale-blue, --color-yellow, --color-cyan …) have been retired
+       in favour of the ramps below; `white` comes from Tailwind's own
+       default theme. See the migration note in the ramp comment. */
+
+    /* ---------------------------------------------------------------
+       Palette ramps — read directly from the Figma variable collection
+       (Yellow/*, Blue/*, Cyan/*, Gray/*), not sampled from screenshots.
+
+       The Gray ramp is included because it is what the semantic text
+       colours alias, and because Tailwind ships its own (blue-tinted)
+       gray: without overriding it, `text-gray-500` would silently mean
+       something other than Figma's Text/Tertiary.
+
+       The flat legacy names above (--color-yellow, --color-cyan,
+       --color-dark-blue …) are kept as-is so existing markup keeps
+       working; several are the same value as a ramp step.
+       --------------------------------------------------------------- */
+    --color-yellow-50: #fdfae9;
+    --color-yellow-100: #faf3c7;
+    --color-yellow-200: #f6e492;
+    --color-yellow-300: #f1ce53;
+    --color-yellow-400: #ebb723;
+    --color-yellow-500: #dba017;
+    --color-yellow-600: #bd7b11;
+    --color-yellow-700: #975811;
+    --color-yellow-800: #7d4616;
+    --color-yellow-900: #6b3a18;
+    --color-yellow-950: #3e1d0a;
+
+    --color-blue-50: #f3f7fc;
+    --color-blue-100: #e6eef8;
+    --color-blue-200: #c7dbf0;
+    --color-blue-300: #96bee3;
+    --color-blue-400: #5e9cd2;
+    --color-blue-500: #397fbe;
+    --color-blue-600: #2964a0;
+    --color-blue-700: #225082;
+    --color-blue-800: #20456c;
+    --color-blue-900: #1f3b5b;
+    --color-blue-950: #111f31;
+
+    --color-cyan-50: #f1fcfa;
+    --color-cyan-100: #cff8f3;
+    --color-cyan-200: #a0efe6;
+    --color-cyan-300: #68e0d7;
+    --color-cyan-400: #34bab4;
+    --color-cyan-500: #20aca8;
+    --color-cyan-600: #178a89;
+    --color-cyan-700: #176e6e;
+    --color-cyan-800: #175758;
+    --color-cyan-900: #17494a;
+    --color-cyan-950: #072a2c;
+
+    --color-gray-50: #fafafa;
+    --color-gray-100: #f5f5f5;
+    --color-gray-200: #e6e6e6;
+    --color-gray-300: #d6d6d6;
+    --color-gray-400: #a5a5a5;
+    --color-gray-500: #767676;
+    --color-gray-600: #575757;
+    --color-gray-700: #434343;
+    --color-gray-800: #212121;
+    --color-gray-900: #1a1a1a;
+    --color-gray-950: #0a0a0a;
+
+    /* Semantic text colours. In Figma these are aliases rather than new
+       values (Text/Primary → Gray/900, Text/Accent/Blue → Blue/600 …),
+       so they are expressed as references here too — change a ramp step
+       and every semantic token that points at it follows. */
+    --color-text-primary: var(--color-gray-900);
+    --color-text-secondary: var(--color-gray-700);
+    --color-text-tertiary: var(--color-gray-500);
+    --color-text-accent-yellow: var(--color-yellow-400);
+    --color-text-accent-cyan: var(--color-cyan-400);
+    --color-text-accent-blue: var(--color-blue-600);
+
+    /* Spacing intentionally not overridden — Tailwind's default scale
+       (`--spacing: 0.25rem`) already produces every value this site used
+       (p-15 = 3.75rem, py-25 = 6.25rem, and so on). */
+
+    /* Font Families
+       Urbanist carries titles and numerals; Albert Sans carries body and UI.
+       Sizes/weights live in the type-scale utilities below, not here — each
+       token binds a family to a weight, so they cannot be set independently. */
+    --font-display: "Urbanist Variable", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Albert Sans Variable", ui-sans-serif, system-ui, sans-serif;
+
+    /* Breakpoints
+       `sm` is Tailwind's 640px default, removed so it cannot be reached for
+       by mistake: it sits out of sequence with this scale and is easily
+       confused with `s`. The mobile breakpoint here is `s` (434px). */
+    --breakpoint-sm: initial;
     --breakpoint-s: 434px;
     --breakpoint-md: 741px;
     --breakpoint-lg: 1047px;
     --breakpoint-xl: 1200px;
     --breakpoint-2xl: 1350px;
-  
+
     /* Animation */
     --animate-underlining: underline 1000ms 200ms cubic-bezier(0, 0, 0.2, 1) forwards;
-  
-    /* Keyframes */
+
+    /* Keyframes — bar thickness comes from the element so one keyframe can
+       serve headings at different sizes. */
     @keyframes underline {
       0% {
-        background-size: 0% 0.8rem;
+        background-size: 0% var(--underline-height, 0.8rem);
       }
       100% {
-        background-size: 100% 0.8rem;
+        background-size: 100% var(--underline-height, 0.8rem);
       }
     }
   }
+
+/* ---------------------------------------------------------------------------
+   Type scale
+
+   One utility per token. Each sets family, weight, size, line height and
+   tracking together, because those five are a single design decision — a
+   token is not "a size you then pick a weight for". Consequently these
+   should not be combined with `font-*`, `leading-*` or `tracking-*`
+   utilities; override the token instead of patching it.
+
+   `md` here is this project's 741px breakpoint, the point at which the
+   layouts go multi-column, which is what "desktop" means on this site.
+--------------------------------------------------------------------------- */
+
+/* hero — fluid 44 → 76 */
+@utility text-article-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.75rem, 1.4167rem + 4.4444vw, 4.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+/* hero — fluid 44 → 76 */
+@utility text-hero-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2rem, 1.5rem + 1.6667vw, 2.75rem);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+}
+
+/* section — fluid 32 → 44 */
+@utility text-h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 1.5rem + 1.6667vw, 2.75rem);
+  line-height: 1.18;
+  letter-spacing: 0em;
+}
+
+/* subhead — 18. Same size as body; weight and colour separate them. */
+@utility text-h3 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.125rem;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+/* stat — 44 */
+@utility text-stats {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 2.75rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* card — 24 → 28 */
+@utility text-card-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  letter-spacing: 0;
+
+  @media (width >= theme(--breakpoint-md)) {
+    font-size: 1.75rem;
+  }
+}
+
+/* section — fluid 32 → 44. Same size as h2; weight separates them. */
+@utility text-section-title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 1.75rem;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+/* numeral — 24 → 28 */
+@utility text-numeral {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+
+  @media (width >= theme(--breakpoint-md)) {
+    font-size: 1.75rem;
+  }
+}
+
+/* body — 18. Leading opens from 1.55 to 1.6: smaller text wants
+   proportionally more of it. */
+@utility text-body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+/* ui — 16 */
+@utility text-ui {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+/* caption — 14 */
+@utility text-caption {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+/* label — 1 */
+@utility text-label {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+figcaption p {
+  font-size: 0.875rem !important;
+}

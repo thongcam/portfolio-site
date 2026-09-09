@@ -1,24 +1,86 @@
 ---
-import NumberingDecoratorBackground from "/public/decorators/numberings/background.svg";
+/**
+ * Numbered section heading — "1. Work/ Case studies".
+ *
+ * The yellow rule under the title is a background gradient on the inline text
+ * rather than a border or an SVG, so it hugs the text width and re-flows per
+ * line when the title wraps on mobile (matching the Figma, where each wrapped
+ * line carries its own highlight).
+ *
+ * It starts at zero width and wipes in when the heading scrolls fully into
+ * view — the same treatment the CTA heading uses, sharing the `underline`
+ * keyframes and `animate-underlining` utility from global.css.
+ *
+ * On mobile the numeral sits on its own line above the title; from `md` the
+ * two share a baseline row.
+ */
+interface Props {
+  /** Section index, rendered with a trailing period. */
+  number?: number | string;
+  class?: string;
+  id?: string;
+  /** Thickness of the highlight bar. */
+  underlineHeight?: string;
+}
+
+const {
+  number,
+  class: className,
+  id,
+  underlineHeight = "0.7rem",
+} = Astro.props;
 ---
 
-<h2 class="flex flex-col gap-3 md:flex-row md:gap-5 md:align-center">
-  <div class="relative w-fit">
-    <img
-      src={NumberingDecoratorBackground.src}
-      alt="Numbering decorator"
-      width={55}
-      height={36}
-      loading="lazy"
-      decoding="async"
-    />
-    <div
-      class="absolute left-[50%] -translate-x-[45%] top-[45%] -translate-y-[50%] font-display text-[1.7rem] text-yellow font-semibold h-fit"
+<div class:list={["flex flex-col gap-1 md:flex-row md:items-center md:gap-3", className]}>
+  {
+    number != null && number !== "" && (
+      <span class="text-hero-title text-yellow-400" aria-hidden="true">
+        {number}.
+      </span>
+    )
+  }
+  <h2
+    id={id}
+    class="section-header text-section-title text-text-primary"
+    style={`--underline-height: ${underlineHeight}`}
+  >
+    <span
+      class="box-decoration-clone bg-gradient-to-r from-yellow-400/45 to-yellow-400/45 bg-[length:0%_var(--underline-height)] bg-[position:0_88%] bg-no-repeat"
     >
-      <slot name="numbering" />
-    </div>
-  </div>
-  <span class="text-lg leading-relaxed">
-    <slot name="content" />
-  </span>
-</h2>
+      <slot />
+    </span>
+  </h2>
+</div>
+
+<script>
+  let options = {
+    root: null,
+    rootMargin: "0px 0px 10% 0px",
+    threshold: 1.0,
+  };
+
+  let addAnimation = (entries: IntersectionObserverEntry[]) => {
+    entries.forEach((entry) => {
+      if (entry.intersectionRatio >= 1) {
+        entry.target.classList.add("animate-underlining");
+      }
+    });
+  };
+
+  let observer = new IntersectionObserver(addAnimation, options);
+  document?.querySelectorAll(".section-header span")?.forEach((i) => {
+    observer.observe(i);
+  });
+</script>
+
+<style>
+  /* The bar starts at zero width, so without the animation it would never
+     appear at all. Show it outright rather than hiding it from anyone who
+     asks not to be animated. */
+  @media (prefers-reduced-motion: reduce) {
+    .section-header span {
+      animation: none !important;
+      background-size: 100% var(--underline-height);
+    }
+  }
+</style>

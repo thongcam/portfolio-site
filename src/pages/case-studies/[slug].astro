@@ -9,6 +9,7 @@ import CaseStudyIntroduction from "./sections/caseStudyIntroduction.astro";
 import CaseStudyContent from "./sections/caseStudyContent.astro";
 import CaseStudyOtherProjects from "./sections/caseStudyOtherProjects.astro";
 import CaseStudyContactLinks from "./sections/caseStudyContactLinks.astro";
+import type { CardContentType } from "@customTypes/cardContentType";
 
 export interface CaseStudyType {
   title: string;
@@ -38,9 +39,25 @@ if (!currentCaseStudy) {
   return Astro.redirect("/404");
 }
 
-const otherCaseStudies = caseStudies.filter(
-  (caseStudy) => caseStudy.slug !== slug,
-);
+// `/api/case-studies/all` carries no description and no image dimensions, but
+// the "other case studies" cards need both — so each one's card content comes
+// from the same `/:id/thumbnail` endpoint the homepage uses.
+const otherCaseStudies = await Promise.all(
+  caseStudies
+    .filter((caseStudy) => caseStudy.slug !== slug)
+    .map(async (caseStudy) => {
+      try {
+        const res = await fetch(
+          `${cmsURL}/api/case-studies/${caseStudy.id}/thumbnail`,
+        );
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data?.error ? null : (data as CardContentType);
+      } catch {
+        return null;
+      }
+    }),
+).then((rows) => rows.filter((r): r is CardContentType => r !== null));
 
 // The browser should always check freshness
 Astro.response.headers.set(

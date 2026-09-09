@@ -1,4 +1,12 @@
 ---
+/**
+ * Case-study opener: title, a rule, the summary meta grid, then the banner.
+ *
+ * The meta grid is the CMS's summary blocks rendered as label/value pairs —
+ * three columns on desktop, one on mobile. The timeline is appended as a
+ * further cell so the field still has a home; the design's grid leaves a
+ * sixth slot empty, which it fills.
+ */
 import { RichTextLexical } from "@/components/rich-text/richTextLexical";
 import Section from "@/components/sections/section.astro";
 import { cmsURL } from "@/constants";
@@ -15,80 +23,73 @@ interface SummaryBlockType {
 const { page } = Astro.props;
 
 const themeColor = Color(page.themeColor);
+const { themeColorLighter, themeColorRamp500 } = generateArticleColors(themeColor);
+const labelColor = themeColorRamp500.hex();
 
-const { themeColorLight, themeColorLighter } =
-  generateArticleColors(themeColor);
+const banner = page.bannerImage;
+const thumbnail = page.thumbnail.thumbnailImage;
 ---
 
 <Section
-  class={["py-12"]}
+  class={["pt-12 pb-16 md:pt-20 md:pb-16"]}
   style={{ backgroundColor: themeColorLighter.rgb().string() }}
   id="introduction"
 >
-  <Image
-    src={cmsURL + page.bannerImage.url}
-    alt={page.bannerImage.alt}
-    width={page.bannerImage.width}
-    height={page.bannerImage.height}
-    class="rounded-xl hidden sm:block"
-    quality={80}
-    priority
-  />
-  <Image
-    src={cmsURL + page.thumbnail.thumbnailImage.url}
-    alt={page.thumbnail.thumbnailImage.alt}
-    width={page.thumbnail.thumbnailImage.width}
-    height={page.thumbnail.thumbnailImage.height}
-    class="rounded-xl block sm:hidden"
-    quality={80}
-    priority
-  />
-  <!-- <picture>
-  <source
-    media="(min-width:1024px)"
-    srcset={cmsURL + page.bannerImage.url}
-  />
-  <source
-    media="(min-width:640px)"
-    srcset={cmsURL + encodeURI(page.bannerImage.sizes.tablet.url)}
-  />
-  <img
-    src={cmsURL + page.thumbnail.thumbnailImage.thumbnailURL}
-    alt=""
-    class="rounded-xl"
-  />
-</picture> -->
-  <div class="flex flex-col gap-4">
-    <h1 class="mt-12 text-4xl/[1.25] font-display font-bold">
-      {page.title}
-    </h1>
-    <span class="text-md text-pale-blue/80">{page.timeline}</span>
-  </div>
-  <div class="mt-10">
-    <h2 class="text-2xl font-body scroll-spy-item" id="summary">Summary</h2>
-    <div
-      class="my-6 py-6 border-y-[0.5px] border-dark-gray grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6"
-    >
-      {
-        page.summaryBlocks.map((summaryBlock: SummaryBlockType) => (
-          <div class="flex flex-col gap-3">
-            <span
-              class={`font-bold`}
-              style={{ backgroundColor: themeColorLight.rgb().string() }}
-            >
-              {summaryBlock.title}
-            </span>
+  <h1 class="text-article-title text-text-primary text-balance">{page.title}</h1>
 
-            <RichTextLexical data={summaryBlock.content} />
-          </div>
-        ))
-      }
-    </div>
-  </div>
+  <hr class="mt-12 border-0 border-t-[0.5px] border-blue-950/20 md:mt-16" />
+
+  <dl
+    class="mt-8 grid grid-cols-1 gap-8 md:grid-cols-3"
+  >
+    {
+      page.summaryBlocks?.map((block: SummaryBlockType) => (
+        <div class="flex flex-col gap-2">
+          <dt class="text-label" style={{ color: labelColor }}>
+            {block.title}
+          </dt>
+          <dd class="text-body text-text-primary">
+            <RichTextLexical data={block.content} />
+          </dd>
+        </div>
+      ))
+    }
+    {
+      page.timeline && (
+        <div class="flex flex-col gap-2">
+          <dt class="text-label" style={{ color: labelColor }}>Timeline</dt>
+          <dd class="text-body text-text-primary">{page.timeline}</dd>
+        </div>
+      )
+    }
+  </dl>
+
+  <!-- Wide banner above `s`; the portrait thumbnail stands in below it, where
+       a 3.8:1 crop would be only a sliver tall. -->
+  <Image
+    src={cmsURL + banner.url}
+    alt={banner.alt}
+    width={banner.width}
+    height={banner.height}
+    class="mt-12 hidden w-full rounded-[15px] border-[0.5px] border-gray-300 object-cover aspect-[1200/312] s:block md:mt-16"
+    quality={80}
+    priority
+  />
+  <Image
+    src={cmsURL + thumbnail.url}
+    alt={thumbnail.alt}
+    width={thumbnail.width}
+    height={thumbnail.height}
+    class="mt-12 block w-full rounded-[15px] border-[0.5px] border-gray-300 object-cover s:hidden"
+    quality={80}
+    priority
+  />
 </Section>
 
 <style>
-  :global(#introduction ul) {
-    margin: 0;
+  /* Summary values are single blocks; the article's rhythm doesn't apply. */
+  :global(#introduction dd > *) {
+    margin-top: 0;
+    padding-top: 0;
   }
 </style>

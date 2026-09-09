@@ -1,35 +1,56 @@
 ---
+/**
+ * "Other case studies" — the same row card as the homepage, minus the button
+ * (hidden in the design), at a 6/6 split rather than the homepage's 4/8.
+ */
 import Section from "@/components/sections/section.astro";
+import Grid from "@components/container/grid.astro";
 import { cmsURL } from "@/constants";
 import { Image } from "astro:assets";
-import type { CaseStudyType } from "../[slug].astro";
+import { RichTextLexical } from "@components/rich-text/richTextLexical";
+import type { CardContentType } from "@customTypes/cardContentType";
+import type { SerializedEditorState } from "lexical";
 
 const { otherCaseStudies } = Astro.props;
+
+// Half the container from md, full gutter width below.
+const SIZES = "(min-width: 741px) min(50vw, 584px), calc(100vw - 3rem)";
 ---
 
-<Section class={["mb-30"]} id="other-projects">
-  <div class="border-t-[0.5px] border-dark-gray"></div>
-  <h2 class="text-2xl font-body mt-10 mb-10">Other projects</h2>
-  <div class="flex flex-row gap-12 flex-wrap">
+<Section class={["py-16 md:py-12"]} id="other-projects">
+  <h2 class="text-section-title text-text-primary">Other case studies</h2>
+
+  <div class="mt-10 flex flex-col gap-12 md:mt-12">
     {
-      otherCaseStudies.map((data: CaseStudyType) => (
-        <div class="flex flex-col gap-5 max-w-75">
+      otherCaseStudies.map((data: CardContentType) => (
+        <Grid as="div" class="gap-y-6">
           {data.thumbnailImage && (
             <Image
               src={cmsURL + data.thumbnailImage.url}
               alt={data.thumbnailImage.alt}
-              inferSize
+              width={data.thumbnailImage.width}
+              height={data.thumbnailImage.height}
+              quality={80}
+              sizes={SIZES}
+              class="col-span-12 w-full object-cover aspect-video md:col-span-6 md:order-2"
             />
           )}
-          <a
-            href={data.slug}
-            class="text-xl/[1.25] font-display font-bold underline hover:text-pale-blue/80"
-            tabindex="0"
-            data-astro-prefetch
-          >
-            {data.title}
-          </a>
-        </div>
+          <div class="col-span-12 flex flex-col gap-4 md:col-span-6 md:order-1 md:py-8">
+            <a
+              href={`/${data.url}`}
+              tabindex="0"
+              data-astro-prefetch
+              class="text-card-title text-text-primary text-balance transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-cyan"
+            >
+              {data.title}
+            </a>
+            {data.description && (
+              <div class="text-body text-text-primary">
+                <RichTextLexical data={data.description as SerializedEditorState} />
+              </div>
+            )}
+          </div>
+        </Grid>
       ))
     }
   </div>

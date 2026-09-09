@@ -1,0 +1,56 @@
+---
+/**
+ * Development/website card: 16:9 screenshot above the copy, ending in a cyan
+ * "Visit site" link. Two per row on desktop, one per row on mobile.
+ */
+import { Image } from "astro:assets";
+import { cmsURL } from "@/constants";
+import { RichTextLexical } from "@components/rich-text/richTextLexical";
+import SocialLink from "@components/buttons/socialLink.astro";
+import type { CardContentType } from "@customTypes/cardContentType";
+import type { SerializedEditorState } from "lexical";
+
+interface Props {
+  content: CardContentType;
+}
+
+const { content } = Astro.props;
+const { title, description, linkLabel, url, thumbnailImage } = content;
+
+// Half the 1200px container on desktop, full gutter width below `md`.
+const SIZES = "(min-width: 741px) min(50vw, 584px), calc(100vw - 3rem)";
+---
+
+<article class="flex flex-col gap-6">
+  <Image
+    src={`${cmsURL}${thumbnailImage.url}`}
+    alt={thumbnailImage.alt}
+    width={thumbnailImage.width}
+    height={thumbnailImage.height}
+    quality={80}
+    sizes={SIZES}
+    class="w-full object-cover aspect-video"
+  />
+
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4">
+      <h3 class="text-card-title text-text-primary text-balance">{title}</h3>
+      <div class="text-body text-text-primary">
+        <RichTextLexical data={description as SerializedEditorState} />
+      </div>
+    </div>
+
+    {
+      url && (
+        <SocialLink
+          href={url}
+          label={title}
+          underline={false}
+          class="text-body text-cyan-400"
+        >
+          {linkLabel || "Visit site"}
+        </SocialLink>
+      )
+    }
+  </div>
+</article>

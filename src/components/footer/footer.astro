@@ -7,8 +7,8 @@ import getGlobals from "@/utils/getGlobals";
 const { footer: footerData } = await getGlobals(Astro.locals);
 ---
 
-<footer class="relative bg-gray">
-  <div class="bg-white md:pt-20">
+<footer class="relative bg-gray-50">
+  <div class="bg-white">
     <div class="relative w-[clamp(15rem,30vw,18em)] mx-auto">
       <img
         src={HalfRing.src}
@@ -36,8 +36,8 @@ const { footer: footerData } = await getGlobals(Astro.locals);
     </div>
   </div>
   <MaxWidth class="pt-[5.5rem] md:pt-16 pb-12 flex flex-col gap-5">
-    <span class="text-md">{footerData.copyright}</span>
-    <span class="text-sm text-pale-blue/80">{footerData.tagline}</span>
+    <span class="text-body text-text-primary">{footerData.copyright}</span>
+    <span class="text-caption text-text-tertiary">{footerData.tagline}</span>
   </MaxWidth>
 </footer>
 

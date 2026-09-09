@@ -1,69 +1,108 @@
 ---
+/**
+ * About me: a dark copy card butted against a portrait, with the animated
+ * ring decorator behind the portrait's right edge.
+ *
+ * Laid out proportionally rather than on the 12-column grid: the design's
+ * three widths (617 / 377 / 449 of 1200) don't land on column boundaries,
+ * and the three have to hold their relation to each other as the page
+ * narrows. Percentages come straight from the Figma:
+ *
+ *   card   617     / 1200 = 51.4167%
+ *   image  376.685 / 1200 = 31.3904%   (card + image = 82.807%, no gap)
+ *   ring   449     / 1200 = 37.4167%, starting at 751/1200 = 62.5833%
+ *
+ * The ring therefore begins inside the image's span — leaving it about half
+ * occluded — and ends flush with the container's right edge, so the three
+ * together measure exactly the content width.
+ *
+ * The three are aligned on a common horizontal centre line rather than
+ * staggered vertically, so their midpoints agree whatever their heights.
+ *
+ * Breakpoints:
+ *   < md   stacked, 32px gap, portrait at 5:4 (tall) filling its box
+ *   md     ring hidden so card and image can share the full width without
+ *          either getting too thin (617/377 renormalised to 100%)
+ *   lg+    all three, as drawn
+ */
+import { Image } from "astro:assets";
 import Section from "../section.astro";
 import SectionHeader from "@components/headers/sectionHeader.astro";
-import Image from "astro/components/Image.astro";
 import ThreeRings from "@components/decorators/threeRings.astro";
-import StandOutCard from "@/components/cards/standOutCard.astro";
-import InternalLinkYellow from "/public/icons/Internal link yellow.svg";
+import ArrowRight from "@assets/icons/arrow-right.svg";
+import ArrowRightLong from "@assets/icons/arrow-right-long.svg";
 import { cmsURL } from "@/constants";
+
+interface Props {
+  data: {
+    sectionNumber: number;
+    sectionTitle: string;
+    content: string;
+    buttonLabel: string;
+    buttonURL: string;
+    aboutMePortrait: { url: string; width: number; height: number; alt: string };
+  };
+}
+
 const { data } = Astro.props;
-const image = data.aboutMePortrait;
-const imageAlt = data.aboutMePortrait.alt;
+const portrait = data.aboutMePortrait;
+const isExternal = data.buttonURL?.startsWith("http");
+
+// 37.9% of the viewport at md, 31.4% from lg, full gutter width below.
+const SIZES =
+  "(min-width: 1047px) 32vw, (min-width: 741px) 38vw, calc(100vw - 3rem)";
 ---
 
-<Section class={["py-12 md:py-25 bg-white overflow-x-hidden"]} id="about">
-  <SectionHeader>
-    <span slot="numbering">{data.sectionNumber}.</span>
-    <span slot="content">{data.sectionTitle}</span>
+<Section class={["bg-white py-16 md:py-24 overflow-x-clip"]} id="about">
+  <SectionHeader number={data.sectionNumber} class="mb-10 md:mb-6">
+    {data.sectionTitle}
   </SectionHeader>
-  <div class="flex flex-col relative pt-10 lg:pt-0">
+
+  <div class="relative flex flex-col gap-8 md:flex-row md:items-center md:gap-0">
+    <!-- Decorative; sits behind the portrait and animates in on scroll. -->
+    <ThreeRings
+      class="pointer-events-none absolute left-[62.5833%] top-1/2 z-0 hidden aspect-square w-[37.4167%] -translate-y-1/2 lg:block"
+      enableAnimation={true}
+      fromCorner={false}
+    />
+
     <div
-      class:list={"w-full  relative  overflow-y-hidden md:overflow-y-visible"}
+      class="relative z-10 flex flex-col gap-16 overflow-hidden bg-blue-950 px-6 py-8 md:w-[62.0919%] md:gap-16 lg:gap-24 md:px-8 md:py-8 lg:w-[51.4167%]"
     >
-      <div
-        class:list={"md:w-[88%] lg:w-[90%] xl:w-[95%] md:grid md:grid-cols-[1fr_45%] ld:grid-cols-[1fr_38%] xl:grid-cols-[1fr_45%] md:items-center md:justify-center"}
+      <!-- Faint tilted rectangle, as in the Figma card background. -->
+      <span
+        aria-hidden="true"
+        class="pointer-events-none absolute -left-16 -top-24 z-0 size-[325px] -rotate-[20deg] border-[30px] border-blue-900 opacity-25"
+      ></span>
+
+      <p class="relative z-10 text-body text-white text-pretty">{data.content}</p>
+
+      <a
+        href={data.buttonURL}
+        target={isExternal ? "_blank" : undefined}
+        rel={isExternal ? "noopener noreferrer" : undefined}
+        tabindex="0"
+        class="group relative z-10 inline-flex w-fit items-center gap-2 text-body text-yellow-400 transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-yellow-400"
       >
-        <StandOutCard
-          class="pb-10 z-10 md:flex md:flex-col md:justify-between md:w-full md:h-fit md:min-h-75 md:pr-12 xl:pr-15"
-        >
-          <p class="text-md text-white pb-12 text-pretty">
-            {data.content}
-          </p>
-          <a
-            href={data.buttonURL}
-            target={data.buttonURL.startsWith("http") ? "__blank" : ""}
-            tabindex="0"
-            class="text-md text-yellow flex flex-row gap-3 underline decoration-1 underline-offset-4 hover:brightness-110 hover:gap-4 transition-[gap] duration-200 ease-in-out"
-          >
-            <span class="fit-content">{data.buttonLabel}</span>
-            <div class="flex flex-col justify-center">
-              <img
-                loading="lazy"
-                decoding="async"
-                src={InternalLinkYellow.src}
-                width={InternalLinkYellow.width}
-                height={InternalLinkYellow.height}
-                alt="External link to About me page"
-                class="aspect-auto"
-              />
-            </div>
-          </a>
-        </StandOutCard>
-        <Image
-          loading={"lazy"}
-          src={cmsURL + image.url}
-          width={image.width}
-          height={image.height}
-          alt={imageAlt || ""}
-          class:list={"shadow z-10 w-full relative md:h-[100%] md:max-w-xl pt-5 md:pt-0 aspect-[4/5] md:scale-110 lg:scale-100 xl:scale-90 xl:-translate-x-[11%] md:-translate-x-[5%] object-cover "}
+        {data.buttonLabel}
+         <ArrowRight
+        width={24}
+        height={24}
+        aria-hidden="true"
+        class="shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-1"
         />
-      </div>
-      <!-- Old classes for ThreeRings on mobile screen: w-[80%]  left-[50%] -translate-x-[50%] top-[calc(100%-150vw)]  -->
-      <ThreeRings
-        class="hidden absolute z-0 md:block md:w-[28vw] md:max-w-[23rem] md:min-w-[20rem] md:top-[50%] md:-translate-y-[50%] md:right-0 md:left-auto md:translate-x-0 transition-[top,_left] duration-300"
-        enableAnimation={true}
-        fromCorner={false}
-      />
+      </a>
     </div>
+
+    <Image
+      src={cmsURL + portrait.url}
+      width={portrait.width}
+      height={portrait.height}
+      alt={portrait.alt || ""}
+      quality={80}
+      loading="lazy"
+      sizes={SIZES}
+      class="relative z-10 w-full object-cover aspect-[2/3] md:w-[37.9081%] lg:w-[31.3904%]"
+    />
   </div>
 </Section>

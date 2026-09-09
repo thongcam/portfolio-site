@@ -20,7 +20,7 @@ export default function ImageCollection({images} : {images? : ImageCollectionRow
     if (!images?.length) return null;
 
     return (
-        <div className="columns-xs gap-5 my-5">
+        <div className="columns-xs gap-5">
             {images.map((row, index) => (
                 <LightboxImage
                     key={row.id ?? index}

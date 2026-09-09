@@ -3,7 +3,20 @@ import type { SerializedLexicalNode } from "lexical";
 import extractPlainTextFromRichText from "./extractPlainTextFromRichText";
 import "css.escape"
 
-export const textToID = (text : string ) => encodeURIComponent(text.toLowerCase().replaceAll(" ", "-"))
+/**
+ * Slugifies a heading into an element id.
+ *
+ * Deliberately not percent-encoded: a title like "User testing #1" encoded to
+ * `user-testing-%231` can never be reached, because the browser decodes the
+ * fragment to `user-testing-#1` before matching it against the id. Stripping
+ * the punctuation instead keeps the anchor addressable.
+ */
+export const textToID = (text: string) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
 
 export default function extractHeadingsFromRichText(obj : SerializedLexicalNode) {
     let headings : {title: string, id: string, heading: string}[] = [];
@@ -35,6 +48,9 @@ export default function extractHeadingsFromRichText(obj : SerializedLexicalNode)
   
     traverse(obj);
 
-    headings.forEach((heading, key) => heading.id += key + 1)
+    // Suffixed with the heading's position so repeated titles ("Findings"
+    // appears three times) stay unique. Must stay 0-based and cover exactly
+    // the same set the client script numbers — see scrollSpy.astro.
+    headings.forEach((heading, key) => (heading.id += key))
     return headings; // Remove leading/trailing spaces
   }

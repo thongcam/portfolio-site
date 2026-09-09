@@ -1,8 +1,6 @@
 ---
-import "@fontsource-variable/nunito";
-import Nunito from "@fontsource-variable/nunito/files/nunito-latin-wght-normal.woff2";
-import "@fontsource-variable/noto-serif";
-import NotoSerif from "@fontsource-variable/noto-serif/files/noto-serif-latin-wght-normal.woff2";
+import Urbanist from "@fontsource-variable/urbanist/files/urbanist-latin-wght-normal.woff2";
+import AlbertSans from "@fontsource-variable/albert-sans/files/albert-sans-latin-wght-normal.woff2";
 import Footer from "@/components/footer/footer.astro";
 import Navbar from "@/components/navbar/navbar.astro";
 import { cmsURL } from "@/constants";
@@ -43,8 +41,8 @@ const ogImage = pageOgMeta?.image || fallbackOgImage;
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/images/logo-small.svg" />
     <link rel="canonical" href={canonicalURL} />
-    <link rel="preload" as="font" type="font/woff2" href={Nunito} crossorigin="anonymous" />
-    <link rel="preload" as="font" type="font/woff2" href={NotoSerif} crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href={AlbertSans} crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href={Urbanist} crossorigin="anonymous" />
     <link rel="preconnect" href="https://admin.thong.cam" crossorigin>
     <link rel="preconnect" href="https://umami.thong.cam" crossorigin>
     <link rel="preconnect" href="https://image.mux.com" crossorigin>
@@ -85,7 +83,7 @@ const ogImage = pageOgMeta?.image || fallbackOgImage;
     <script defer src="https://umami.thong.cam/script.js" data-website-id="b924d487-517b-4512-a0e0-4ba9d69b1c36"></script>
     <slot name="head" />
   </head>
-  <body class="text-dark-blue font-body" style={themeColor ? `--theme-color: ${themeColor}` : null}>
+  <body class="text-blue-950 text-body" style={themeColor ? `--theme-color: ${themeColor}` : null}>
     <Navbar logos={logos} themeColor={themeColor} />
     <main>
       <slot />

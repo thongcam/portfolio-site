@@ -1,0 +1,58 @@
+---
+/**
+ * Underlined text link with a trailing outbound arrow — the hero's contact
+ * column, the CTA rows on the homepage and case studies, and the "Visit site"
+ * affordance on development cards are all this component at different colours.
+ *
+ * The arrow is Figma's exported glyph, inlined so it inherits `currentColor`
+ * from the link rather than needing one file per colour.
+ */
+import ArrowUpRight from "@assets/icons/arrow-up-right.svg";
+
+interface Props {
+  href: string;
+  /** Used to build the accessible name, e.g. "LinkedIn". */
+  label: string;
+  class?: string;
+  /** Underlines the label. Off for links whose colour already marks them. */
+  underline?: boolean;
+}
+
+const { href, label, class: className, underline = true } = Astro.props;
+
+// Contact links come from the CMS and mix schemes: https for profiles,
+// mailto for email. Only http(s) should open a new tab — `target="_blank"`
+// on a mailto leaves an orphaned blank tab behind in some browsers.
+const isHttp = /^https?:\/\//i.test(href);
+const isMailto = href.startsWith("mailto:");
+const accessibleName = isMailto
+  ? `Email ${label}`
+  : isHttp
+    ? `External link to ${label}`
+    : `Link to ${label}`;
+---
+
+<a
+  href={href}
+  target={isHttp ? "_blank" : undefined}
+  rel={isHttp ? "noopener noreferrer" : undefined}
+  tabindex="0"
+  aria-label={accessibleName}
+  class:list={[
+    // `max-w-full` keeps the link inside a narrow column; without it `w-fit`
+    // sizes to max-content and a long address like an email overflows the
+    // page. The label wraps with `anywhere` because such addresses have no
+    // spaces to break at.
+    "group inline-flex items-center gap-2 w-fit max-w-full transition-opacity hover:opacity-70",
+    underline && "underline underline-offset-4 decoration-1",
+    className,
+  ]}
+>
+  <span class="min-w-0 [overflow-wrap:anywhere]"><slot /></span>
+  <ArrowUpRight
+    width={20}
+    height={20}
+    aria-hidden="true"
+    class="shrink-0 transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+  />
+</a>

@@ -1,50 +1,96 @@
 ---
+/**
+ * Homepage hero: portrait, headline, intro paragraph with availability
+ * status, and the contact column.
+ *
+ * Layouts, by breakpoint:
+ *  - <s (434)    portrait full width, then headline, intro and contacts
+ *  - s           portrait on its own row at 6 columns so it stays modest;
+ *                the text block still spans all 12 beneath it
+ *  - md (741)    portrait (4 cols) beside the text (8); intro and contacts
+ *                share one column, contacts wrapping as a row
+ *  - lg (1047)   intro and contacts split side by side, contacts right-aligned
+ *  - xl (1200)   portrait narrows to the design's 3 columns (276px)
+ */
+import { Image } from "astro:assets";
 import Section from "../section.astro";
-import DisplayHeader from "@components/headers/displayHeader.astro";
-import Image from "astro/components/Image.astro";
-import ThreeRings from "@components/decorators/threeRings.astro";
-import StandOutCard from "@/components/cards/standOutCard.astro";
+import Grid from "@components/container/grid.astro";
+import HeroHeadline from "@components/headers/heroHeadline.astro";
+import SocialLink from "@components/buttons/socialLink.astro";
 import { cmsURL } from "@/constants";
-const { data } = Astro.props;
-const image = data.heroPortrait;
-const imageAlt = data.heroPortrait.alt;
+import type { ContactLinkType } from "@customTypes/contactLinkType";
+
+interface Props {
+  data: {
+    mainHeader: any;
+    heroPortrait: { url: string; width: number; height: number; alt: string };
+    standoutCard: { content: string; tagline: string };
+  };
+  contactLinks: ContactLinkType[];
+}
+
+const { data, contactLinks } = Astro.props;
+const portrait = data.heroPortrait;
+
+// 6 of 12 columns from s (own row), 4 from md, 3 from xl (276px inside the
+// 1200px container). Percentages are of the viewport, not the container.
+const SIZES =
+  "(min-width: 1200px) 20vw, (min-width: 741px) 27vw, (min-width: 434px) 40vw, calc(100vw - 3rem)";
 ---
 
-<Section
-  class={["pt-8 pb-15 md:pb-20 bg-gray overflow-x-hidden relative"]}
-  id="hero"
->
-  <div class="flex flex-col relative">
-    <DisplayHeader class={"pb-10"}>{data.mainHeader}</DisplayHeader>
-    <div
-      class:list={"w-full relative md:grid md:grid-cols-[37%_1fr] md:gap-10"}
-    >
-      <Image
-        loading={"eager"}
-        src={cmsURL + image.url}
-        width={image.width}
-        height={image.height}
-        alt={imageAlt || ""}
-        quality={80}
-        priority
-        class:list={"z-10 w-full relative md:h-[100%] md:max-w-xl pb-5 aspect-[4/5] object-cover "}
-      />
-      <StandOutCard
-        class="z-10 md:flex md:flex-col md:justify-between md:w-full md:h-fit md:min-h-[20rem] md:translate-y-10"
-      >
-        <p class="text-md text-white pb-12 text-pretty">
-          {data.standoutCard.content}
-        </p>
-        <p class="text-base text-yellow">
-          {data.standoutCard.tagline}
-        </p>
-      </StandOutCard>
-      <!-- Old classes for ThreeRings on mobile screen: w-[80%] left-[50%] -translate-x-[50%] top-[min(55vw,24rem)]  -->
-      <ThreeRings
-        class="hidden z-0 absolute md:block md:w-[22vw] md:min-w-[15rem] md:top-[-17%] md:right-[-9%] lg:top-[-18%] 2xl:top-[-24%] 2xl:right-[-10%] md:left-auto md:translate-x-0 transition-[top,_left] duration-300"
-        enableAnimation={true}
-        fromCorner={true}
-      />
+<Section class={["bg-white pt-8 pb-16 md:py-24"]} id="hero">
+  <Grid class="gap-y-8">
+    <Image
+      src={cmsURL + portrait.url}
+      width={portrait.width}
+      height={portrait.height}
+      alt={portrait.alt || ""}
+      quality={80}
+      priority
+      loading="eager"
+      sizes={SIZES}
+      class="col-span-12 w-full object-cover object-top aspect-[4/5] s:col-span-6 md:col-span-4 xl:col-span-3"
+    />
+
+    <div class="col-span-12 flex flex-col gap-8 md:col-span-8 xl:col-span-9">
+      <HeroHeadline data={data.mainHeader} />
+
+      <div class="flex flex-col gap-6 lg:flex-row lg:justify-between lg:gap-8">
+        <div class="flex flex-col gap-4 lg:min-w-0 lg:max-w-[479px]">
+          <p class="text-body text-text-primary text-pretty">
+            {data.standoutCard.content}
+          </p>
+          {
+            data.standoutCard.tagline && (
+              <p class="flex items-center gap-2 text-body text-cyan-400">
+                <span
+                  class="size-3 shrink-0 rounded-full bg-cyan-400"
+                  aria-hidden="true"
+                />
+                {data.standoutCard.tagline}
+              </p>
+            )
+          }
+        </div>
+
+        <ul
+          class="flex flex-col gap-2 md:flex-row md:flex-wrap md:gap-x-8 md:gap-y-2 lg:flex-col lg:flex-nowrap lg:shrink-0 lg:items-end"
+        >
+          {
+            contactLinks.map((link: ContactLinkType) => (
+              <li>
+                <SocialLink
+                  href={link.url}
+                  label={link.title}
+                  class="text-body text-text-tertiary whitespace-nowrap"
+                >
+                  {link.title}
+                </SocialLink>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </div>
-  </div>
+  </Grid>
 </Section>

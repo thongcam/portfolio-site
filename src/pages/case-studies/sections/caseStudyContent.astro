@@ -17,10 +17,14 @@ const needsHydration = hasZoomableImage(page.content);
 
 <Section class={["mb-15"]} id="content">
   <div class="relative">
-    <div class="absolute right-[calc(-1*max(5vw,20px))] h-[100%] top-10">
+    <!-- The design puts the spy inside the container beside the article
+         (981 + 219 of 1200), not floating in the page margin. -->
+    <div class="absolute right-0 top-10 h-full w-[18.25%]">
       <ScrollSpy page={page} />
     </div>
-    <article class="md:w-[80%] max-w-[80ch] flow-root">
+    <!-- 981 of the design's 1200 content width, leaving 220 for the scroll
+         spy alongside. -->
+    <article class="flow-root md:w-[81.75%] md:w-max-[60ch] md:pe-4 pb-21 border-solid border-be-1 border-gray-300">
       {
         needsHydration ? (
           <RichTextLexical data={page.content} client:idle />
