@@ -8,6 +8,7 @@ import CalloutBlock from './callout-box/CalloutBox'
 import ImageCollection from './image-collection/ImageCollection'
 import Quote from './quote/Quote'
 import NumberedList from './numbered-list/NumberedList'
+import Stats from './stats/Stats'
 import { CustomHeadingJSXConverter } from './custom-converters/heading'
 import { CustomListJSXConverter } from './custom-converters/list'
 import { CustomParagraphJSXConverter } from './custom-converters/paragraph'
@@ -33,6 +34,7 @@ const jsxConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
     ImageCollectionBlock: ({node} : {node: SerializedBlockNode}) => <ImageCollection images={node.fields.images}></ImageCollection>,
     NumberedListBlock: ({node} : {node: SerializedBlockNode}) => <NumberedList items={node.fields.items} />,
     QuoteBlock: ({node} : {node: SerializedBlockNode}) => <Quote quote={node.fields.quote} attribution={node.fields.attribution} />,
+    StatsBlock: ({node} : {node: SerializedBlockNode}) => <Stats stats={node.fields.stats} />,
     // Rendered as the native <mux-player> custom element (no React runtime
     // needed) — see caseStudyContent.astro for the vanilla enhancement script
     // that lazy-loads the player and wires up autoplay-on-scroll.
