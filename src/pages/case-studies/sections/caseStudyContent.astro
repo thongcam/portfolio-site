@@ -18,8 +18,15 @@ const needsHydration = hasZoomableImage(page.content);
 <Section class={["mb-15"]} id="content">
   <div class="relative">
     <!-- The design puts the spy inside the container beside the article
-         (981 + 219 of 1200), not floating in the page margin. -->
-    <div class="absolute right-0 top-10 h-full w-[18.25%]">
+         (981 + 219 of 1200), not floating in the page margin.
+
+         `hidden md:block` matters as much as the positioning: the spy itself
+         is hidden below `md`, but this wrapper is not part of it, and an empty
+         absolutely-positioned box still hit-tests. Left visible it covers the
+         rightmost 18.25% of the article's full height on mobile, swallowing
+         clicks on anything right-aligned inside the article — the carousel's
+         next button, for one. -->
+    <div class="hidden md:block absolute right-0 top-10 h-full w-[18.25%]">
       <ScrollSpy page={page} />
     </div>
     <!-- 981 of the design's 1200 content width, leaving 220 for the scroll

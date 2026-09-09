@@ -7,6 +7,7 @@ import type { SerializedBlockNode, UploadData } from '@payloadcms/richtext-lexic
 import CalloutBlock from './callout-box/CalloutBox'
 import ImageCollection from './image-collection/ImageCollection'
 import Quote from './quote/Quote'
+import Carousel from './carousel/Carousel'
 import NumberedList from './numbered-list/NumberedList'
 import Stats from './stats/Stats'
 import { CustomHeadingJSXConverter } from './custom-converters/heading'
@@ -31,6 +32,7 @@ const jsxConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
     // myTextBlock is the slug of the block
     CalloutBlock: ({node} : {node : SerializedBlockNode}) => <CalloutBlock emoji={node.fields.emoji} content={node.fields.content} color={node.fields.color}></CalloutBlock>,
     FigmaEmbedBlock: ({node} : {node: SerializedBlockNode}) => <div className="flex" dangerouslySetInnerHTML={{__html: node.fields.figmaEmbedCode}}></div>,
+    ImageCarouselBlock: ({node} : {node: SerializedBlockNode}) => <Carousel images={node.fields.images} />,
     ImageCollectionBlock: ({node} : {node: SerializedBlockNode}) => <ImageCollection images={node.fields.images}></ImageCollection>,
     NumberedListBlock: ({node} : {node: SerializedBlockNode}) => <NumberedList items={node.fields.items} />,
     QuoteBlock: ({node} : {node: SerializedBlockNode}) => <Quote quote={node.fields.quote} attribution={node.fields.attribution} />,
