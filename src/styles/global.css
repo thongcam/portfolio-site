@@ -114,8 +114,8 @@
     --color-text-primary: var(--color-gray-900);
     --color-text-secondary: var(--color-gray-700);
     --color-text-tertiary: var(--color-gray-500);
-    --color-text-accent-yellow: var(--color-yellow-400);
-    --color-text-accent-cyan: var(--color-cyan-400);
+    --color-text-accent-yellow: var(--color-yellow-500);
+    --color-text-accent-cyan: var(--color-cyan-500);
     --color-text-accent-blue: var(--color-blue-600);
 
     /* Spacing intentionally not overridden — Tailwind's default scale
@@ -230,7 +230,7 @@
 @utility text-section-title {
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: 1.75rem;
+  font-size: clamp(1.75rem, 1.5rem + 1.6667vw, 2rem);;
   line-height: 1.25;
   letter-spacing: 0;
 }
@@ -242,6 +242,21 @@
   font-size: 1.5rem;
   line-height: 1;
   letter-spacing: -0.01em;
+
+  @media (width >= theme(--breakpoint-md)) {
+    font-size: 1.75rem;
+  }
+}
+
+/* quote — 24 → 28. A third treatment at the 28 tier: card is Semibold and
+   numeral Bold, while a pull quote is Light. Weight is part of a token here,
+   so this cannot be an override on either of those. */
+@utility text-quote {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  letter-spacing: 0;
 
   @media (width >= theme(--breakpoint-md)) {
     font-size: 1.75rem;

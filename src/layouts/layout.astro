@@ -7,6 +7,8 @@ import { cmsURL } from "@/constants";
 import getGlobals from "@/utils/getGlobals";
 import resolveOgImage, { type OgImage } from "@/utils/resolveOgImage";
 import "../styles/global.css";
+import Color from "color";
+import generateArticleColors from "@/utils/generateArticleColors";
 
 interface Props {
   pageMetaDescription?: string;
@@ -22,6 +24,13 @@ interface Props {
 const { logos, settings } = await getGlobals(Astro.locals);
 const { pageMetaDescription, pageTitle, pageOgMeta, themeColor } =
   Astro.props as Props;
+
+// Rich-text blocks are rendered deep inside the Lexical converter chain, well
+// out of reach of props, so the article's derived colours are published as
+// custom properties here for any of them to pick up.
+const themeVars = themeColor
+  ? `--theme-color: ${themeColor}; --theme-ramp-400: ${generateArticleColors(Color(themeColor)).themeColorRamp400.hex()}`
+  : null;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
@@ -83,7 +92,7 @@ const ogImage = pageOgMeta?.image || fallbackOgImage;
     <script defer src="https://umami.thong.cam/script.js" data-website-id="b924d487-517b-4512-a0e0-4ba9d69b1c36"></script>
     <slot name="head" />
   </head>
-  <body class="text-blue-950 text-body" style={themeColor ? `--theme-color: ${themeColor}` : null}>
+  <body class="text-blue-950 text-body" style={themeVars}>
     <Navbar logos={logos} themeColor={themeColor} />
     <main>
       <slot />

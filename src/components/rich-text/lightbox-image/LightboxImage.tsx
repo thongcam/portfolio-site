@@ -26,7 +26,7 @@ interface LightboxImageProps {
     sizes?: string;
 }
 
-export default function LightboxImage({src, alt, caption, width, height, srcSet, className = "flex flex-col gap-2", sizes = RICH_TEXT_IMAGE_SIZES} : LightboxImageProps) {
+export default function LightboxImage({src, alt, caption, width, height, srcSet, className = "flex flex-col gap-4", sizes = RICH_TEXT_IMAGE_SIZES} : LightboxImageProps) {
     const [open, setOpen] = useState(false);
     const zoomRef = useRef(null);
     const captionsRef = useRef(null);
