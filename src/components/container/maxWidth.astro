@@ -10,11 +10,8 @@
  * At the design's 1512px canvas this resolves to a 1200px column with 156px
  * margins, matching the Figma exactly.
  *
- * Below `s` the gutter is a flat 20px. The fluid `7vw` term is only worth
- * having once the layout starts putting things side by side; on a phone it
- * just eats width the content needs — at 393px it worked out to 27.5px a
- * side. The clamp's own floor is kept at the same 20px so the two agree if
- * the `s` breakpoint ever moves.
+ * The gutter value itself lives on `--page-gutter` in global.css, because
+ * the mobile menu in navbar.astro has to line up with it.
  */
 interface Props {
   class: string;
@@ -22,7 +19,7 @@ interface Props {
 const { class: className } = Astro.props;
 ---
 
-<div class="px-5 s:px-[clamp(1.25rem,7vw,5rem)]">
+<div class="px-[var(--page-gutter)]">
   <div class:list={["max-w-[1200px] m-auto", className]}>
     <slot />
   </div>

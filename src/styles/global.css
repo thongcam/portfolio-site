@@ -177,6 +177,27 @@
   letter-spacing: -0.015em;
 }
 
+/* The page gutter, in one place.
+ *
+ * maxWidth.astro sets the page's padding from this, and the mobile menu in
+ * navbar.astro sizes and pads itself from it too, so the open panel lines up
+ * with the content behind it. Keeping it a custom property rather than
+ * repeating the clamp is what stops the two drifting — which they did once
+ * already, when the mobile floor moved to 20px and the menu kept the old
+ * value.
+ *
+ * Flat 20px below `s`; the fluid term only earns its keep once the layout
+ * starts placing things side by side. */
+:root {
+  --page-gutter: 1.25rem;
+}
+
+@media (width >= theme(--breakpoint-s)) {
+  :root {
+    --page-gutter: clamp(1.25rem, 7vw, 5rem);
+  }
+}
+
 /* hero — fluid 44 → 76 */
 @utility text-hero-title {
   font-family: var(--font-display);
