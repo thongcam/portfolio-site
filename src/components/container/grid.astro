@@ -9,6 +9,14 @@
  *
  * Only the column gutter is fixed here; row spacing varies per section and
  * is passed in via `class` (e.g. `gap-y-12`).
+ *
+ * The gutter is held back until `s` because a 12-column grid reserves its 11
+ * gaps whether or not anything sits either side of them: at 32px that is a
+ * 352px floor the grid will not shrink below, which forced the whole page to
+ * overflow on narrow phones. Every item is `col-span-12` below `s` — the
+ * first partial span is `s:col-span-6` — so no column gap is visible there
+ * anyway, and dropping it costs nothing while letting the page reflow all the
+ * way down. Row gaps are unaffected.
  */
 interface Props {
   class?: string;
@@ -19,6 +27,6 @@ interface Props {
 const { class: className, as: Tag = "div" } = Astro.props;
 ---
 
-<Tag class:list={["grid grid-cols-12 gap-x-8", className]}>
+<Tag class:list={["grid grid-cols-12 gap-x-0 s:gap-x-8", className]}>
   <slot />
 </Tag>
