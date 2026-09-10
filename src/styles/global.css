@@ -304,36 +304,3 @@
 figcaption p {
   font-size: 0.875rem !important;
 }
-/* Cross-document view transitions.
- *
- * Deliberately native (`@view-transition`) rather than Astro's <ClientRouter />.
- * The router swaps documents client-side, which means a module `<script>` runs
- * once for the session instead of once per page — and seven components here
- * (navbar, footer, scroll spy, section/display headers, three rings, case-study
- * content) bind observers and listeners at module scope. Under the router each
- * would quietly stop working after the first navigation. A real navigation
- * keeps them all correct, and the browser still morphs the matched titles.
- *
- * Browsers without cross-document support just navigate normally. */
-@view-transition {
-  navigation: auto;
-}
-
-/* The UA default is `ease`, which eases in as well as out — the title reads
- * as sluggish leaving the card. `ease-out` spends its speed up front and
- * settles into place, which suits a morph the reader just asked for by
- * clicking. Covers the group (the position/size morph) as well as the old and
- * new snapshots (the cross-fade), so the whole transition shares one curve. */
-::view-transition-group(*),
-::view-transition-old(*),
-::view-transition-new(*) {
-  animation-timing-function: ease-out;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
-  }
-}

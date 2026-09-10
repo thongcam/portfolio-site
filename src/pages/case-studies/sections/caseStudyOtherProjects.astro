@@ -10,7 +10,6 @@ import { Image } from "astro:assets";
 import { RichTextLexical } from "@components/rich-text/richTextLexical";
 import type { CardContentType } from "@customTypes/cardContentType";
 import type { SerializedEditorState } from "lexical";
-import caseStudyTitleTransition from "@utils/caseStudyTitleTransition";
 
 const { otherCaseStudies } = Astro.props;
 
@@ -42,7 +41,6 @@ const SIZES = "(min-width: 741px) min(50vw, 584px), calc(100vw - 3rem)";
               tabindex="0"
               data-astro-prefetch
               class="text-card-title text-text-primary text-balance transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-cyan"
-              transition:name={caseStudyTitleTransition(data.url)}
             >
               {data.title}
             </a>
