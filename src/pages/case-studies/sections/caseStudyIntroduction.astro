@@ -14,6 +14,7 @@ import generateArticleColors from "@/utils/generateArticleColors";
 import { Image } from "astro:assets";
 import Color from "color";
 import type { SerializedEditorState } from "lexical";
+import caseStudyTitleTransition from "@utils/caseStudyTitleTransition";
 
 interface SummaryBlockType {
   title: string;
@@ -35,7 +36,12 @@ const thumbnail = page.thumbnail.thumbnailImage;
   style={{ backgroundColor: themeColorLighter.rgb().string() }}
   id="introduction"
 >
-  <h1 class="text-article-title text-text-primary text-balance">{page.title}</h1>
+  <h1
+    class="text-article-title text-text-primary text-balance"
+    transition:name={caseStudyTitleTransition(Astro.url.pathname)}
+  >
+    {page.title}
+  </h1>
 
   <hr class="mt-12 border-0 border-t-[0.5px] border-blue-950/20 md:mt-16" />
 

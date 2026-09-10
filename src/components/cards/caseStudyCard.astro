@@ -12,6 +12,7 @@ import { RichTextLexical } from "@components/rich-text/richTextLexical";
 import ArrowRight from "@assets/icons/arrow-right.svg";
 import type { CardContentType } from "@customTypes/cardContentType";
 import type { SerializedEditorState } from "lexical";
+import caseStudyTitleTransition from "@utils/caseStudyTitleTransition";
 
 interface Props {
   content: CardContentType;
@@ -21,6 +22,9 @@ interface Props {
 
 const { content, href } = Astro.props;
 const { title, description, linkLabel, thumbnailImage } = content;
+
+// Morphs into the case study's own <h1> on navigation.
+const titleTransition = caseStudyTitleTransition(href);
 
 // 7 of 12 columns from md, 8 from xl, full gutter width below.
 const SIZES =
@@ -40,7 +44,12 @@ const SIZES =
 
   <div class="col-span-12 flex flex-col gap-3 md:gap-4 md:col-span-5 md:order-1 md:py-4 lg:py-8 xl:col-span-4">
     <div class="flex flex-col gap-3 md:gap-4">
-      <h3 class="text-card-title text-text-primary text-balance">{title}</h3>
+      <h3
+        class="text-card-title text-text-primary text-balance"
+        transition:name={titleTransition}
+      >
+        {title}
+      </h3>
       <div class="text-body text-text-primary">
         <RichTextLexical data={description as SerializedEditorState} />
       </div>
