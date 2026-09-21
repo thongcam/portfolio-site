@@ -114,8 +114,8 @@
     --color-text-primary: var(--color-gray-900);
     --color-text-secondary: var(--color-gray-700);
     --color-text-tertiary: var(--color-gray-500);
-    --color-text-accent-yellow: var(--color-yellow-500);
-    --color-text-accent-cyan: var(--color-cyan-500);
+    --color-text-accent-yellow: var(--color-yellow-400);
+    --color-text-accent-cyan: var(--color-cyan-400);
     --color-text-accent-blue: var(--color-blue-600);
 
     /* Spacing intentionally not overridden — Tailwind's default scale
@@ -228,7 +228,7 @@
 /* stat — 44 */
 @utility text-stats {
   font-family: var(--font-display);
-  font-weight: 300;
+  font-weight: 500;
   font-size: 2.75rem;
   line-height: 1;
   letter-spacing: -0.02em;
