@@ -1,0 +1,89 @@
+---
+/**
+ * /about — the long-form introduction: the essay beside a sticky portrait,
+ * the education and work timelines, the photo scatter, and the closing CTA.
+ */
+import Layout from "@/layouts/layout.astro";
+import JsonLd from "@components/seo/jsonLd.astro";
+import AboutIntro from "@components/sections/about/aboutIntro.astro";
+import AboutTimelines from "@components/sections/about/aboutTimelines.astro";
+import OutsideOfWork from "@components/sections/about/outsideOfWork.astro";
+import AboutCta from "@components/sections/about/aboutCta.astro";
+import getGlobals from "@utils/getGlobals";
+import getAboutData from "@utils/getAboutData";
+import resolveOgImage from "@utils/resolveOgImage";
+import { personRef, PERSON_ID } from "@utils/personSchema";
+import type { ContactLinkType } from "@customTypes/contactLinkType";
+
+const [about, { contacts, settings }] = await Promise.all([
+  getAboutData(Astro.locals),
+  getGlobals(Astro.locals),
+]);
+
+// The browser should always check freshness
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, max-age=0, must-revalidate",
+);
+
+// The CDN caches for a year, invalidated by tag when content changes
+Astro.cache.set({
+  maxAge: 31536000,
+  tags: ["global", "about"],
+});
+
+const contactLinks = (contacts?.contactLinks ?? []) as ContactLinkType[];
+
+const metaDescription =
+  about?.metaDescription || about?.intro?.lead || settings.siteDescription;
+
+const ogImage = resolveOgImage(about?.intro?.portrait);
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+
+const structuredData = [
+  {
+    "@type": "AboutPage",
+    url: canonicalURL,
+    name: about?.intro?.title ?? "About me",
+    description: metaDescription,
+    mainEntity: { "@id": PERSON_ID },
+    author: personRef,
+  },
+  {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://thong.cam/" },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: about?.intro?.title ?? "About",
+        item: canonicalURL,
+      },
+    ],
+  },
+];
+---
+
+<Layout
+  pageTitle={about?.intro?.title ?? "About"}
+  pageMetaDescription={metaDescription}
+  pageOgMeta={{
+    title: about?.intro?.title ?? "About",
+    description: metaDescription,
+    image: ogImage,
+  }}
+>
+  <JsonLd graph={structuredData} slot="head" />
+
+  <AboutIntro intro={about.intro} />
+  <AboutTimelines education={about.education} work={about.work} />
+  <OutsideOfWork
+    statement={about.outsideOfWork?.statement}
+    photos={about.outsideOfWork?.photos ?? []}
+  />
+  <AboutCta
+    header={about.cta?.header ?? "Let’s work together!"}
+    contactLinks={contactLinks}
+  />
+</Layout>

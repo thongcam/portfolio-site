@@ -1,0 +1,39 @@
+---
+/**
+ * Closing call to action — the same treatment as the homepage's contact
+ * section: the display headline with its yellow highlight, then every contact
+ * link spread across a row.
+ */
+import Section from "@components/sections/section.astro";
+import DisplayHeader from "@components/headers/displayHeader.astro";
+import SocialLink from "@components/buttons/socialLink.astro";
+import type { ContactLinkType } from "@customTypes/contactLinkType";
+
+interface Props {
+  header: string;
+  contactLinks: ContactLinkType[];
+}
+
+const { header, contactLinks } = Astro.props;
+---
+
+<Section class={["bg-white pt-16 pb-16 md:pt-24 md:pb-24"]} id="contact">
+  <DisplayHeader level="h2">{header}</DisplayHeader>
+  <ul
+    class="mt-16 flex flex-col gap-8 md:mt-32 md:flex-row md:flex-wrap md:justify-between md:gap-x-8 md:gap-y-10"
+  >
+    {
+      contactLinks.map((link) => (
+        <li>
+          <SocialLink
+            href={link.url}
+            label={link.title}
+            class="text-body text-text-secondary"
+          >
+            {link.title}
+          </SocialLink>
+        </li>
+      ))
+    }
+  </ul>
+</Section>

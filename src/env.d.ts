@@ -6,5 +6,6 @@ declare namespace App {
   interface Locals {
     globalsPromise?: Promise<import("./utils/getGlobals").GlobalsData>;
     blogPromise?: Promise<import("./utils/getBlogData").BlogData>;
+    aboutPromise?: Promise<any>;
   }
 }

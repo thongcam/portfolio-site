@@ -1,0 +1,71 @@
+---
+/**
+ * One row of a timeline: period, the dot-and-rail, then the entry itself.
+ *
+ * The rail is a real element rather than a border on the content, so the dot
+ * can sit on top of it and the line can stop at the last entry. It stretches
+ * to the row's height (`self-stretch` + `flex-1`), which is what keeps the
+ * line continuous through entries of different lengths.
+ *
+ * `accent` picks the dot colour — blue for education, yellow for work, per
+ * the design's two columns.
+ */
+import { RichTextLexical } from "@components/rich-text/richTextLexical";
+import type { SerializedEditorState } from "lexical";
+
+interface Props {
+  entry: {
+    period: string;
+    title: string;
+    organisation: string;
+    description?: SerializedEditorState | null;
+  };
+  accent: "blue" | "yellow";
+  /** Draws the rail below the dot. Off for the final entry. */
+  continues: boolean;
+  /** Ordinal within the timeline, used to stagger the reveal. */
+  index: number;
+}
+
+const { entry, accent, continues, index } = Astro.props;
+---
+
+<li
+  class="flex items-start gap-2"
+  data-timeline-entry
+  style={`--entry-index: ${index}`}
+>
+  <p class="w-[26%] shrink-0 text-ui text-text-tertiary md:w-[102px]">
+    {entry.period}
+  </p>
+
+  <div class="flex w-8 shrink-0 flex-col items-center self-stretch pt-1.5">
+    <span
+      class:list={[
+        "z-10 size-3 shrink-0 rounded-full",
+        accent === "blue" ? "bg-blue-500" : "bg-yellow-500",
+      ]}
+      aria-hidden="true"></span>
+    {
+      continues && (
+        <span
+          aria-hidden="true"
+          data-timeline-rail
+          class="-mt-0.5 w-0.5 flex-1 origin-top bg-gray-100"
+        />
+      )
+    }
+  </div>
+
+  <div class="flex min-w-0 flex-1 flex-col pb-12">
+    <h3 class="text-h3 text-text-primary text-balance mb-1">{entry.title}</h3>
+    <p class="text-ui text-text-tertiary">{entry.organisation}</p>
+    {
+      entry.description && (
+        <div class="pt-2 text-body text-text-primary">
+          <RichTextLexical data={entry.description} />
+        </div>
+      )
+    }
+  </div>
+</li>

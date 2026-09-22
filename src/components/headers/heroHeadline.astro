@@ -30,14 +30,19 @@ interface Props {
    * through `class` would not reliably win.
    */
   typography?: string;
+  /** Heading level. The page's own h1 on the homepage, an h2 elsewhere. */
+  level?: "h1" | "h2";
   class?: string;
 }
 
 const {
   data,
   typography = "text-hero-title text-text-tertiary",
+  level = "h1",
   class: className,
 } = Astro.props;
+
+const Tag = level;
 
 const IS_BOLD = 1;
 
@@ -84,10 +89,10 @@ const runs: Run[] =
 
 {
   runs.length > 0 && (
-    <h1 class:list={[typography, "text-balance", className]}>
+    <Tag class:list={[typography, "text-balance", className]}>
       {runs.map((run) =>
         run.className ? <span class={run.className}>{run.text}</span> : run.text,
       )}
-    </h1>
+    </Tag>
   )
 }

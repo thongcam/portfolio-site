@@ -1,0 +1,87 @@
+---
+/**
+ * The page opener: title and portrait on the left, the essay on the right.
+ *
+ * The left column sticks while the essay scrolls past it. It is the column
+ * itself that is `sticky`, not the image — the two have to travel together —
+ * and `items-start` on the row is what lets it, since a stretched flex item
+ * has no room to move.
+ *
+ * Below `md` that column turns into a row: the title sits beside the portrait
+ * on a shared centre line, at the design's 45% / 50% split, and nothing
+ * sticks. Only the column's own `flex-direction` changes between the two —
+ * the element itself is the same one, so the sticky wrapper is unaffected.
+ *
+ * The design's 481 / 133 / 480 of 1200 don't land on 12-column boundaries, so
+ * the split is proportional rather than on the grid.
+ */
+import { Image } from "astro:assets";
+import Section from "@components/sections/section.astro";
+import { RichTextLexical } from "@components/rich-text/richTextLexical";
+import { cmsURL } from "@/constants";
+import type { SerializedEditorState } from "lexical";
+
+interface Props {
+  intro: {
+    title: string;
+    lead: string;
+    portrait: { url: string; width: number; height: number; alt?: string };
+    sections: { heading: string; body: SerializedEditorState }[];
+  };
+}
+
+const { intro } = Astro.props;
+const portrait = intro.portrait;
+
+// 40% of the container from md; half the gutter width below, where the
+// portrait shares its row with the title.
+const SIZES = "(min-width: 741px) min(40vw, 481px), 50vw";
+---
+
+<Section class={["bg-white pt-8 pb-16 md:pt-16 md:pb-24"]} id="about-intro">
+  <div class="flex flex-col gap-12 md:flex-row md:items-start md:gap-[11%]">
+    <div
+      class="flex flex-row items-center gap-4 md:sticky md:top-28 md:w-[40.08%] md:flex-col md:items-start md:gap-12"
+    >
+      <h1
+        class="w-[45%] shrink-0 text-article-title text-text-primary md:w-full"
+      >
+        {intro.title}
+      </h1>
+      <!-- The gradient wash over the portrait is part of the design, not the
+           photo, so it is a sibling overlay rather than baked into the file. -->
+      <div class="relative min-w-0 flex-1 overflow-hidden md:w-full md:flex-none">
+        <Image
+          src={cmsURL + portrait.url}
+          alt={portrait.alt || intro.title}
+          width={portrait.width}
+          height={portrait.height}
+          quality={80}
+          priority
+          loading="eager"
+          sizes={SIZES}
+          class="w-full object-cover aspect-[481/601]"
+        />
+        <span
+          aria-hidden="true"
+          class="pointer-events-none absolute inset-0 bg-gradient-to-b from-blue-900/10 to-gray-300/10"
+        ></span>
+      </div>
+    </div>
+
+    <div class="flex flex-col md:w-[40%]">
+      <p class="text-body text-text-primary text-pretty">{intro.lead}</p>
+
+      {
+        intro.sections?.map((section) => (
+          <section class="flex flex-col pt-10">
+            <h2 class="text-h3 text-text-primary">{section.heading}</h2>
+            <div class="pt-6 text-body text-text-primary">
+              <RichTextLexical data={section.body} />
+            </div>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</Section>

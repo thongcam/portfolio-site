@@ -46,6 +46,7 @@ export async function GET({ site, cache }: APIContext) {
 
   const entries = [
     urlEntry(base + "/"),
+    urlEntry(base + "/about"),
     ...list<CaseStudyEntry>(caseStudies).map((cs) =>
       urlEntry(`${base}/case-studies/${cs.slug}`, cs.updatedAt),
     ),
@@ -63,7 +64,7 @@ export async function GET({ site, cache }: APIContext) {
   // The CDN caches for a year, invalidated by tag when content changes
   cache.set({
     maxAge: 31536000,
-    tags: ["global", "case-studies", "posts", "tags"],
+    tags: ["global", "about", "case-studies", "posts", "tags"],
   });
 
   return new Response(xml, {
