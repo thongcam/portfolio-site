@@ -8,9 +8,12 @@ import DisplayHeader from "@components/headers/displayHeader.astro";
 import Section from "@components/sections/section.astro";
 import Grid from "@components/container/grid.astro";
 import SocialLink from "@components/buttons/socialLink.astro";
+import ArticleRow from "@components/blog/articleRow.astro";
+import ArrowRight from "@assets/icons/arrow-right.svg";
 import JsonLd from "@/components/seo/jsonLd.astro";
 import { buildPersonSchema, buildWebsiteSchema } from "@/utils/personSchema";
 import getGlobals from "@/utils/getGlobals";
+import getBlogData from "@/utils/getBlogData";
 import { cmsURL } from "@/constants";
 import Layout from "@/layouts/layout.astro";
 import type { ContactLinkType } from "@customTypes/contactLinkType";
@@ -34,6 +37,12 @@ const heroContactLinks = heroSelection.length
 
 const caseStudiesSection = homepageData.caseStudies;
 const websitesSection = homepageData.websites;
+const blogSection = homepageData.blog ?? {};
+
+// `/api/posts/all` already comes back newest first, so the homepage's blog
+// section is just the top of that list — nothing to choose in the CMS.
+const { posts } = await getBlogData(Astro.locals);
+const latestPosts = posts.slice(0, blogSection.postCount ?? 3);
 
 // Showcased projects come back as ids at depth 0. Each collection exposes a
 // `/:id/thumbnail` endpoint returning the flattened card content (title, rich
@@ -74,7 +83,7 @@ Astro.response.headers.set(
 // The CDN caches for a year, invalidated by tag when content changes
 Astro.cache.set({
   maxAge: 31536000,
-  tags: ["global", "case-studies", "websites"],
+  tags: ["global", "case-studies", "websites", "posts"],
 });
 ---
 
@@ -110,6 +119,41 @@ Astro.cache.set({
       }
     </Grid>
   </Section>
+
+  {
+    latestPosts.length > 0 && (
+      <Section class={["bg-gray-50 py-16 md:py-20"]} id="blog">
+        <SectionHeader number={blogSection.sectionNumber} class="mb-10 md:mb-12">
+          {blogSection.sectionTitle ?? "Blog"}
+        </SectionHeader>
+
+        <!-- Each row carries its own bottom rule, so the list closes itself
+             but has nothing above the first entry. The top rule lives on the
+             list rather than the row: on the blog index a year heading opens
+             each group, and rows there must not draw one of their own. -->
+        <ul class="flex flex-col border-t-[0.5px] border-gray-500/50">
+          {latestPosts.map((post) => (
+            <ArticleRow post={post} />
+          ))}
+        </ul>
+
+        <a
+          href="/blog"
+          tabindex="0"
+          data-astro-prefetch
+          class="group mt-10 inline-flex w-fit items-center justify-center gap-3 bg-text-primary p-5 text-ui text-white transition-colors hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600 md:mt-12"
+        >
+          {blogSection.linkLabel ?? "See all articles"}
+          <ArrowRight
+            width={24}
+            height={24}
+            aria-hidden="true"
+            class="shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-1"
+          />
+        </a>
+      </Section>
+    )
+  }
 
   <AboutMe data={homepageData.aboutMe} />
 

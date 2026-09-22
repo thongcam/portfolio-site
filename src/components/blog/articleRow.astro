@@ -7,6 +7,12 @@
  * — and when it is missing the copy keeps its own width rather than stretching
  * across, so titles stay on a common measure down the list.
  *
+ * That measure is 583px, the design's article column. In the blog's own 890px
+ * column it is exactly what `flex-1` works out to anyway; on the homepage,
+ * where the same row spans the full 1200px container, it stops the title
+ * running to a hard-to-read length and `justify-between` sends the thumbnail
+ * to the far edge instead.
+ *
  * The whole row is the link. The anchor wraps only the title (so the
  * accessible name is the title alone) and covers the row with an inset
  * pseudo-element, which is what makes the thumbnail clickable too.
@@ -46,9 +52,9 @@ const meta = [
 
 <li
   {...rest}
-  class="relative flex items-center gap-4 border-b-[0.5px] border-gray-500/50 py-4 md:gap-8"
+  class="relative flex items-center justify-between gap-4 border-b-[0.5px] border-gray-500/50 py-4 md:gap-8"
 >
-  <div class="flex min-w-0 flex-1 flex-col gap-2 py-4">
+  <div class="flex min-w-0 flex-1 flex-col gap-2 py-4 md:max-w-[583px]">
     <Tag class="text-h3 text-text-primary text-balance">
       <a
         href={`/blog/${post.slug}`}
