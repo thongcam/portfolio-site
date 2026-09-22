@@ -1,10 +1,37 @@
 ---
+/**
+ * Site footer: a "Go to" column of internal links, a "Socials" column of the
+ * contact links picked in the CMS, and the copyright block.
+ *
+ * The three columns share a row from `md` and stack below it. They are
+ * bottom-aligned (`items-end`) so the copyright — which is taller than a link
+ * list row — sits on the same baseline as the last link in each column,
+ * matching the design.
+ *
+ * The half-ring and the logo that tracks the pointer sit above the footer
+ * band, on white, exactly as before.
+ */
 import MaxWidth from "@components/container/maxWidth.astro";
+import SocialLink from "@components/buttons/socialLink.astro";
 import HalfRing from "/public/decorators/half ring.svg";
 import LogoSmall from "/public/images/logo-small.svg";
 import getGlobals from "@/utils/getGlobals";
+import type { ContactLinkType } from "@customTypes/contactLinkType";
 
-const { footer: footerData } = await getGlobals(Astro.locals);
+const { footer: footerData, contacts } = await getGlobals(Astro.locals);
+
+// An empty selection means "all", so the footer is never left without a way
+// to reach out — the same rule the hero and the blog's author card follow.
+const allContactLinks = (contacts?.contactLinks ?? []) as ContactLinkType[];
+const selection: string[] = footerData.socials?.links ?? [];
+const socialLinks = selection.length
+  ? allContactLinks.filter((link) => link.id && selection.includes(link.id))
+  : allContactLinks;
+
+const goToLinks = (footerData.goTo?.links ?? []) as {
+  title: string;
+  url: string;
+}[];
 ---
 
 <footer class="relative bg-gray-50">
@@ -35,9 +62,69 @@ const { footer: footerData } = await getGlobals(Astro.locals);
       </div>
     </div>
   </div>
-  <MaxWidth class="pt-[5.5rem] md:pt-16 pb-12 flex flex-col gap-5">
-    <span class="text-body text-text-primary">{footerData.copyright}</span>
-    <span class="text-caption text-text-tertiary">{footerData.tagline}</span>
+
+  <MaxWidth class="pt-24 md:pt-32 pb-12">
+    <!-- Three tiers rather than two: stacked on the narrowest screens, the
+         two link columns paired from `s` with the copyright spanning beneath
+         them, then all three abreast from `md`. A grid rather than a wrapping
+         flex row because the copyright has to change how many columns it
+         spans, which flex has no way to express. -->
+    <div
+      class="grid grid-cols-1 items-start gap-12 s:grid-cols-2 md:grid-cols-3 md:gap-8"
+    >
+      {
+        goToLinks.length > 0 && (
+          <nav class="flex flex-col gap-5" aria-label="Footer">
+            <h2 class="text-label text-text-primary">{footerData.goTo.label}</h2>
+            <ul class="flex flex-col gap-4">
+              {goToLinks.map((link) => (
+                <li>
+                  <a
+                    href={link.url}
+                    tabindex="0"
+                    data-astro-prefetch
+                    class="text-ui text-text-tertiary transition-colors hover:text-text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600"
+                  >
+                    {link.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+
+      {
+        socialLinks.length > 0 && (
+          <div class="flex flex-col gap-5">
+            <h2 class="text-label text-text-primary">
+              {footerData.socials.label}
+            </h2>
+            <ul class="flex flex-col gap-4">
+              {socialLinks.map((link) => (
+                <li>
+                  <SocialLink
+                    href={link.url}
+                    label={link.title}
+                    underline={false}
+                    class="text-ui text-text-tertiary"
+                  >
+                    {link.title}
+                  </SocialLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
+      <div class="flex flex-col gap-4 s:col-span-2 md:col-span-1 md:self-end">
+        <p class="text-section-title text-text-primary text-balance">
+          {footerData.copyright}
+        </p>
+        <p class="text-caption text-text-tertiary">{footerData.tagline}</p>
+      </div>
+    </div>
   </MaxWidth>
 </footer>
 
