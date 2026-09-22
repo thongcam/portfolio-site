@@ -1,0 +1,47 @@
+---
+/**
+ * Post opener: the title, then a byline of avatar, author name and date.
+ *
+ * Simpler than the case study's introduction on purpose — no summary grid, no
+ * banner and no theme colour, since a post carries none of those.
+ */
+import { Image } from "astro:assets";
+import Section from "@components/sections/section.astro";
+import { cmsURL } from "@/constants";
+import formatPostDate from "@utils/formatPostDate";
+
+interface Props {
+  title: string;
+  publishedDate: string;
+  authorName: string;
+  avatar?: { url: string; width: number; height: number; alt?: string } | null;
+}
+
+const { title, publishedDate, authorName, avatar } = Astro.props;
+---
+
+<Section class={["bg-white pt-8 pb-10 md:pt-12 md:pb-14"]} id="introduction">
+  <h1 class="text-article-title text-text-primary text-balance">{title}</h1>
+
+  <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 md:mt-12">
+    <p class="flex items-center gap-2 text-ui text-text-primary">
+      {
+        avatar && (
+          <Image
+            src={cmsURL + avatar.url}
+            alt=""
+            width={avatar.width}
+            height={avatar.height}
+            quality={80}
+            priority
+            class="size-6 shrink-0 rounded-full object-cover"
+          />
+        )
+      }
+      {authorName}
+    </p>
+    <p class="text-ui text-text-tertiary">
+      <time datetime={publishedDate}>{formatPostDate(publishedDate)}</time>
+    </p>
+  </div>
+</Section>

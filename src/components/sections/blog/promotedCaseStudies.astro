@@ -1,0 +1,46 @@
+---
+/**
+ * "Like what you are seeing? Check out my works" — the three case studies
+ * picked under Blog → Promoted case studies, shown at the foot of the blog
+ * index and the tag pages.
+ *
+ * The heading and the "View all" link share a row on desktop and stack on
+ * mobile, which is the only difference between the two layouts.
+ */
+import Section from "@components/sections/section.astro";
+import ArrowLink from "@components/buttons/arrowLink.astro";
+import VerticalCaseStudyCard from "@components/cards/verticalCaseStudyCard.astro";
+import type { CardContentType } from "@customTypes/cardContentType";
+
+interface Props {
+  heading: string;
+  linkLabel: string;
+  linkURL: string;
+  caseStudies: CardContentType[];
+}
+
+const { heading, linkLabel, linkURL, caseStudies } = Astro.props;
+---
+
+{
+  caseStudies.length > 0 && (
+    <Section class={["bg-gray-50 py-16 md:py-20"]} id="works">
+      <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8">
+        <h2 class="text-section-title text-text-primary text-balance">
+          {heading}
+        </h2>
+        <ArrowLink href={linkURL} class="text-ui text-text-secondary shrink-0">
+          {linkLabel}
+        </ArrowLink>
+      </div>
+
+      <ul class="mt-10 grid grid-cols-1 gap-10 md:mt-12 md:grid-cols-3 md:gap-8">
+        {caseStudies.map((caseStudy) => (
+          <li>
+            <VerticalCaseStudyCard content={caseStudy} href={`/${caseStudy.url}`} />
+          </li>
+        ))}
+      </ul>
+    </Section>
+  )
+}

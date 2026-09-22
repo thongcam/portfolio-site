@@ -4,13 +4,14 @@ import ScrollSpy from "@/components/scroll-spy/scrollSpy.astro";
 import Section from "@/components/sections/section.astro";
 import useAstroImage from "@utils/useAstroImage";
 import hasZoomableImage from "@utils/hasZoomableImage";
+import MuxAutoplay from "@components/rich-text/muxAutoplay.astro";
 
 const { page } = Astro.props;
 
 await useAstroImage(page.content);
 
 // Only the zoomable-image lightbox needs client JS. Mux video is a plain
-// <mux-player> custom element enhanced by the vanilla script below —
+// <mux-player> custom element enhanced by <MuxAutoplay> —
 // everything else in the rich text is static HTML.
 const needsHydration = hasZoomableImage(page.content);
 ---
@@ -43,42 +44,4 @@ const needsHydration = hasZoomableImage(page.content);
   </div>
 </Section>
 
-<script>
-  const wrappers = document.querySelectorAll<HTMLElement>(
-    ".mux-video-wrapper mux-player",
-  );
-
-  if (wrappers.length) {
-    import("@mux/mux-player");
-
-    const players = Array.from(wrappers);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const player = entry.target as HTMLElement & {
-            play?: () => Promise<void>;
-            pause?: () => void;
-          };
-          if (entry.isIntersecting) {
-            player.play?.()?.catch(() => {});
-          } else {
-            player.pause?.();
-          }
-        });
-      },
-      { rootMargin: "-40% 0px -40% 0px", threshold: 0 },
-    );
-
-    players.forEach((player) => {
-      observer.observe(player);
-      player.addEventListener("play", () => {
-        players.forEach((other) => {
-          if (other !== player) {
-            (other as HTMLElement & { pause?: () => void }).pause?.();
-          }
-        });
-      });
-    });
-  }
-</script>
+<MuxAutoplay />

@@ -1,0 +1,46 @@
+---
+/**
+ * Post body — the same rich-text pipeline, the same blocks and the same
+ * scroll spy as a case study, so an article and a case study read alike.
+ *
+ * Kept as its own component rather than reusing `caseStudyContent.astro`
+ * because that one also owns the Mux autoplay script and the case-study
+ * section id; sharing the article column is what matters here.
+ */
+import { RichTextLexical } from "@components/rich-text/richTextLexical";
+import ScrollSpy from "@components/scroll-spy/scrollSpy.astro";
+import Section from "@components/sections/section.astro";
+import useAstroImage from "@utils/useAstroImage";
+import hasZoomableImage from "@utils/hasZoomableImage";
+import MuxAutoplay from "@components/rich-text/muxAutoplay.astro";
+
+const { post } = Astro.props;
+
+await useAstroImage(post.content);
+
+// Only the zoomable-image lightbox needs client JS; everything else in the
+// rich text is static HTML.
+const needsHydration = hasZoomableImage(post.content);
+---
+
+<Section class={["bg-white"]} id="content">
+  <div class="relative">
+    <!-- Hidden below `md` along with the spy itself: an empty absolutely
+         positioned box still hit-tests, and would swallow clicks on anything
+         right-aligned inside the article. -->
+    <div class="hidden md:block absolute right-0 top-10 h-full w-[18.25%]">
+      <ScrollSpy page={post} />
+    </div>
+    <article class="flow-root md:w-[81.75%] md:pe-4">
+      {
+        needsHydration ? (
+          <RichTextLexical data={post.content} client:idle />
+        ) : (
+          <RichTextLexical data={post.content} />
+        )
+      }
+    </article>
+  </div>
+</Section>
+
+<MuxAutoplay />

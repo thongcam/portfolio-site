@@ -1,6 +1,7 @@
 ---
 /**
- * Renders the homepage headline from the CMS `heroSection.mainHeader` field.
+ * Renders a coloured display headline from a CMS rich-text field — the
+ * homepage's `heroSection.mainHeader`, and the blog index's `pageTitle`.
  *
  * Deliberately not routed through <RichTextLexical>: that pipeline wraps
  * output in the article prose styles and maps paragraphs to `text-body`,
@@ -22,10 +23,21 @@ interface LexicalTextNode {
 interface Props {
   /** Lexical editor state, or a bare string for un-migrated content. */
   data: { root?: { children?: LexicalTextNode[] } } | string | null | undefined;
+  /**
+   * The type-scale token and base colour. A prop rather than something the
+   * caller appends to `class`, because two size utilities on one element are
+   * resolved by stylesheet order, not class order — so an override passed
+   * through `class` would not reliably win.
+   */
+  typography?: string;
   class?: string;
 }
 
-const { data, class: className } = Astro.props;
+const {
+  data,
+  typography = "text-hero-title text-text-tertiary",
+  class: className,
+} = Astro.props;
 
 const IS_BOLD = 1;
 
@@ -72,7 +84,7 @@ const runs: Run[] =
 
 {
   runs.length > 0 && (
-    <h1 class:list={["text-hero-title text-text-tertiary text-balance", className]}>
+    <h1 class:list={[typography, "text-balance", className]}>
       {runs.map((run) =>
         run.className ? <span class={run.className}>{run.text}</span> : run.text,
       )}

@@ -1,0 +1,173 @@
+---
+/**
+ * The article list: posts filed under the year they were published, with a
+ * "Load more" button that reveals the next batch.
+ *
+ * Every post is rendered into the HTML up front and the ones past the first
+ * batch carry the `hidden` attribute, rather than the button fetching a page
+ * at a time. A personal blog's archive is small enough that the extra markup
+ * is cheaper than a round trip, and it means the whole archive is in the
+ * document for search engines and for people reading without JavaScript —
+ * the `noscript` block below drops the button and unhides everything.
+ *
+ * Rows are indexed across the whole list rather than per year, so a year
+ * heading appears exactly when its first row does.
+ */
+import ArticleRow from "./articleRow.astro";
+import Plus from "@assets/icons/plus.svg";
+import { postYear } from "@utils/formatPostDate";
+import type { PostListItemType } from "@customTypes/postType";
+
+interface Props {
+  posts: PostListItemType[];
+  /** How many rows show initially, and how many each press adds. */
+  perLoad?: number;
+  loadMoreLabel?: string;
+  emptyMessage?: string;
+}
+
+const {
+  posts,
+  perLoad = 5,
+  loadMoreLabel = "Load more",
+  emptyMessage = "No articles yet — check back soon.",
+} = Astro.props;
+
+// `posts` arrives newest first, so the years come out in descending order and
+// each group is already internally sorted.
+const groups: { year: number; firstIndex: number; posts: PostListItemType[] }[] =
+  [];
+
+posts.forEach((post, index) => {
+  const year = postYear(post.publishedDate);
+  const last = groups[groups.length - 1];
+  if (last?.year === year) {
+    last.posts.push(post);
+  } else {
+    groups.push({ year, firstIndex: index, posts: [post] });
+  }
+});
+
+const initiallyVisible = Math.max(1, perLoad);
+const hasMore = posts.length > initiallyVisible;
+---
+
+{
+  posts.length === 0 ? (
+    <p class="text-body text-text-tertiary">{emptyMessage}</p>
+  ) : (
+    <div
+      class="flex flex-col gap-12"
+      data-article-list
+      data-per-load={initiallyVisible}
+      data-total={posts.length}
+    >
+      <div class="flex flex-col gap-12">
+        {groups.map((group) => (
+          <section
+            data-article-group
+            data-first-index={group.firstIndex}
+            hidden={group.firstIndex >= initiallyVisible}
+            class="flex flex-col gap-2"
+          >
+            <div class="flex items-center gap-4">
+              <h3 class="text-ui text-text-tertiary">{group.year}</h3>
+              <span
+                aria-hidden="true"
+                class="h-px flex-1 bg-gray-500/50"
+              />
+            </div>
+            <ul class="flex flex-col">
+              {group.posts.map((post, offset) => (
+                <ArticleRow
+                  post={post}
+                  as="h4"
+                  data-article
+                  data-index={group.firstIndex + offset}
+                  hidden={group.firstIndex + offset >= initiallyVisible}
+                />
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+
+      {hasMore && (
+        <div class="flex justify-center" data-load-more-wrapper>
+          <button
+            type="button"
+            data-load-more
+            class="group inline-flex items-center justify-center gap-2.5 bg-gray-100 p-6 text-ui text-text-primary transition-colors hover:bg-gray-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+          >
+            {loadMoreLabel}
+            <Plus
+              width={24}
+              height={24}
+              aria-hidden="true"
+              class="shrink-0 transition-transform duration-200 ease-out group-hover:rotate-90"
+            />
+          </button>
+        </div>
+      )}
+
+      <noscript>
+        <style>
+          /* Without JS the button can do nothing, so show the whole archive
+             and take the button away. `display` has to be restored per
+             element type — `hidden` is only the UA sheet's `display: none`. */
+          [data-article-group][hidden] {
+            display: flex !important;
+          }
+          [data-article][hidden] {
+            display: flex !important;
+          }
+          [data-load-more-wrapper] {
+            display: none !important;
+          }
+        </style>
+      </noscript>
+    </div>
+  )
+}
+
+<script>
+  document
+    .querySelectorAll<HTMLElement>("[data-article-list]")
+    .forEach((list) => {
+      const button = list.querySelector<HTMLButtonElement>("[data-load-more]");
+      if (!button) return;
+
+      const perLoad = Number(list.dataset.perLoad) || 5;
+      const total = Number(list.dataset.total) || 0;
+      const rows = Array.from(
+        list.querySelectorAll<HTMLElement>("[data-article]"),
+      );
+      const groups = Array.from(
+        list.querySelectorAll<HTMLElement>("[data-article-group]"),
+      );
+
+      let visible = perLoad;
+
+      button.addEventListener("click", () => {
+        const firstNewRow = rows[visible];
+        visible = Math.min(visible + perLoad, total);
+
+        rows.forEach((row, index) => {
+          if (index < visible) row.hidden = false;
+        });
+        groups.forEach((group) => {
+          if (Number(group.dataset.firstIndex) < visible) group.hidden = false;
+        });
+
+        if (visible >= total) {
+          button.closest<HTMLElement>("[data-load-more-wrapper]")?.remove();
+        }
+
+        // Move the reading position to the first row that just appeared —
+        // otherwise the button jumps down the page and leaves keyboard users
+        // with no idea what changed.
+        firstNewRow?.querySelector("a")?.focus({ preventScroll: true });
+        firstNewRow?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      });
+    });
+</script>

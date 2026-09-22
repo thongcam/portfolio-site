@@ -1,0 +1,110 @@
+---
+/**
+ * Blog index.
+ *
+ * Articles fill the left 890 of the design's 1200 container and the tag list
+ * the right 275, with the tags sticking to the top as the list scrolls. Below
+ * `md` the design lifts the tags above the articles and drops their heading,
+ * which is why the cloud is rendered twice — once per breakpoint — rather
+ * than reordered: the mobile copy has no heading, so they are not the same
+ * element.
+ */
+import Layout from "@/layouts/layout.astro";
+import Section from "@components/sections/section.astro";
+import JsonLd from "@components/seo/jsonLd.astro";
+import HeroHeadline from "@components/headers/heroHeadline.astro";
+import ArticleList from "@components/blog/articleList.astro";
+import TagCloud from "@components/blog/tagCloud.astro";
+import PromotedCaseStudies from "@components/sections/blog/promotedCaseStudies.astro";
+import AuthorCard from "@components/sections/blog/authorCard.astro";
+import getBlogChrome from "@utils/getBlogChrome";
+import { personRef, WEBSITE_ID } from "@utils/personSchema";
+
+const {
+  blog,
+  posts,
+  tags,
+  promotedCaseStudies,
+  authorContactLinks,
+  settings,
+} = await getBlogChrome(Astro.locals);
+
+// The browser should always check freshness
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, max-age=0, must-revalidate",
+);
+
+// The CDN caches for a year, invalidated by tag when content changes
+Astro.cache.set({
+  maxAge: 31536000,
+  tags: ["global", "blog", "posts", "tags", "case-studies"],
+});
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+const metaDescription = blog?.author?.bio || settings.siteDescription;
+
+const structuredData = [
+  {
+    "@type": "Blog",
+    "@id": `${canonicalURL}#blog`,
+    url: canonicalURL,
+    name: `${blog?.author?.name ?? "Thong Cam"}'s blog`,
+    description: metaDescription,
+    author: personRef,
+    isPartOf: { "@id": WEBSITE_ID },
+    blogPost: posts.slice(0, 10).map((post) => ({
+      "@type": "BlogPosting",
+      headline: post.title,
+      url: new URL(`/blog/${post.slug}`, Astro.site).toString(),
+      datePublished: post.publishedDate,
+      author: personRef,
+    })),
+  },
+];
+---
+
+<Layout pageTitle="Blog" pageMetaDescription={metaDescription}>
+  <JsonLd graph={structuredData} slot="head" />
+
+  <Section class={["bg-white pt-8 pb-16 md:pt-12 md:pb-20"]} id="blog">
+    <HeroHeadline
+      data={blog?.index?.pageTitle}
+      typography="text-article-title text-text-primary"
+    />
+
+    <!-- Tags first on mobile, per the design; the sidebar copy below owns
+         the heading and the sticky behaviour. -->
+    <TagCloud tags={tags} class="mt-10 md:hidden" />
+
+    <div class="mt-12 flex flex-col gap-12 md:mt-16 md:flex-row md:items-start md:gap-8">
+      <div class="flex min-w-0 flex-1 flex-col gap-12">
+        <h2 class="text-section-title text-text-primary">
+          {blog?.index?.articlesHeading ?? "Articles"}
+        </h2>
+        <ArticleList
+          posts={posts}
+          perLoad={blog?.index?.postsPerLoad ?? 5}
+          loadMoreLabel={blog?.index?.loadMoreLabel}
+          emptyMessage={blog?.index?.emptyMessage}
+        />
+      </div>
+
+      <TagCloud
+        tags={tags}
+        heading={blog?.index?.tagsHeading ?? "Tags"}
+        sticky
+        class="hidden w-[275px] shrink-0 md:flex"
+      />
+    </div>
+  </Section>
+
+  <PromotedCaseStudies
+    heading={blog?.caseStudies?.heading}
+    linkLabel={blog?.caseStudies?.linkLabel}
+    linkURL={blog?.caseStudies?.linkURL}
+    caseStudies={promotedCaseStudies}
+  />
+
+  <AuthorCard author={blog?.author} contactLinks={authorContactLinks} />
+</Layout>

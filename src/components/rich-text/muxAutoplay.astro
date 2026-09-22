@@ -1,0 +1,50 @@
+---
+/**
+ * Plays whichever Mux video is closest to the middle of the viewport and
+ * pauses the rest. Rendered once per article body — case studies and blog
+ * posts share the same Mux block, so they share this.
+ *
+ * Emits no markup; the player library is imported only when the page actually
+ * contains a `<mux-player>`.
+ */
+---
+
+<script>
+  const wrappers = document.querySelectorAll<HTMLElement>(
+    ".mux-video-wrapper mux-player",
+  );
+
+  if (wrappers.length) {
+    import("@mux/mux-player");
+
+    const players = Array.from(wrappers);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const player = entry.target as HTMLElement & {
+            play?: () => Promise<void>;
+            pause?: () => void;
+          };
+          if (entry.isIntersecting) {
+            player.play?.()?.catch(() => {});
+          } else {
+            player.pause?.();
+          }
+        });
+      },
+      { rootMargin: "-40% 0px -40% 0px", threshold: 0 },
+    );
+
+    players.forEach((player) => {
+      observer.observe(player);
+      player.addEventListener("play", () => {
+        players.forEach((other) => {
+          if (other !== player) {
+            (other as HTMLElement & { pause?: () => void }).pause?.();
+          }
+        });
+      });
+    });
+  }
+</script>

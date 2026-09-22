@@ -1,0 +1,49 @@
+---
+/**
+ * Vertical case-study card — a 16:9 screenshot with the title stacked beneath
+ * it, three to a row. The blog's "check out my works" strip uses this rather
+ * than `horizontalCaseStudyCard`, which lays the same content out as a
+ * full-width row with a description and a button.
+ */
+import { Image } from "astro:assets";
+import { cmsURL } from "@/constants";
+import type { CardContentType } from "@customTypes/cardContentType";
+
+interface Props {
+  content: CardContentType;
+  href: string;
+}
+
+const { content, href } = Astro.props;
+const { title, thumbnailImage } = content;
+
+// A third of the 1200px container from md, full gutter width below.
+const SIZES = "(min-width: 741px) min(33vw, 377px), calc(100vw - 2.5rem)";
+---
+
+<article class="group relative flex flex-col gap-6">
+  {
+    thumbnailImage && (
+      <Image
+        src={cmsURL + thumbnailImage.url}
+        alt={thumbnailImage.alt || ""}
+        width={thumbnailImage.width}
+        height={thumbnailImage.height}
+        quality={80}
+        sizes={SIZES}
+        loading="lazy"
+        class="w-full object-cover aspect-video transition-opacity group-hover:opacity-90"
+      />
+    )
+  }
+  <h3 class="text-h3 text-text-primary text-balance">
+    <a
+      href={href}
+      tabindex="0"
+      data-astro-prefetch
+      class="after:absolute after:inset-0 after:content-[''] transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+    >
+      {title}
+    </a>
+  </h3>
+</article>

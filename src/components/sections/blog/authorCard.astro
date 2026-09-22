@@ -1,0 +1,107 @@
+---
+/**
+ * The author card that closes every blog page: portrait, byline, bio, a
+ * button through to the About section, and the direct contact links.
+ *
+ * Laid out on a grid rather than a flex row because the mobile order is not a
+ * stacking of the desktop one — the design puts the portrait *between* the
+ * byline and the bio on mobile, while on desktop it is a single column beside
+ * all three. Explicit row/column placement from `md` is what lets the same
+ * markup do both without repeating the byline.
+ *
+ * The portrait's 377/472 and the copy's 790/1200 come straight from the
+ * Figma, with the 32px column gutter between them.
+ */
+import { Image } from "astro:assets";
+import Section from "@components/sections/section.astro";
+import SocialLink from "@components/buttons/socialLink.astro";
+import ArrowRight from "@assets/icons/arrow-right.svg";
+import { cmsURL } from "@/constants";
+import type { ContactLinkType } from "@customTypes/contactLinkType";
+
+interface Props {
+  author: {
+    label: string;
+    name: string;
+    bio: string;
+    buttonLabel: string;
+    buttonURL: string;
+    contactsHeading: string;
+    portrait: { url: string; width: number; height: number; alt?: string };
+  };
+  contactLinks: ContactLinkType[];
+}
+
+const { author, contactLinks } = Astro.props;
+const isExternal = author.buttonURL?.startsWith("http");
+
+// 31.4% of the container from md, 59% of the gutter width below.
+const SIZES = "(min-width: 741px) min(32vw, 377px), 59vw";
+---
+
+<Section class={["bg-white py-16 md:py-24"]} id="author">
+  <div
+    class="grid grid-cols-1 gap-8 md:grid-cols-[377fr_790fr] md:items-center md:gap-x-8 md:gap-y-0"
+  >
+    <Image
+      src={cmsURL + author.portrait.url}
+      alt={author.portrait.alt || author.name}
+      width={author.portrait.width}
+      height={author.portrait.height}
+      quality={80}
+      loading="lazy"
+      sizes={SIZES}
+      class="order-2 w-[59%] object-cover aspect-[207/290] md:order-none md:col-start-1 md:row-span-3 md:row-start-1 md:w-full md:aspect-[377/472]"
+    />
+
+    <div class="order-1 flex flex-col gap-2 md:order-none md:col-start-2 md:row-start-1">
+      <p class="text-ui text-text-tertiary">{author.label}</p>
+      <h2 class="text-h2 text-text-primary">{author.name}</h2>
+    </div>
+
+    <div
+      class="order-3 flex flex-col items-start gap-8 md:order-none md:col-start-2 md:row-start-2 md:pt-6"
+    >
+      <p class="max-w-[583px] text-body text-text-primary text-pretty">
+        {author.bio}
+      </p>
+
+      <a
+        href={author.buttonURL}
+        target={isExternal ? "_blank" : undefined}
+        rel={isExternal ? "noopener noreferrer" : undefined}
+        tabindex="0"
+        class="group inline-flex w-fit items-center justify-center gap-3 bg-text-primary p-5 text-ui text-white transition-colors hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+      >
+        {author.buttonLabel}
+        <ArrowRight
+          width={24}
+          height={24}
+          aria-hidden="true"
+          class="shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-1"
+        />
+      </a>
+    </div>
+
+    {
+      contactLinks.length > 0 && (
+        <div class="order-4 flex flex-col gap-4 border-t-[0.5px] border-gray-500/50 pt-8 md:order-none md:col-start-2 md:row-start-3 md:mt-8">
+          <p class="text-ui text-text-tertiary">{author.contactsHeading}</p>
+          <ul class="flex flex-col gap-4 md:flex-row md:flex-wrap md:gap-x-8">
+            {contactLinks.map((link) => (
+              <li>
+                <SocialLink
+                  href={link.url}
+                  label={link.title}
+                  class="text-text-secondary"
+                >
+                  {link.title}
+                </SocialLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+  </div>
+</Section>

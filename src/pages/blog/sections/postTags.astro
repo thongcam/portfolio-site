@@ -1,0 +1,26 @@
+---
+/**
+ * The post's own tags, between the article body and "Continue reading".
+ *
+ * The same pills as the index sidebar, without counts — this is a list of
+ * what the post is about, not a filter showing how much else shares it.
+ */
+import Section from "@components/sections/section.astro";
+import TagCloud from "@components/blog/tagCloud.astro";
+import type { TagType } from "@customTypes/postType";
+
+interface Props {
+  tags: TagType[];
+}
+
+const { tags } = Astro.props;
+---
+
+{
+  tags.length > 0 && (
+    <Section class={["bg-white pt-12 pb-16 md:pt-16 md:pb-20"]} id="post-tags">
+      <h2 class="sr-only">Tags</h2>
+      <TagCloud tags={tags} />
+    </Section>
+  )
+}

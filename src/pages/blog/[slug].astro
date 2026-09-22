@@ -1,0 +1,122 @@
+---
+/**
+ * A blog post: title and byline, the rich-text body with its scroll spy, the
+ * post's tags, three further posts to read, and the author card.
+ */
+import Layout from "@/layouts/layout.astro";
+import JsonLd from "@components/seo/jsonLd.astro";
+import AuthorCard from "@components/sections/blog/authorCard.astro";
+import PostIntroduction from "./sections/postIntroduction.astro";
+import PostContent from "./sections/postContent.astro";
+import PostTags from "./sections/postTags.astro";
+import ContinueReading from "./sections/continueReading.astro";
+import { cmsURL } from "@/constants";
+import getBlogChrome from "@utils/getBlogChrome";
+import relatedPosts from "@utils/relatedPosts";
+import resolveOgImage from "@utils/resolveOgImage";
+import extractPlainTextFromRichText from "@utils/extractPlainTextFromRichText";
+import { personRef } from "@utils/personSchema";
+import type { TagType } from "@customTypes/postType";
+
+const { slug } = Astro.params;
+
+const [{ blog, posts, authorContactLinks }, postResponse] = await Promise.all([
+  getBlogChrome(Astro.locals),
+  fetch(`${cmsURL}/api/posts/by-slug/${slug}`),
+]);
+
+const post = await postResponse.json();
+
+// `/by-slug` filters to published posts, so a draft or an unknown slug both
+// come back as an error object rather than a document.
+if (!post || post.error) {
+  return Astro.redirect("/404");
+}
+
+const listing = posts.find((candidate) => candidate.slug === slug);
+
+// The post's own tags arrive as full documents at the collection's default
+// depth; the listing copy is already flattened, so prefer it when present.
+const postTags: TagType[] =
+  listing?.tags ??
+  (post.tags ?? [])
+    .filter((tag: unknown) => typeof tag === "object" && tag !== null)
+    .map((tag: any) => ({ id: tag.id, name: tag.name, slug: tag.slug }));
+
+const continueReading = listing
+  ? relatedPosts(listing, posts)
+  : posts.filter((candidate) => candidate.slug !== slug).slice(0, 3);
+
+// The browser should always check freshness
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, max-age=0, must-revalidate",
+);
+
+// The CDN caches for a year, invalidated by tag when content changes
+Astro.cache.set({
+  maxAge: 31536000,
+  tags: ["global", "blog", "posts", "tags", post.id],
+});
+
+const plainDescription = (
+  post.meta?.description ||
+  post.excerpt ||
+  extractPlainTextFromRichText(post.content)
+).slice(0, 155);
+
+const ogImage =
+  resolveOgImage(post.meta?.image) || resolveOgImage(post.thumbnail);
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+const authorName = blog?.author?.name ?? "Thong Cam";
+
+const structuredData = [
+  {
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: plainDescription,
+    url: canonicalURL,
+    image: ogImage?.url,
+    datePublished: post.publishedDate,
+    dateModified: post.updatedAt,
+    keywords: postTags.map((tag) => tag.name).join(", ") || undefined,
+    author: personRef,
+  },
+  {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://thong.cam/" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://thong.cam/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: canonicalURL },
+    ],
+  },
+];
+---
+
+<Layout
+  pageTitle={post.title}
+  pageMetaDescription={plainDescription}
+  pageOgMeta={{
+    title: post.meta?.title || post.title,
+    description: plainDescription,
+    image: ogImage,
+  }}
+>
+  <JsonLd graph={structuredData} slot="head" />
+
+  <PostIntroduction
+    title={post.title}
+    publishedDate={post.publishedDate}
+    authorName={authorName}
+    avatar={blog?.author?.avatar ?? blog?.author?.portrait}
+  />
+  <PostContent post={post} />
+  <PostTags tags={postTags} />
+  <ContinueReading
+    heading={blog?.postPage?.continueReadingHeading ?? "Continue reading"}
+    linkLabel={blog?.postPage?.continueReadingLinkLabel ?? "See all articles"}
+    posts={continueReading}
+  />
+  <AuthorCard author={blog?.author} contactLinks={authorContactLinks} />
+</Layout>

@@ -1,0 +1,41 @@
+---
+/**
+ * "Continue reading" — three further posts, ranked by how many tags they
+ * share with the current one and then by recency.
+ *
+ * Deliberately the index's row, not the three-up project card: the design
+ * reuses the article list here so the section reads as more of the same blog
+ * rather than a separate feature strip.
+ */
+import Section from "@components/sections/section.astro";
+import ArrowLink from "@components/buttons/arrowLink.astro";
+import ArticleRow from "@components/blog/articleRow.astro";
+import type { PostListItemType } from "@customTypes/postType";
+
+interface Props {
+  heading: string;
+  linkLabel: string;
+  posts: PostListItemType[];
+}
+
+const { heading, linkLabel, posts } = Astro.props;
+---
+
+{
+  posts.length > 0 && (
+    <Section class={["bg-gray-50 py-16 md:py-20"]} id="continue-reading">
+      <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8">
+        <h2 class="text-section-title text-text-primary">{heading}</h2>
+        <ArrowLink href="/blog" class="text-ui text-text-secondary shrink-0">
+          {linkLabel}
+        </ArrowLink>
+      </div>
+
+      <ul class="mt-8 flex flex-col md:mt-12">
+        {posts.map((post) => (
+          <ArticleRow post={post} />
+        ))}
+      </ul>
+    </Section>
+  )
+}

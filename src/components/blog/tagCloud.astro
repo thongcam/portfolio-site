@@ -1,0 +1,60 @@
+---
+/**
+ * The wrapped list of tag pills.
+ *
+ * On the blog index this is the right-hand column, which sticks to the top of
+ * the viewport as the article list scrolls past it; `top-28` clears the
+ * sticky navbar rather than sliding under it. Below `md` the design moves the
+ * whole thing above the articles and drops the heading, so the heading is
+ * opt-in via the `heading` prop and the stickiness only applies from `md`.
+ */
+import TagPill from "./tagPill.astro";
+import type { TagType } from "@customTypes/postType";
+
+interface Props {
+  tags: TagType[];
+  /** Omitted on mobile and on the post page, where the group needs no title. */
+  heading?: string;
+  /** Slug of the tag currently being viewed, if any. */
+  currentSlug?: string;
+  /** Sticks to the top from `md`. Off for the row at the end of a post. */
+  sticky?: boolean;
+  class?: string;
+}
+
+const {
+  tags,
+  heading,
+  currentSlug,
+  sticky = false,
+  class: className,
+} = Astro.props;
+---
+
+{
+  tags.length > 0 && (
+    <div
+      class:list={[
+        "flex flex-col gap-8",
+        sticky && "md:sticky md:top-28",
+        className,
+      ]}
+    >
+      {heading && (
+        <h2 class="text-section-title text-text-primary">{heading}</h2>
+      )}
+      <ul class="flex flex-wrap gap-4">
+        {tags.map((tag) => (
+          <li>
+            <TagPill
+              name={tag.name}
+              slug={tag.slug}
+              count={tag.count}
+              current={tag.slug === currentSlug}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}

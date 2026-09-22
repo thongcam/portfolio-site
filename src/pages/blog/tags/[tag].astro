@@ -1,0 +1,124 @@
+---
+/**
+ * Tag page — the blog index filtered to one tag.
+ *
+ * Shares the index's article list, promoted case studies and author card; the
+ * differences are the back link, the title, and the absence of the tag
+ * sidebar, so the article column runs at the design's 890 rather than
+ * stretching to the full container.
+ */
+import Layout from "@/layouts/layout.astro";
+import Section from "@components/sections/section.astro";
+import JsonLd from "@components/seo/jsonLd.astro";
+import ArrowLink from "@components/buttons/arrowLink.astro";
+import ArticleList from "@components/blog/articleList.astro";
+import PromotedCaseStudies from "@components/sections/blog/promotedCaseStudies.astro";
+import AuthorCard from "@components/sections/blog/authorCard.astro";
+import getBlogChrome from "@utils/getBlogChrome";
+import { personRef } from "@utils/personSchema";
+
+const { tag: tagSlug } = Astro.params;
+
+const { blog, posts, tags, promotedCaseStudies, authorContactLinks } =
+  await getBlogChrome(Astro.locals);
+
+const tag = tags.find((candidate) => candidate.slug === tagSlug);
+
+// A tag with no published posts is dropped from `/api/tags/all`, so an
+// unknown slug and an emptied tag are the same case — both are a 404.
+if (!tag) {
+  return Astro.redirect("/404");
+}
+
+const taggedPosts = posts.filter((post) =>
+  post.tags.some((postTag) => postTag.slug === tagSlug),
+);
+
+// The browser should always check freshness
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, max-age=0, must-revalidate",
+);
+
+// The CDN caches for a year, invalidated by tag when content changes
+Astro.cache.set({
+  maxAge: 31536000,
+  tags: ["global", "blog", "posts", "tags", "case-studies"],
+});
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+const titlePrefix = blog?.tagPage?.titlePrefix ?? "Articles with tag";
+const metaDescription = `Articles tagged “${tag.name}” on ${blog?.author?.name ?? "Thong Cam"}'s blog.`;
+
+const structuredData = [
+  {
+    "@type": "CollectionPage",
+    url: canonicalURL,
+    name: `${titlePrefix} “${tag.name}”`,
+    description: metaDescription,
+    author: personRef,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: taggedPosts.map((post, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: post.title,
+        url: new URL(`/blog/${post.slug}`, Astro.site).toString(),
+      })),
+    },
+  },
+  {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://thong.cam/" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://thong.cam/blog" },
+      { "@type": "ListItem", position: 3, name: tag.name, item: canonicalURL },
+    ],
+  },
+];
+---
+
+<Layout
+  pageTitle={`${titlePrefix} “${tag.name}”`}
+  pageMetaDescription={metaDescription}
+>
+  <JsonLd graph={structuredData} slot="head" />
+
+  <Section class={["bg-white pt-8 pb-16 md:pt-12 md:pb-20"]} id="tag">
+    <ArrowLink
+      href="/blog"
+      direction="back"
+      class="text-ui text-text-secondary"
+    >
+      {blog?.tagPage?.backLabel ?? "Back to blog"}
+    </ArrowLink>
+
+    <h1 class="mt-10 text-h2 text-balance md:mt-16">
+      <span class="text-text-tertiary">{titlePrefix}</span>{" "}
+      <span class="text-text-primary">“{tag.name}”</span>
+    </h1>
+
+    <div class="mt-12 max-w-[890px] md:mt-16">
+      <!-- The index names this list "Articles" in a visible heading; here the
+           page title already says what the list is, so the same level is kept
+           for screen readers only rather than letting the year headings skip
+           from h1 to h3. -->
+      <h2 class="sr-only">Articles</h2>
+      <ArticleList
+        posts={taggedPosts}
+        perLoad={blog?.index?.postsPerLoad ?? 5}
+        loadMoreLabel={blog?.index?.loadMoreLabel}
+        emptyMessage={blog?.index?.emptyMessage}
+      />
+    </div>
+  </Section>
+
+  <PromotedCaseStudies
+    heading={blog?.caseStudies?.heading}
+    linkLabel={blog?.caseStudies?.linkLabel}
+    linkURL={blog?.caseStudies?.linkURL}
+    caseStudies={promotedCaseStudies}
+  />
+
+  <AuthorCard author={blog?.author} contactLinks={authorContactLinks} />
+</Layout>

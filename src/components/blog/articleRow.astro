@@ -1,0 +1,79 @@
+---
+/**
+ * One row of the article list: title and meta on the left, a 16:9 thumbnail
+ * on the right, a hairline underneath.
+ *
+ * The thumbnail is optional — the design draws rows both with and without one
+ * — and when it is missing the copy keeps its own width rather than stretching
+ * across, so titles stay on a common measure down the list.
+ *
+ * The whole row is the link. The anchor wraps only the title (so the
+ * accessible name is the title alone) and covers the row with an inset
+ * pseudo-element, which is what makes the thumbnail clickable too.
+ */
+import { Image } from "astro:assets";
+import { cmsURL } from "@/constants";
+import formatPostDate from "@utils/formatPostDate";
+import type { HTMLAttributes } from "astro/types";
+import type { PostListItemType } from "@customTypes/postType";
+
+// Extending the `li` attributes rather than adding an index signature: the
+// list passes `hidden` and its `data-*` through to the row, and an index
+// signature would widen every declared prop to `unknown` along with them.
+interface Props extends HTMLAttributes<"li"> {
+  post: PostListItemType;
+  /**
+   * The row title's heading level. `h4` in the year-grouped list, where the
+   * year itself is the `h3`; `h3` in a flat list such as "Continue reading",
+   * whose own heading is the `h2`.
+   */
+  as?: "h3" | "h4";
+}
+
+const { post, as: Tag = "h3", ...rest } = Astro.props;
+
+// ~31% of the article column at every width, per the design (275 of 890 on
+// desktop, 111 of 350 on mobile).
+const SIZES = "(min-width: 741px) min(31vw, 275px), 31vw";
+
+const meta = [
+  formatPostDate(post.publishedDate),
+  post.tags.map((tag) => tag.name).join(", "),
+]
+  .filter(Boolean)
+  .join(" • ");
+---
+
+<li
+  {...rest}
+  class="relative flex items-center gap-4 border-b-[0.5px] border-gray-500/50 py-4 md:gap-8"
+>
+  <div class="flex min-w-0 flex-1 flex-col gap-2 py-4">
+    <Tag class="text-h3 text-text-primary text-balance">
+      <a
+        href={`/blog/${post.slug}`}
+        tabindex="0"
+        data-astro-prefetch
+        class="after:absolute after:inset-0 after:content-[''] transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+      >
+        {post.title}
+      </a>
+    </Tag>
+    {meta && <p class="text-ui text-text-tertiary">{meta}</p>}
+  </div>
+
+  {
+    post.thumbnail && (
+      <Image
+        src={cmsURL + post.thumbnail.url}
+        alt={post.thumbnail.alt || ""}
+        width={post.thumbnail.width}
+        height={post.thumbnail.height}
+        quality={80}
+        sizes={SIZES}
+        loading="lazy"
+        class="w-[40%] sm:w-[30%] max-w-[275px] shrink-0 object-cover aspect-video"
+      />
+    )
+  }
+</li>

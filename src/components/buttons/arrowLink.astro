@@ -1,0 +1,56 @@
+---
+/**
+ * Underlined text link with a directional arrow — "View all →",
+ * "See all articles →", "← Back to blog".
+ *
+ * Distinct from `socialLink.astro`, which carries the outbound ↗ glyph and is
+ * for links that leave the site. Here the arrow points the way through the
+ * site, so the same exported glyph is mirrored for a back link rather than
+ * shipping a second file. The mirror is why the back arrow's hover shift is
+ * negative: `transform` composes in world space, so `translate-x-1` on a
+ * `-scale-x-100` element still travels right.
+ */
+import ArrowRight from "@assets/icons/arrow-right.svg";
+
+interface Props {
+  href: string;
+  /** Which side the arrow sits on, and which way it points. */
+  direction?: "forward" | "back";
+  class?: string;
+}
+
+const { href, direction = "forward", class: className } = Astro.props;
+const isBack = direction === "back";
+---
+
+<a
+  href={href}
+  tabindex="0"
+  data-astro-prefetch
+  class:list={[
+    "group inline-flex w-fit max-w-full items-center gap-2 underline underline-offset-4 decoration-1 transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-600",
+    className,
+  ]}
+>
+  {
+    isBack && (
+      <ArrowRight
+        width={20}
+        height={20}
+        aria-hidden="true"
+        class="shrink-0 -scale-x-100 transition-transform duration-200 ease-out group-hover:-translate-x-1"
+      />
+    )
+  }
+  <span class="min-w-0"><slot /></span>
+  {
+    !isBack && (
+      <ArrowRight
+        width={20}
+        height={20}
+        aria-hidden="true"
+        class="shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-1"
+      />
+    )
+  }
+</a>

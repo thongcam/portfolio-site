@@ -1,0 +1,45 @@
+---
+/**
+ * Tag pill — "Design system (4)".
+ *
+ * One component for all three places tags appear: the blog index's sidebar,
+ * the same list stacked above the articles on mobile, and the row of a post's
+ * own tags at the end of an article. The count is optional because a post's
+ * tags come back without one.
+ *
+ * `current` marks the tag whose page is being viewed, so the pill for
+ * "design system" reads as selected on /blog/tags/design-system.
+ */
+interface Props {
+  name: string;
+  slug: string;
+  count?: number;
+  /** Renders the pill as the active filter rather than a plain link. */
+  current?: boolean;
+}
+
+const { name, slug, count, current = false } = Astro.props;
+---
+
+<a
+  href={`/blog/tags/${slug}`}
+  tabindex="0"
+  data-astro-prefetch
+  aria-current={current ? "page" : undefined}
+  class:list={[
+    "inline-flex items-center gap-2 rounded-full border px-4 py-3 text-ui transition-colors",
+    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600",
+    current
+      ? "border-text-primary bg-text-primary text-white"
+      : "border-gray-200 text-text-secondary hover:border-gray-300 hover:bg-gray-50",
+  ]}
+>
+  <span>{name}</span>
+  {
+    count != null && (
+      <span class:list={[current ? "text-white/70" : "text-text-tertiary"]}>
+        ({count})
+      </span>
+    )
+  }
+</a>
