@@ -55,7 +55,7 @@ const SIZES =
     <div class="col-span-12 flex flex-col gap-8 md:col-span-8 xl:col-span-9">
       <HeroHeadline data={data.mainHeader} />
 
-      <div class="flex flex-col gap-6 lg:flex-row lg:justify-between lg:gap-8">
+      <div class="flex flex-col gap-8 lg:flex-row lg:justify-between lg:gap-8">
         <div class="flex flex-col gap-4 lg:min-w-0 lg:max-w-[479px]">
           <p class="text-body text-text-primary text-pretty">
             {data.standoutCard.content}
@@ -74,7 +74,7 @@ const SIZES =
         </div>
 
         <ul
-          class="flex flex-col gap-3 md:flex-row md:flex-wrap md:gap-x-8 md:gap-y-3 lg:flex-col lg:flex-nowrap lg:shrink-0 lg:items-end"
+          class="flex flex-col gap-6 md:flex-row md:flex-wrap md:gap-x-8 md:gap-y-4 lg:flex-col lg:flex-nowrap lg:shrink-0 lg:items-end"
         >
           {
             contactLinks.map((link: ContactLinkType) => (
@@ -82,7 +82,7 @@ const SIZES =
                 <SocialLink
                   href={link.url}
                   label={link.title}
-                  class="text-body text-text-tertiary whitespace-nowrap"
+                  class="text-body text-text-secondary whitespace-nowrap"
                 >
                   {link.title}
                 </SocialLink>

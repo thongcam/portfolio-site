@@ -16,9 +16,10 @@ interface Props {
   class?: string;
   /** Underlines the label. Off for links whose colour already marks them. */
   underline?: boolean;
+  icon?: boolean;
 }
 
-const { href, label, class: className, underline = true } = Astro.props;
+const { href, label, class: className, underline = true, icon = true} = Astro.props;
 
 // Contact links come from the CMS and mix schemes: https for profiles,
 // mailto for email. Only http(s) should open a new tab — `target="_blank"`
@@ -49,10 +50,11 @@ const accessibleName = isMailto
   ]}
 >
   <span class="min-w-0 [overflow-wrap:anywhere]"><slot /></span>
-  <ArrowUpRight
-    width={20}
-    height={20}
-    aria-hidden="true"
-    class="shrink-0 transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-  />
+  {icon && (
+    <ArrowUpRight
+      width={20}
+      height={20}
+      aria-hidden="true"
+      class="shrink-0 transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+  />)}
 </a>

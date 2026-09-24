@@ -116,7 +116,7 @@
     --color-text-tertiary: var(--color-gray-500);
     --color-text-accent-yellow: var(--color-yellow-400);
     --color-text-accent-cyan: var(--color-cyan-400);
-    --color-text-accent-blue: var(--color-blue-600);
+    --color-text-accent-blue: var(--color-blue-500);
 
     /* Spacing intentionally not overridden — Tailwind's default scale
        (`--spacing: 0.25rem`) already produces every value this site used

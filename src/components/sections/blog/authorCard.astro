@@ -6,8 +6,14 @@
  * Laid out on a grid rather than a flex row because the mobile order is not a
  * stacking of the desktop one — the design puts the portrait *between* the
  * byline and the bio on mobile, while on desktop it is a single column beside
- * all three. Explicit row/column placement from `md` is what lets the same
+ * the rest. Explicit row/column placement from `md` is what lets the same
  * markup do both without repeating the byline.
+ *
+ * Bio and contacts sit in one wrapper because they are adjacent in both
+ * orders: stacked and rule-separated on mobile, side by side either side of a
+ * vertical rule from `md`. The wrapper's 379/137/274 columns are the Figma's
+ * measurements across its 790px copy column — the middle track exists only to
+ * hold the rule, which is why it is empty and the rule is centred in it.
  *
  * The portrait's 377/472 and the copy's 790/1200 come straight from the
  * Figma, with the 32px column gutter between them.
@@ -41,7 +47,7 @@ const SIZES = "(min-width: 741px) min(32vw, 377px), 59vw";
 
 <Section class={["bg-white py-16 md:py-24"]} id="author">
   <div
-    class="grid grid-cols-1 gap-8 md:grid-cols-[377fr_790fr] md:items-center md:gap-x-8 md:gap-y-0"
+    class="grid grid-cols-1 gap-8 md:grid-cols-3 md:items-center md:gap-x-8 md:gap-y-0 order-first"
   >
     <Image
       src={cmsURL + author.portrait.url}
@@ -51,57 +57,86 @@ const SIZES = "(min-width: 741px) min(32vw, 377px), 59vw";
       quality={80}
       loading="lazy"
       sizes={SIZES}
-      class="order-2 w-[59%] object-cover aspect-[207/290] md:order-none md:col-start-1 md:row-span-3 md:row-start-1 md:w-full md:aspect-[377/472]"
+      class="hidden md:block object-cover aspect-[4/5] col-span-1 order-none w-full"
     />
 
-    <div class="order-1 flex flex-col gap-2 md:order-none md:col-start-2 md:row-start-1">
-      <p class="text-ui text-text-tertiary">{author.label}</p>
-      <h2 class="text-h2 text-text-primary">{author.name}</h2>
-    </div>
+    <div class="md:col-start-2 md:col-span-2 gap-6 md:gap-4 flex flex-col">
 
-    <div
-      class="order-3 flex flex-col items-start gap-8 md:order-none md:col-start-2 md:row-start-2 md:pt-6"
-    >
-      <p class="max-w-[583px] text-body text-text-primary text-pretty">
-        {author.bio}
-      </p>
+      <div
+        class="flex flex-col gap-2 md:gap-4"
+        >
+        <p class="text-ui text-text-tertiary">{author.label}</p>
+        <h2 class="text-h2 text-text-primary">{author.name}</h2>
+      </div>
 
-      <a
-        href={author.buttonURL}
-        target={isExternal ? "_blank" : undefined}
-        rel={isExternal ? "noopener noreferrer" : undefined}
-        tabindex="0"
-        class="group inline-flex w-fit items-center justify-center gap-3 bg-text-primary p-5 text-ui text-white transition-colors hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+      <Image
+        src={cmsURL + author.portrait.url}
+        alt={author.portrait.alt || author.name}
+        width={author.portrait.width}
+        height={author.portrait.height}
+        quality={80}
+        loading="lazy"
+        sizes={SIZES}
+        class="md:hidden block w-[60%] object-cover aspect-[4/5]"
+      />
+      
+      <div
+      class="flex flex-col gap-8 md:order-none md:col-start-2 md:grid md:grid-cols-8 md:gap-0 md:pt-6"
       >
-        {author.buttonLabel}
-        <ArrowRight
-          width={24}
-          height={24}
-          aria-hidden="true"
-          class="shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-1"
-        />
-      </a>
-    </div>
+        <div class="flex flex-col items-start gap-6 md:col-start-1 md:col-span-4 md:gap-6 md:self-start">
+          <p class="max-w-[583px] text-body text-text-primary text-pretty md:max-w-none">
+              {author.bio}
+            </p>
 
-    {
-      contactLinks.length > 0 && (
-        <div class="order-4 flex flex-col gap-4 border-t-[0.5px] border-gray-500/50 pt-8 md:order-none md:col-start-2 md:row-start-3 md:mt-8" id="contact">
-          <p class="text-ui text-text-tertiary">{author.contactsHeading}</p>
-          <ul class="flex flex-col gap-4 md:flex-row md:flex-wrap md:gap-x-8">
-            {contactLinks.map((link) => (
-              <li>
-                <SocialLink
-                  href={link.url}
-                  label={link.title}
-                  class="text-text-secondary"
+            <a
+              href={author.buttonURL}
+              target={isExternal ? "_blank" : undefined}
+              rel={isExternal ? "noopener noreferrer" : undefined}
+              tabindex="0"
+              class="group inline-flex w-fit items-center justify-center gap-3 bg-text-primary p-5 text-ui text-white transition-colors hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+            >
+              {author.buttonLabel}
+              <ArrowRight
+                width={24}
+                height={24}
+                aria-hidden="true"
+                class="shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-1"
+              />
+            </a>
+          </div>
+
+          {
+            contactLinks.length > 0 && (
+              <>
+                <div
+                  aria-hidden="true"
+                  class="hidden md:col-start-5 md:col-span-1 md:block md:w-px md:justify-self-center md:bg-gray-500/50"
+                />
+
+                <div
+                  class="flex flex-col gap-6 border-t-[0.5px] border-gray-500/50 pt-8 md:col-start-6 md:col-span-3 md:gap-4 md:self-start md:border-t-0 md:pt-0"
+                  id="contact"
                 >
-                  {link.title}
-                </SocialLink>
-              </li>
-            ))}
-          </ul>
+                  <p class="text-ui text-text-tertiary">{author.contactsHeading}</p>
+                  <ul class="flex flex-col gap-6 md:gap-4">
+                    {contactLinks.map((link) => (
+                      <li>
+                        <SocialLink
+                          href={link.url}
+                          label={link.title}
+                          class="text-text-tertiary"
+                        >
+                          {link.title}
+                        </SocialLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </>
+            )
+          }
+      </div>
         </div>
-      )
-    }
+
   </div>
 </Section>
