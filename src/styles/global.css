@@ -119,15 +119,17 @@
     --color-text-tertiary: var(--color-gray-600);
     --color-text-accent-blue: var(--color-blue-700);
 
-    /* Highlights — dark text on a 40% tint of the same ramp. They
-       replace the former yellow and cyan accent text colours, and back the
-       CMS's Highlight / Yellow, Cyan and Blue text states. */
-    --color-highlight-yellow-text: var(--color-yellow-900);
-    --color-highlight-yellow-bg: color-mix(in srgb, var(--color-yellow-400) 40%, transparent);
-    --color-highlight-cyan-text: var(--color-cyan-900);
-    --color-highlight-cyan-bg: color-mix(in srgb, var(--color-cyan-400) 40%, transparent);
-    --color-highlight-blue-text: var(--color-blue-900);
-    --color-highlight-blue-bg: color-mix(in srgb, var(--color-blue-400) 40%, transparent);
+    /* Highlights — Color/800 text on a 40% tint of Color/400, both with
+       their HSL saturation pushed to 1.4× the ramp step's (capped at 100%,
+       which Yellow/400 hits). Fixed values rather than derived ones so they
+       match the CMS editor's literals in lexicalFeatures.ts exactly. They
+       back the CMS's Highlight / Yellow, Cyan and Blue text states. */
+    --color-highlight-yellow-text: #924501; /* Yellow/800, S 70% → 98% */
+    --color-highlight-yellow-bg: rgb(255 193 15 / 0.4); /* Yellow/400, S 83% → 100% */
+    --color-highlight-cyan-text: #0a6465; /* Cyan/800, S 59% → 82% */
+    --color-highlight-cyan-bg: rgb(25 213 204 / 0.4); /* Cyan/400, S 56% → 79% */
+    --color-highlight-blue-text: #11457b; /* Blue/800, S 54% → 76% */
+    --color-highlight-blue-bg: rgb(71 158 233 / 0.4); /* Blue/400, S 56% → 79% */
 
     /* Spacing intentionally not overridden — Tailwind's default scale
        (`--spacing: 0.25rem`) already produces every value this site used
