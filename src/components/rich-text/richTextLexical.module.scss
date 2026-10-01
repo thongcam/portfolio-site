@@ -90,7 +90,7 @@
     a {
         -webkit-appearance: none;
         text-decoration: underline;
-        color: color-mix(in oklab, var(--color-blue-900) 80%, transparent);
+        color: var(--color-blue-700);
     }
     table {
         table-layout: fixed;
@@ -159,7 +159,7 @@
      > blockquote {
         border-left: 2px solid var(--color-blue-950);
         padding-left: 1rem;
-        color: color-mix(in oklab, var(--color-blue-900) 80%, transparent);
+        color: var(--color-blue-900);
         font-style: italic;
      }
 }
@@ -188,8 +188,23 @@
 .text-primary { color: var(--color-text-primary); }
 .text-secondary { color: var(--color-text-secondary); }
 .text-tertiary { color: var(--color-text-tertiary); }
-.text-accent-yellow { color: var(--color-text-accent-yellow); }
-.text-accent-cyan { color: var(--color-text-accent-cyan); }
 .text-accent-blue { color: var(--color-text-accent-blue); }
 
-.rich-text a {color: var(--color-text-accent-blue);}
+// Highlights: text colour and background together, one state in the CMS.
+.highlight-yellow {
+  color: var(--color-highlight-yellow-text);
+  background-color: var(--color-highlight-yellow-bg);
+  box-decoration-break: clone;
+}
+.highlight-cyan {
+  color: var(--color-highlight-cyan-text);
+  background-color: var(--color-highlight-cyan-bg);
+  box-decoration-break: clone;
+}
+.highlight-blue {
+  color: var(--color-highlight-blue-text);
+  background-color: var(--color-highlight-blue-bg);
+  box-decoration-break: clone;
+}
+
+.rich-text a {color: var(--color-blue-700);}

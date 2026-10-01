@@ -27,17 +27,20 @@ export default function generateArticleColors(themeColor: ColorInstance) {
      * label. See the note where this is used.
      */
     const hsl = themeColor.hsl().object();
-    const atLightness = (l: number) => Color.hsl({...hsl, l});
+    // Colours here, and the background below, are rounded through hex because
+    // that is what the page renders: measuring unrounded values let a label
+    // pass at 7.0 and ship at 6.99.
+    const atLightness = (l: number) => Color(Color.hsl({...hsl, l}).hex());
 
     // What the intro actually renders on: themeColorLighter is 30% opaque, so
     // measure against it composited over the page's white, not against white.
-    const sectionBackground = Color("#ffffff").mix(atLightness(95), 0.3);
+    const sectionBackground = Color(Color("#ffffff").mix(atLightness(95), 0.3).hex());
 
     // Step 500 is only a starting point. A light hue's 500 can be far below
     // readable — the palette's own yellow-500 is 2.3:1 on white — so darken
-    // from there until the label clears WCAG AA for normal text. Hues whose
+    // from there until the label clears WCAG AAA for normal text (7:1). Hues whose
     // 500 already passes are left exactly at 500.
-    const CONTRAST_TARGET = 4.5;
+    const CONTRAST_TARGET = 7;
     let lightness = 48;
     while (
         lightness > 0 &&

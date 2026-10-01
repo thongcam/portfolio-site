@@ -34,7 +34,7 @@ export default function NumberedList({ items }: { items?: NumberedListItem[] }) 
               whereas the token's 1.4 exists for wrapping quotes. */}
           <span
             aria-hidden="true"
-            className="text-quote text-gray-400 w-10 shrink-0 pr-4 leading-none md:w-14 md:pr-5"
+            className="text-quote text-text-tertiary w-10 shrink-0 pr-4 leading-none md:w-14 md:pr-5"
           >
             {index + 1}
           </span>

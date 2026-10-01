@@ -41,7 +41,7 @@ export const CustomUploadJSXConverter : JSXConverters = {
                 loading="lazy"
                 className="max-w-full h-auto rounded-md"
               />
-              {node.fields && node.fields.caption && <figcaption className="text-caption text-blue-900/80"><RichTextLexical data={node.fields.caption}/>
+              {node.fields && node.fields.caption && <figcaption className="text-caption text-blue-900"><RichTextLexical data={node.fields.caption}/>
               </figcaption>}
           </figure>)
         }

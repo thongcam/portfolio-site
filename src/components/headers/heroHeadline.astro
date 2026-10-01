@@ -55,8 +55,14 @@ const COLOR_CLASSES: Record<string, string> = {
   "text-primary": "text-text-primary",
   "text-secondary": "text-text-secondary",
   "text-tertiary": "text-text-tertiary",
-  "text-accent-yellow": "text-text-accent-yellow",
-  "text-accent-cyan": "text-text-accent-cyan",
+  // Highlights clone their background per line so a phrase that wraps keeps
+  // the tint on each line rather than leaving a gap at the break.
+  "highlight-yellow":
+    "text-highlight-yellow-text bg-highlight-yellow-bg box-decoration-clone",
+  "highlight-cyan":
+    "text-highlight-cyan-text bg-highlight-cyan-bg box-decoration-clone",
+  "highlight-blue":
+    "text-highlight-blue-text bg-highlight-blue-bg box-decoration-clone",
   "text-accent-blue": "text-text-accent-blue",
 };
 
@@ -89,7 +95,7 @@ const runs: Run[] =
 
 {
   runs.length > 0 && (
-    <Tag class:list={[typography, "text-balance", className]}>
+    <Tag class:list={[typography, "text-pretty", className]}>
       {runs.map((run) =>
         run.className ? <span class={run.className}>{run.text}</span> : run.text,
       )}

@@ -53,7 +53,7 @@
        The Gray ramp is included because it is what the semantic text
        colours alias, and because Tailwind ships its own (blue-tinted)
        gray: without overriding it, `text-gray-500` would silently mean
-       something other than Figma's Text/Tertiary.
+       something other than Figma's Gray/500.
 
        The flat legacy names above (--color-yellow, --color-cyan,
        --color-dark-blue …) are kept as-is so existing markup keeps
@@ -113,10 +113,21 @@
        and every semantic token that points at it follows. */
     --color-text-primary: var(--color-gray-900);
     --color-text-secondary: var(--color-gray-700);
-    --color-text-tertiary: var(--color-gray-500);
-    --color-text-accent-yellow: var(--color-yellow-400);
-    --color-text-accent-cyan: var(--color-cyan-400);
-    --color-text-accent-blue: var(--color-blue-500);
+    /* Gray/600 clears WCAG AAA on white (7.23:1) but not on gray-50
+       (6.92:1), so tertiary text in the footer and the grey sections is AA
+       only. Accepted deliberately, not an oversight. */
+    --color-text-tertiary: var(--color-gray-600);
+    --color-text-accent-blue: var(--color-blue-700);
+
+    /* Highlights — dark text on a 40% tint of the same ramp. They
+       replace the former yellow and cyan accent text colours, and back the
+       CMS's Highlight / Yellow, Cyan and Blue text states. */
+    --color-highlight-yellow-text: var(--color-yellow-900);
+    --color-highlight-yellow-bg: color-mix(in srgb, var(--color-yellow-400) 40%, transparent);
+    --color-highlight-cyan-text: var(--color-cyan-900);
+    --color-highlight-cyan-bg: color-mix(in srgb, var(--color-cyan-400) 40%, transparent);
+    --color-highlight-blue-text: var(--color-blue-900);
+    --color-highlight-blue-bg: color-mix(in srgb, var(--color-blue-400) 40%, transparent);
 
     /* Spacing intentionally not overridden — Tailwind's default scale
        (`--spacing: 0.25rem`) already produces every value this site used
@@ -203,7 +214,10 @@
   font-family: var(--font-display);
   font-weight: 600;
   font-size: clamp(2rem, 1.5rem + 1.6667vw, 2.75rem);
-  line-height: 1.18;
+  /* 1.25 rather than tighter: highlighted phrases paint their background
+     over Urbanist's full 1.2em content area, so anything below 1.2 lets
+     highlights on adjacent lines overlap; the extra 0.05em keeps a gap. */
+  line-height: 1.25;
   letter-spacing: -0.01em;
 }
 
@@ -212,7 +226,10 @@
   font-family: var(--font-display);
   font-weight: 600;
   font-size: clamp(2rem, 1.5rem + 1.6667vw, 2.75rem);
-  line-height: 1.18;
+  /* 1.25 rather than tighter: highlighted phrases paint their background
+     over Urbanist's full 1.2em content area, so anything below 1.2 lets
+     highlights on adjacent lines overlap; the extra 0.05em keeps a gap. */
+  line-height: 1.25;
   letter-spacing: 0em;
 }
 
@@ -253,6 +270,19 @@
   font-weight: 400;
   font-size: clamp(1.75rem, 1.5rem + 1.6667vw, 2rem);;
   line-height: 1.25;
+  letter-spacing: 0;
+}
+
+/* section header — fluid 30 → 36. The homepage's numbered section titles,
+   numeral and title alike. Figma sets these at 32 → 36; like section-title
+   above, the small end comes down a step so the scale keeps its mobile
+   proportions, and the range runs over the same 480 → 1200px span as the
+   other fluid tokens. Sits between section-title (32) and h2 (44). */
+@utility text-section-header {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.875rem, 1.625rem + 0.8333vw, 2.25rem);
+  line-height: 1.2;
   letter-spacing: 0;
 }
 

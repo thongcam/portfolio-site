@@ -80,7 +80,7 @@ return (
             </button>
             {
                 caption &&
-                <figcaption className="text-caption text-blue-900/80">
+                <figcaption className="text-caption text-blue-900">
                     <RichTextLexical data={caption}/>
                 </figcaption>
             }

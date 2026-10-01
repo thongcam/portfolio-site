@@ -7,10 +7,9 @@
  *  - <s (434)    portrait full width, then headline, intro and contacts
  *  - s           portrait on its own row at 6 columns so it stays modest;
  *                the text block still spans all 12 beneath it
- *  - md (741)    portrait (4 cols) beside the text (8); intro and contacts
- *                share one column, contacts wrapping as a row
+ *  - md (741)    text (8 cols) on the left, portrait (4) on the right; intro
+ *                and contacts share one column, contacts wrapping as a row
  *  - lg (1047)   intro and contacts split side by side, contacts right-aligned
- *  - xl (1200)   portrait narrows to the design's 3 columns (276px)
  */
 import { Image } from "astro:assets";
 import Section from "../section.astro";
@@ -32,14 +31,14 @@ interface Props {
 const { data, contactLinks } = Astro.props;
 const portrait = data.heroPortrait;
 
-// 6 of 12 columns from s (own row), 4 from md, 3 from xl (276px inside the
-// 1200px container). Percentages are of the viewport, not the container.
+// 6 of 12 columns from s (own row), 4 from md. The container caps at 1200px
+// once the viewport clears it plus both gutters, where 4 columns are 379px.
 const SIZES =
-  "(min-width: 1200px) 20vw, (min-width: 741px) 27vw, (min-width: 434px) 40vw, calc(100vw - 3rem)";
+  "(min-width: 1360px) 379px, (min-width: 741px) 27vw, (min-width: 434px) 40vw, calc(100vw - 3rem)";
 ---
 
 <Section class={["bg-white py-8 md:py-20"]} id="hero">
-  <Grid class="gap-y-8">
+  <Grid class="gap-y-8 items-center">
     <Image
       src={cmsURL + portrait.url}
       width={portrait.width}
@@ -49,10 +48,12 @@ const SIZES =
       priority
       loading="eager"
       sizes={SIZES}
-      class="col-span-12 w-full object-cover object-top aspect-[4/5] s:col-span-6 md:col-span-4 xl:col-span-3 shadow-lg"
+      class="col-span-12 w-full object-cover object-top aspect-[4/5] s:col-span-6 md:order-2 md:col-span-4"
     />
 
-    <div class="col-span-12 flex flex-col gap-8 md:col-span-8 xl:col-span-9">
+    <!-- The portrait stays first in source so it leads on mobile; from md the
+         grid order puts the text on the left. -->
+    <div class="col-span-12 flex flex-col gap-8 md:order-1 md:col-span-8">
       <HeroHeadline data={data.mainHeader} />
 
       <div class="flex flex-col gap-8 lg:flex-row lg:justify-between lg:gap-8">
@@ -62,7 +63,7 @@ const SIZES =
           </p>
           {
             data.standoutCard.tagline && (
-              <p class="flex items-center gap-2 text-body text-cyan-400">
+              <p class="flex items-center gap-2 text-body text-cyan-800">
                 <span
                   class="size-3 shrink-0 rounded-full bg-cyan-400"
                   aria-hidden="true"

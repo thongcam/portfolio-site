@@ -12,7 +12,9 @@
  * keyframes and `animate-underlining` utility from global.css.
  *
  * On mobile the numeral sits on its own line above the title; from `md` the
- * two share a baseline row.
+ * two share a row. The numeral is set in the same token as the title and
+ * carries the yellow highlight (Yellow/900 on Yellow/400 at 40%) the hero
+ * headline uses.
  */
 interface Props {
   /** Section index, rendered with a trailing period. */
@@ -27,25 +29,26 @@ const {
   number,
   class: className,
   id,
-  underlineHeight = "0.4em",
 } = Astro.props;
 ---
 
 <div class:list={["flex flex-col gap-1 md:flex-row md:items-center md:gap-3", className]}>
   {
     number != null && number !== "" && (
-      <span class="text-hero-title text-yellow-400 text-semibold" aria-hidden="true">
+      <span
+        class="self-start text-section-header text-highlight-yellow-text bg-highlight-yellow-bg md:self-auto px-1 font-bold"
+        aria-hidden="true"
+      >
         {number}.
       </span>
     )
   }
   <h2
     id={id}
-    class="section-header text-section-title text-text-primary"
-    style={`--underline-height: ${underlineHeight}`}
+    class="section-header text-section-header text-text-primary"
   >
     <span
-      class="box-decoration-clone bg-gradient-to-r from-yellow-400/45 to-yellow-400/45 bg-[length:0%_var(--underline-height)] bg-[position:0_88%] bg-no-repeat"
+      class="box-decoration-clone"
     >
       <slot />
     </span>
