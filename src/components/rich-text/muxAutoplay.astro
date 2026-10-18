@@ -4,47 +4,63 @@
  * pauses the rest. Rendered once per article body — case studies and blog
  * posts share the same Mux block, so they share this.
  *
- * Emits no markup; the player library is imported only when the page actually
- * contains a `<mux-player>`.
+ * Emits no markup. `@mux/mux-video` (hls.js included, ~160 KB gzipped) is
+ * imported only once a video comes within a screen of the viewport, so it
+ * never competes with the page's initial load and is skipped entirely by a
+ * reader who doesn't scroll that far. Until then each <mux-video> is an
+ * undefined element showing nothing but its wrapper's reserved box.
  */
 ---
 
 <script>
-  const wrappers = document.querySelectorAll<HTMLElement>(
-    ".mux-video-wrapper mux-player",
+  type Player = HTMLElement & {
+    play?: () => Promise<void>;
+    pause?: () => void;
+  };
+
+  const players = Array.from(
+    document.querySelectorAll<Player>(".mux-video-wrapper mux-video"),
   );
 
-  if (wrappers.length) {
-    import("@mux/mux-player");
+  if (players.length) {
+    const startAutoplay = () => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const player = entry.target as Player;
+            if (entry.isIntersecting) {
+              player.play?.()?.catch(() => {});
+            } else {
+              player.pause?.();
+            }
+          });
+        },
+        { rootMargin: "-40% 0px -40% 0px", threshold: 0 },
+      );
 
-    const players = Array.from(wrappers);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const player = entry.target as HTMLElement & {
-            play?: () => Promise<void>;
-            pause?: () => void;
-          };
-          if (entry.isIntersecting) {
-            player.play?.()?.catch(() => {});
-          } else {
-            player.pause?.();
-          }
-        });
-      },
-      { rootMargin: "-40% 0px -40% 0px", threshold: 0 },
-    );
-
-    players.forEach((player) => {
-      observer.observe(player);
-      player.addEventListener("play", () => {
-        players.forEach((other) => {
-          if (other !== player) {
-            (other as HTMLElement & { pause?: () => void }).pause?.();
-          }
+      players.forEach((player) => {
+        observer.observe(player);
+        player.addEventListener("play", () => {
+          players.forEach((other) => {
+            if (other !== player) other.pause?.();
+          });
         });
       });
-    });
+    };
+
+    const loader = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        loader.disconnect();
+        // Autoplay is wired up only once the element is defined: observing
+        // earlier would deliver a video's first "in the middle" entry while
+        // `play` doesn't exist yet, and nothing would fire it again.
+        import("@mux/mux-video")
+          .then(() => customElements.whenDefined("mux-video"))
+          .then(startAutoplay);
+      },
+      { rootMargin: "100% 0px" },
+    );
+    players.forEach((player) => loader.observe(player));
   }
 </script>

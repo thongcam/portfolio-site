@@ -105,5 +105,12 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss(), clientBundleOptions()],
+    resolve: {
+      // <mux-video> pulls in the full hls.js. The light build drops
+      // subtitles, alternate audio, EME/DRM, CMCD and content steering —
+      // none of which the muted, looping case-study clips use — for ~55 KB
+      // gzipped less. Exact match only, so `hls.js/light` itself resolves.
+      alias: [{ find: /^hls\.js$/, replacement: "hls.js/light" }],
+    },
   },
 });

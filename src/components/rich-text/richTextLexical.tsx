@@ -37,18 +37,23 @@ const jsxConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
     NumberedListBlock: ({node} : {node: SerializedBlockNode}) => <NumberedList items={node.fields.items} />,
     QuoteBlock: ({node} : {node: SerializedBlockNode}) => <Quote quote={node.fields.quote} attribution={node.fields.attribution} />,
     StatsBlock: ({node} : {node: SerializedBlockNode}) => <Stats stats={node.fields.stats} />,
-    // Rendered as the native <mux-player> custom element (no React runtime
-    // needed) — see caseStudyContent.astro for the vanilla enhancement script
-    // that lazy-loads the player and wires up autoplay-on-scroll.
+    // Rendered as the native <mux-video> custom element (no React runtime
+    // needed) — see muxAutoplay.astro for the vanilla enhancement script
+    // that lazy-loads it and wires up autoplay-on-scroll. <mux-video> has no
+    // player UI of its own, so `controls` gives it the browser's, and the
+    // poster is set explicitly (mux-player used to derive it) so the frame
+    // isn't blank before the element is defined.
     MuxVideoBlock: ({node} : {node: SerializedBlockNode}) => (
       <div className="w-full aspect-video mux-video-wrapper">
-        <mux-player
+        <mux-video
           playback-id={node.fields.muxPlaybackId}
+          poster={`https://image.mux.com/${node.fields.muxPlaybackId}/thumbnail.webp`}
+          controls
           muted
           loop
           playsinline
-          style={{ width: '100%', height: '100%' }}
-        ></mux-player>
+          style={{ display: 'block', width: '100%', height: '100%' }}
+        ></mux-video>
       </div>
     ),
   },
