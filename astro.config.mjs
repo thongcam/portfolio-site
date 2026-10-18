@@ -2,7 +2,7 @@ import { defineConfig, envField } from "astro/config";
 import cloudflare from "@astrojs/cloudflare";
 import { cacheCloudflare } from "@astrojs/cloudflare/cache";
 
-import react from "@astrojs/react";
+import preact from "@astrojs/preact";
 
 import tailwindcss from "@tailwindcss/vite";
 
@@ -57,7 +57,8 @@ function clientBundleOptions() {
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react()],
+  // compat aliases react/react-dom for Payload's RichText and the lightbox.
+  integrations: [preact({ compat: true })],
   output: "server",
 
   // Astro 7 changed the default from `true` to `'jsx'` (React-style

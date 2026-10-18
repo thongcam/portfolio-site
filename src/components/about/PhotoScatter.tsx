@@ -282,7 +282,7 @@ export default function PhotoScatter({ photos }: Props) {
     };
   }, [opened]);
 
-  const onPointerDown = (event: React.PointerEvent, index: number) => {
+  const onPointerDown = (event: React.PointerEvent<HTMLLIElement>, index: number) => {
     // A press on another photo may reach the document-level close listener —
     // closing is what it should do. A press on the open photo must not, or it
     // would be closed there and reopened here.
@@ -308,7 +308,7 @@ export default function PhotoScatter({ photos }: Props) {
     (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
   };
 
-  const onPointerMove = (event: React.PointerEvent) => {
+  const onPointerMove = (event: React.PointerEvent<HTMLLIElement>) => {
     const current = gesture.current;
     if (!current || current.pointerId !== event.pointerId) return;
 
@@ -341,7 +341,7 @@ export default function PhotoScatter({ photos }: Props) {
     setOffsets((all) => all.map((o, i) => (i === current.index ? next : o)));
   };
 
-  const endGesture = (event: React.PointerEvent) => {
+  const endGesture = (event: React.PointerEvent<HTMLLIElement>) => {
     const current = gesture.current;
     if (!current || current.pointerId !== event.pointerId) return;
 
