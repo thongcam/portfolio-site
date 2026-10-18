@@ -5,15 +5,16 @@ import Section from "@/components/sections/section.astro";
 import useAstroImage from "@utils/useAstroImage";
 import hasZoomableImage from "@utils/hasZoomableImage";
 import MuxAutoplay from "@components/rich-text/muxAutoplay.astro";
+import ImageViewers from "@components/rich-text/imageViewers.astro";
 
 const { page } = Astro.props;
 
 await useAstroImage(page.content);
 
-// Only the zoomable-image lightbox needs client JS. Mux video is a plain
-// <mux-player> custom element enhanced by <MuxAutoplay> —
-// everything else in the rich text is static HTML.
-const needsHydration = hasZoomableImage(page.content);
+// The rich text is never hydrated. Zoomable images and carousels are made
+// interactive by <ImageViewers>, Mux video by <MuxAutoplay>; everything else
+// is static HTML.
+const hasImageViewers = hasZoomableImage(page.content);
 ---
 
 <Section class={["mb-15"]} id="content">
@@ -33,15 +34,10 @@ const needsHydration = hasZoomableImage(page.content);
     <!-- 981 of the design's 1200 content width, leaving 220 for the scroll
          spy alongside. -->
     <article class="flow-root md:w-[81.75%] md:w-max-[60ch] md:pe-4 pb-21 border-solid border-be-1 border-gray-300">
-      {
-        needsHydration ? (
-          <RichTextLexical data={page.content} client:idle />
-        ) : (
-          <RichTextLexical data={page.content} />
-        )
-      }
+      <RichTextLexical data={page.content} />
     </article>
   </div>
 </Section>
 
 <MuxAutoplay />
+{hasImageViewers && <ImageViewers />}

@@ -1,9 +1,4 @@
-import { Fragment, useRef, useState } from "react";
-import Lightbox, { type ImageSource } from "yet-another-react-lightbox";
-import Zoom from "yet-another-react-lightbox/plugins/zoom";
-import Captions  from "yet-another-react-lightbox/plugins/captions";
-import "yet-another-react-lightbox/styles.css";
-import "yet-another-react-lightbox/plugins/captions.css";
+import type { ImageSource } from "yet-another-react-lightbox";
 import styles from "./LightboxImage.module.css";
 import type { SerializedEditorState } from "lexical";
 import { RichTextLexical } from "../richTextLexical";
@@ -26,41 +21,15 @@ interface LightboxImageProps {
     sizes?: string;
 }
 
+/**
+ * Server-rendered only. The `data-lightbox-*` attributes are what
+ * `imageViewers.astro` reads to open the Lightbox, so the image, its srcSet
+ * and its caption are all taken from this markup on click.
+ */
 export default function LightboxImage({src, alt, caption, width, height, srcSet, className = "flex flex-col gap-4", sizes = RICH_TEXT_IMAGE_SIZES} : LightboxImageProps) {
-    const [open, setOpen] = useState(false);
-    const zoomRef = useRef(null);
-    const captionsRef = useRef(null);
 return (
-    <Fragment>
-        <Lightbox
-            open={open}
-            close={() => setOpen(false)}
-            slides={[{
-                src: src, 
-                alt: alt,
-                width: width,
-                height: height,
-                srcSet: srcSet,
-                description: caption ? <RichTextLexical data={caption}/> : ""
-            }]}
-            plugins={[Zoom, Captions]}
-            zoom={{ ref: zoomRef, scrollToZoom: true, maxZoomPixelRatio: 2 }}
-            captions={{ ref: captionsRef }}
-            carousel={{
-                finite: true,
-                imageFit: "contain",
-            }}
-
-            controller={{ closeOnBackdropClick: true }}
-            render={{
-                buttonPrev:  () => null,
-                buttonNext:  () => null,
-            }}
-        >
-
-        </Lightbox>
-        <figure className={className}>
-            <button className="relative cursor-pointer" onClick={() => setOpen(true)}>
+        <figure className={className} data-lightbox-group>
+            <button type="button" className="relative cursor-pointer" data-lightbox-trigger>
                 <span className={"absolute bottom-2 right-3 md:bottom-4 md:right-5 p-2 bg-blue-900/50 rounded-full flex flex-row items-center  " + styles.zoomHint} style={{}}>
                     <img className="h-6" src="/icons/Frame inspect.svg" alt="" width={24} height={24} loading="lazy"/>
                     <span className="text-caption text-white transition-all duration-150 ease-in">Click to zoom</span>
@@ -76,16 +45,15 @@ return (
                 // full srcSet separately so zoomed quality is untouched.
                 sizes={sizes}
                 loading="lazy"
+                data-lightbox-slide
                 />
             </button>
             {
                 caption &&
-                <figcaption className="text-caption text-blue-900">
+                <figcaption className="text-caption text-blue-900" data-lightbox-caption="0">
                     <RichTextLexical data={caption}/>
                 </figcaption>
             }
           </figure>
-    </Fragment>
-
 )
 }

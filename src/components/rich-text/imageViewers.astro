@@ -1,0 +1,125 @@
+---
+/**
+ * Makes the article's zoomable images and carousels interactive. The rich
+ * text itself is rendered on the server with no hydration; this is the only
+ * script behind LightboxImage and Carousel, and it works off their
+ * `data-lightbox-*` / `data-carousel-*` attributes.
+ *
+ * Carousel paging is plain DOM work, so it responds as soon as the page has
+ * parsed. The Lightbox (Preact + yet-another-react-lightbox) is imported once
+ * the first viewer comes within a screen of the viewport, or on hover or focus
+ * if that happens first, so it is normally loaded before anyone clicks. A
+ * click that still beats it is held and opens the Lightbox when it arrives.
+ *
+ * Emits no markup; rendered only for articles that have a zoomable image.
+ */
+---
+
+<script>
+  import type { ViewerSlide } from "./lightbox-image/openLightbox";
+
+  const groups = document.querySelectorAll<HTMLElement>("[data-lightbox-group]");
+
+  if (groups.length) {
+    let lightbox: Promise<typeof import("./lightbox-image/openLightbox")> | undefined;
+    const loadLightbox = () => (lightbox ??= import("./lightbox-image/openLightbox"));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          observer.disconnect();
+          loadLightbox();
+        }
+      },
+      { rootMargin: "100% 0px" },
+    );
+    groups.forEach((group) => observer.observe(group));
+
+    const preload = (event: Event) => {
+      if ((event.target as Element).closest?.("[data-lightbox-trigger]")) loadLightbox();
+    };
+    document.addEventListener("pointerover", preload, { passive: true });
+    document.addEventListener("focusin", preload);
+
+    /** Rebuilds a slide from the rendered <img>. Every srcSet candidate shares
+     *  the original's aspect ratio (see `buildSrcSet`), so each one's height
+     *  follows from its width. */
+    const readSlide = (img: HTMLImageElement, caption: Element | null): ViewerSlide => {
+      const width = Number(img.getAttribute("width"));
+      const height = Number(img.getAttribute("height"));
+      const srcSet = (img.getAttribute("srcset") ?? "")
+        .split(",")
+        .map((candidate) => candidate.trim().split(/\s+/))
+        .filter(([src, descriptor]) => src && descriptor?.endsWith("w"))
+        .map(([src, descriptor]) => {
+          const w = parseInt(descriptor, 10);
+          return { src, width: w, height: Math.round((w * height) / width) };
+        });
+
+      return {
+        src: img.getAttribute("src") ?? "",
+        alt: img.alt,
+        width,
+        height,
+        srcSet,
+        captionHTML: caption?.innerHTML,
+      };
+    };
+
+    const currentIndex = (group: HTMLElement) => Number(group.dataset.index ?? 0);
+
+    const showSlide = (group: HTMLElement, index: number) => {
+      const slides = group.querySelectorAll<HTMLImageElement>("[data-lightbox-slide]");
+      if (index < 0 || index >= slides.length) return;
+
+      group.dataset.index = String(index);
+      slides.forEach((img, i) => {
+        img.classList.toggle("invisible", i !== index);
+        img.setAttribute("aria-hidden", String(i !== index));
+      });
+      group.querySelectorAll<HTMLElement>("[data-lightbox-caption]").forEach((caption) => {
+        caption.hidden = caption.dataset.lightboxCaption !== String(index);
+      });
+
+      const counter = group.querySelector("[data-carousel-counter]");
+      if (counter) counter.textContent = `${index + 1} / ${slides.length}`;
+      const prev = group.querySelector<HTMLButtonElement>("[data-carousel-prev]");
+      const next = group.querySelector<HTMLButtonElement>("[data-carousel-next]");
+      if (prev) prev.disabled = index === 0;
+      if (next) next.disabled = index === slides.length - 1;
+    };
+
+    let opening = false;
+
+    const open = async (group: HTMLElement) => {
+      if (opening) return;
+      opening = true;
+      try {
+        const slides = Array.from(
+          group.querySelectorAll<HTMLImageElement>("[data-lightbox-slide]"),
+          (img, i) => readSlide(img, group.querySelector(`[data-lightbox-caption="${i}"]`)),
+        );
+        const { openLightbox } = await loadLightbox();
+        openLightbox(slides, currentIndex(group), (index) => {
+          if (group.hasAttribute("data-carousel")) showSlide(group, index);
+        });
+      } finally {
+        opening = false;
+      }
+    };
+
+    document.addEventListener("click", (event) => {
+      const target = event.target as Element;
+      const group = target.closest<HTMLElement>("[data-lightbox-group]");
+      if (!group) return;
+
+      if (target.closest("[data-carousel-prev]")) {
+        showSlide(group, currentIndex(group) - 1);
+      } else if (target.closest("[data-carousel-next]")) {
+        showSlide(group, currentIndex(group) + 1);
+      } else if (target.closest("[data-lightbox-trigger]")) {
+        open(group);
+      }
+    });
+  }
+</script>

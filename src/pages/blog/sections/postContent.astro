@@ -13,14 +13,15 @@ import Section from "@components/sections/section.astro";
 import useAstroImage from "@utils/useAstroImage";
 import hasZoomableImage from "@utils/hasZoomableImage";
 import MuxAutoplay from "@components/rich-text/muxAutoplay.astro";
+import ImageViewers from "@components/rich-text/imageViewers.astro";
 
 const { post } = Astro.props;
 
 await useAstroImage(post.content);
 
-// Only the zoomable-image lightbox needs client JS; everything else in the
-// rich text is static HTML.
-const needsHydration = hasZoomableImage(post.content);
+// The rich text is never hydrated. Zoomable images and carousels are made
+// interactive by <ImageViewers>; everything else is static HTML.
+const hasImageViewers = hasZoomableImage(post.content);
 ---
 
 <Section class={["bg-white"]} id="content">
@@ -32,15 +33,10 @@ const needsHydration = hasZoomableImage(post.content);
       <ScrollSpy page={post} />
     </div>
     <article class="flow-root md:w-[81.75%] md:pe-4">
-      {
-        needsHydration ? (
-          <RichTextLexical data={post.content} client:idle />
-        ) : (
-          <RichTextLexical data={post.content} />
-        )
-      }
+      <RichTextLexical data={post.content} />
     </article>
   </div>
 </Section>
 
 <MuxAutoplay />
+{hasImageViewers && <ImageViewers />}

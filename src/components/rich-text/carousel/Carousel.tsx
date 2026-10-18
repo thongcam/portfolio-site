@@ -1,9 +1,3 @@
-import { Fragment, useRef, useState } from "react";
-import Lightbox from "yet-another-react-lightbox";
-import Zoom from "yet-another-react-lightbox/plugins/zoom";
-import Captions from "yet-another-react-lightbox/plugins/captions";
-import "yet-another-react-lightbox/styles.css";
-import "yet-another-react-lightbox/plugins/captions.css";
 import type { SerializedEditorState } from "lexical";
 import { RichTextLexical } from "../richTextLexical";
 import { buildSrcSet, preferredSrc, type MediaLike } from "../imageSources";
@@ -76,127 +70,111 @@ const NAV_BUTTON_CLASS = [
  * All slides are mounted and stacked, with only the active one visible, so
  * moving between them is instant rather than triggering a fetch. Opening any
  * slide hands the whole set to the Lightbox at the current index, so the
- * reader can keep paging through them zoomed in; `on.view` carries the
- * position back out so closing the Lightbox leaves the inline carousel where
- * they left off.
+ * reader can keep paging through them zoomed in; the Lightbox reports the
+ * position back so closing it leaves the inline carousel where they left off.
+ *
+ * Server-rendered only, in its first-slide state. Paging and opening are done
+ * by `imageViewers.astro` through the `data-carousel-*` and `data-lightbox-*`
+ * attributes, which is why every caption is rendered and all but the active
+ * one hidden.
  */
 export default function Carousel({ images }: { images?: CarouselSlide[] }) {
-    const [index, setIndex] = useState(0);
-    const [open, setOpen] = useState(false);
-    const zoomRef = useRef(null);
-    const captionsRef = useRef(null);
-
     if (!images?.length) return null;
 
-    const current = images[index];
+    const index = 0;
     // Smallest ratio = tallest image, the one the frame has to accommodate.
     const frameRatio = Math.min(...images.map(({ image }) => image.width / image.height));
 
     return (
-        <Fragment>
-            <Lightbox
-                open={open}
-                close={() => setOpen(false)}
-                index={index}
-                on={{ view: ({ index: i }) => setIndex(i) }}
-                slides={images.map(({ image, caption }) => ({
-                    src: preferredSrc(image),
-                    alt: image.alt,
-                    width: image.width,
-                    height: image.height,
-                    srcSet: buildSrcSet(image),
-                    description: caption ? <RichTextLexical data={caption} /> : "",
-                }))}
-                plugins={[Zoom, Captions]}
-                zoom={{ ref: zoomRef, scrollToZoom: true, maxZoomPixelRatio: 2 }}
-                captions={{ ref: captionsRef }}
-                carousel={{ finite: true, imageFit: "contain" }}
-                controller={{ closeOnBackdropClick: true }}
-            />
-
-            <figure className="flex flex-col gap-3">
-                <button
-                    type="button"
-                    className="relative w-full cursor-pointer"
-                    // A string, not a number: preact-render-to-string appends
-                    // "px" to numeric `aspectRatio`, which is invalid and collapses
-                    // the frame to zero height.
-                    style={{ aspectRatio: String(frameRatio) }}
-                    onClick={() => setOpen(true)}
+        <figure className="flex flex-col gap-3" data-lightbox-group data-carousel>
+            <button
+                type="button"
+                className="relative w-full cursor-pointer"
+                // A string, not a number: preact-render-to-string appends
+                // "px" to numeric `aspectRatio`, which is invalid and collapses
+                // the frame to zero height.
+                style={{ aspectRatio: String(frameRatio) }}
+                data-lightbox-trigger
+            >
+                <span
+                    className={
+                        "absolute bottom-2 right-3 md:bottom-4 md:right-5 p-2 bg-blue-900/50 rounded-full flex flex-row items-center z-10 " +
+                        lightboxStyles.zoomHint
+                    }
                 >
-                    <span
+                    <img className="h-6" src="/icons/Frame inspect.svg" alt="" width={24} height={24} loading="lazy" />
+                    <span className="text-caption text-white transition-all duration-150 ease-in">Click to zoom</span>
+                </span>
+                {images.map(({ id, image }, i) => (
+                    <img
+                        key={id ?? i}
+                        src={preferredSrc(image)}
+                        alt={image.alt}
+                        width={image.width}
+                        height={image.height}
+                        srcSet={buildSrcSet(image).map((s) => `${s.src} ${s.width}w`).join(", ")}
+                        sizes={RICH_TEXT_IMAGE_SIZES}
+                        loading={i === 0 ? undefined : "lazy"}
+                        aria-hidden={i !== index}
                         className={
-                            "absolute bottom-2 right-3 md:bottom-4 md:right-5 p-2 bg-blue-900/50 rounded-full flex flex-row items-center z-10 " +
-                            lightboxStyles.zoomHint
+                            "absolute inset-0 size-full object-contain " +
+                            (i === index ? "" : "invisible")
                         }
-                    >
-                        <img className="h-6" src="/icons/Frame inspect.svg" alt="" width={24} height={24} loading="lazy" />
-                        <span className="text-caption text-white transition-all duration-150 ease-in">Click to zoom</span>
-                    </span>
-                    {images.map(({ id, image }, i) => (
-                        <img
-                            key={id ?? i}
-                            src={preferredSrc(image)}
-                            alt={image.alt}
-                            width={image.width}
-                            height={image.height}
-                            srcSet={buildSrcSet(image).map((s) => `${s.src} ${s.width}w`).join(", ")}
-                            sizes={RICH_TEXT_IMAGE_SIZES}
-                            loading={i === 0 ? undefined : "lazy"}
-                            aria-hidden={i !== index}
-                            className={
-                                "absolute inset-0 size-full object-contain " +
-                                (i === index ? "" : "invisible")
-                            }
-                        />
-                    ))}
-                </button>
+                        data-lightbox-slide
+                    />
+                ))}
+            </button>
 
-                <div className="flex items-center justify-between gap-8">
-                    <figcaption className="text-caption text-text-tertiary min-w-0 [&_strong]:text-text-primary">
-                        {current.caption && <RichTextLexical data={current.caption} />}
-                    </figcaption>
-
-                    {images.length > 1 && (
-                        <div className="flex shrink-0 items-center gap-3">
-                            <button
-                                type="button"
-                                aria-label="Previous image"
-                                disabled={index === 0}
-                                onClick={() => setIndex((i) => i - 1)}
-                                className={NAV_BUTTON_CLASS}
-                            >
-                                <Chevron direction="left" />
-                            </button>
-                            {/* A hidden copy of the widest possible counter holds the
-                                width open, so the buttons never shift as the reader
-                                pages through. With tabular figures every digit is the
-                                same width, which makes that widest string the one where
-                                both numbers carry the most digits. */}
-                            <p
-                                aria-live="polite"
-                                className="text-caption text-text-tertiary grid tabular-nums whitespace-nowrap"
-                            >
-                                <span aria-hidden="true" className="invisible col-start-1 row-start-1">
-                                    {images.length} / {images.length}
-                                </span>
-                                <span className="col-start-1 row-start-1 text-center">
-                                    {index + 1} / {images.length}
-                                </span>
-                            </p>
-                            <button
-                                type="button"
-                                aria-label="Next image"
-                                disabled={index === images.length - 1}
-                                onClick={() => setIndex((i) => i + 1)}
-                                className={NAV_BUTTON_CLASS}
-                            >
-                                <Chevron direction="right" />
-                            </button>
-                        </div>
+            <div className="flex items-center justify-between gap-8">
+                <figcaption className="text-caption text-text-tertiary min-w-0 [&_strong]:text-text-primary">
+                    {images.map(({ id, caption }, i) =>
+                        caption && (
+                            <div key={id ?? i} data-lightbox-caption={i} hidden={i !== index}>
+                                <RichTextLexical data={caption} />
+                            </div>
+                        )
                     )}
-                </div>
-            </figure>
-        </Fragment>
+                </figcaption>
+
+                {images.length > 1 && (
+                    <div className="flex shrink-0 items-center gap-3">
+                        <button
+                            type="button"
+                            aria-label="Previous image"
+                            disabled={index === 0}
+                            data-carousel-prev
+                            className={NAV_BUTTON_CLASS}
+                        >
+                            <Chevron direction="left" />
+                        </button>
+                        {/* A hidden copy of the widest possible counter holds the
+                            width open, so the buttons never shift as the reader
+                            pages through. With tabular figures every digit is the
+                            same width, which makes that widest string the one where
+                            both numbers carry the most digits. */}
+                        <p
+                            aria-live="polite"
+                            className="text-caption text-text-tertiary grid tabular-nums whitespace-nowrap"
+                        >
+                            <span aria-hidden="true" className="invisible col-start-1 row-start-1">
+                                {images.length} / {images.length}
+                            </span>
+                            <span className="col-start-1 row-start-1 text-center" data-carousel-counter>
+                                {index + 1} / {images.length}
+                            </span>
+                        </p>
+                        <button
+                            type="button"
+                            aria-label="Next image"
+                            disabled={index === images.length - 1}
+                            data-carousel-next
+                            className={NAV_BUTTON_CLASS}
+                        >
+                            <Chevron direction="right" />
+                        </button>
+                    </div>
+                )}
+            </div>
+        </figure>
     );
 }
