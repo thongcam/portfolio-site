@@ -118,7 +118,10 @@ export default function Carousel({ images }: { images?: CarouselSlide[] }) {
                 <button
                     type="button"
                     className="relative w-full cursor-pointer"
-                    style={{ aspectRatio: frameRatio }}
+                    // A string, not a number: preact-render-to-string appends
+                    // "px" to numeric `aspectRatio`, which is invalid and collapses
+                    // the frame to zero height.
+                    style={{ aspectRatio: String(frameRatio) }}
                     onClick={() => setOpen(true)}
                 >
                     <span
