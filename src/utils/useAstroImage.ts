@@ -13,7 +13,11 @@ export default async function useAstroImage(obj : SerializedLexicalNode) {
         await Promise.all(Object.entries(currentNode).map(async ([key, value]) => {   
           if (key === 'mimeType' && typeof(value) === "string" && value.includes("image")) {
             const currentUploadNode = currentNode as UploadNodeWithURL
-            const astroImage = await getImage({src: cmsURL + currentUploadNode.url, width: currentUploadNode.width, height: currentUploadNode.height, format:"webp", quality: 80, densities: [0.5, 1]})
+            // Variants wider than 1600px are what the lightbox shows zoomed in,
+            // where compression artefacts on small text are visible — so they
+            // get a higher quality than the inline sizes.
+            const quality = currentUploadNode.width > 1600 ? 90 : 80
+            const astroImage = await getImage({src: cmsURL + currentUploadNode.url, width: currentUploadNode.width, height: currentUploadNode.height, format:"webp", quality, densities: [0.5, 1]})
             currentUploadNode.url = astroImage.src
           } else if (typeof value === 'object' && value !== null) {
             await traverse(value); // Recursively traverse nested objects
